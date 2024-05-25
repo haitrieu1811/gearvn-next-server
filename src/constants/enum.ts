@@ -66,3 +66,18 @@ export enum HttpStatusCode {
   NotExtended = 510,
   NetworkAuthenticationRequired = 511
 }
+
+export enum RoleType {
+  Create,
+  Read,
+  Update,
+  Delete
+}
+
+export enum RoleField {
+  Product,
+  Post,
+  Order,
+  ProductCategory,
+  PostCategory
+}
