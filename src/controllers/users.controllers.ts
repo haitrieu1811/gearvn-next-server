@@ -4,7 +4,7 @@ import { WithId } from 'mongodb'
 
 import { USERS_MESSAGES } from '~/constants/message'
 import User from '~/models/databases/User.database'
-import { LogoutReqBody, RegisterReqBody } from '~/models/requests/User.requests'
+import { LogoutReqBody, RefreshTokenReqBody, RegisterReqBody, TokenPayload } from '~/models/requests/User.requests'
 import userService from '~/services/users.services'
 
 export const registerController = async (req: Request<ParamsDictionary, any, RegisterReqBody>, res: Response) => {
@@ -27,5 +27,21 @@ export const logoutController = async (req: Request<ParamsDictionary, any, Logou
   await userService.logout(req.body.refreshToken)
   return res.json({
     message: USERS_MESSAGES.LOGOUT_SUCCESS
+  })
+}
+
+export const refreshTokenController = async (
+  req: Request<ParamsDictionary, any, RefreshTokenReqBody>,
+  res: Response
+) => {
+  const decodedRefreshToken = req.decodedRefreshToken as TokenPayload
+  const result = await userService.refreshToken({
+    ...decodedRefreshToken,
+    refreshToken: req.body.refreshToken,
+    refreshTokenExp: decodedRefreshToken.exp
+  })
+  return res.json({
+    message: USERS_MESSAGES.REFRESH_TOKEN_SUCCESS,
+    data: result
   })
 }

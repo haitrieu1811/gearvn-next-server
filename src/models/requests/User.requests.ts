@@ -18,3 +18,7 @@ export type RegisterReqBody = {
 export type LogoutReqBody = {
   refreshToken: string
 }
+
+export type RefreshTokenReqBody = {
+  refreshToken: string
+}

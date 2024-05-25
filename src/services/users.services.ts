@@ -197,6 +197,45 @@ class UserService {
   async logout(refreshToken: string) {
     return databaseService.refreshTokens.deleteOne({ token: refreshToken })
   }
+
+  async refreshToken({
+    refreshToken,
+    userId,
+    userVerifyStatus,
+    userStatus,
+    userType,
+    refreshTokenExp
+  }: {
+    refreshToken: string
+    userId: string
+    userVerifyStatus: UserVerifyStatus
+    userStatus: UserStatus
+    userType: UserType
+    refreshTokenExp: number
+  }) {
+    const [[newAccessToken, newRefreshToken]] = await Promise.all([
+      this.signAccessAndRefreshToken({
+        userId,
+        verify: userVerifyStatus,
+        status: userStatus,
+        type: userType,
+        exp: refreshTokenExp
+      }),
+      databaseService.refreshTokens.deleteOne({ token: refreshToken })
+    ])
+    const { iat, exp } = await this.decodeRefreshToken(newRefreshToken)
+    await databaseService.refreshTokens.insertOne(
+      new RefreshToken({
+        iat,
+        exp,
+        token: newRefreshToken
+      })
+    )
+    return {
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken
+    }
+  }
 }
 
 const userService = new UserService()
