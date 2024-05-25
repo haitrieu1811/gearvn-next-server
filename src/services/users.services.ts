@@ -236,6 +236,30 @@ class UserService {
       refreshToken: newRefreshToken
     }
   }
+
+  async resendEmailVerify(userId: string) {
+    const [verifyEmailToken, user] = await Promise.all([
+      this.signVerifyEmailToken(userId),
+      databaseService.users.findOne({ _id: new ObjectId(userId) })
+    ])
+    await Promise.all([
+      sendVerifyEmail((user as WithId<User>).email, verifyEmailToken),
+      databaseService.users.updateOne(
+        {
+          _id: new ObjectId(userId)
+        },
+        {
+          $set: {
+            verifyEmailToken
+          },
+          $currentDate: {
+            updatedAt: true
+          }
+        }
+      )
+    ])
+    return true
+  }
 }
 
 const userService = new UserService()

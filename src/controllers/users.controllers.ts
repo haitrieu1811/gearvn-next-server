@@ -45,3 +45,11 @@ export const refreshTokenController = async (
     data: result
   })
 }
+
+export const resendEmailVerifyController = async (req: Request, res: Response) => {
+  const { userId } = req.decodedAuthorization as TokenPayload
+  await userService.resendEmailVerify(userId)
+  return res.json({
+    message: USERS_MESSAGES.RESEND_EMAIL_VERIFY_SUCCESS
+  })
+}
