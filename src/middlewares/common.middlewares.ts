@@ -27,8 +27,7 @@ export const paginationValidator = validate(
             const page = Number(value)
             if (!Number.isInteger(page) || page < 1) {
               throw new ErrorWithStatus({
-                enMessage: GENERAL_MESSAGES.EN_PAGE_MUST_BE_A_POSITIVE_INTEGER,
-                viMessage: GENERAL_MESSAGES.VI_PAGE_MUST_BE_A_POSITIVE_INTEGER,
+                message: GENERAL_MESSAGES.PAGE_MUST_BE_A_POSITIVE_INTEGER,
                 status: HttpStatusCode.BadRequest
               })
             }
@@ -44,8 +43,7 @@ export const paginationValidator = validate(
             const limit = Number(value)
             if (!Number.isInteger(limit) || limit < 0) {
               throw new ErrorWithStatus({
-                enMessage: GENERAL_MESSAGES.EN_LIMIT_MUST_BE_A_POSITIVE_INTEGER,
-                viMessage: GENERAL_MESSAGES.VI_LIMIT_MUST_BE_A_POSITIVE_INTEGER,
+                message: GENERAL_MESSAGES.LIMIT_MUST_BE_A_POSITIVE_INTEGER,
                 status: HttpStatusCode.BadRequest
               })
             }

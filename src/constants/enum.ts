@@ -67,6 +67,13 @@ export enum HttpStatusCode {
   NetworkAuthenticationRequired = 511
 }
 
+export enum TokenType {
+  AccessToken,
+  RefreshToken,
+  VerifyEmailToken,
+  ForgotPasswordToken
+}
+
 export enum RoleType {
   Create,
   Read,
@@ -80,4 +87,26 @@ export enum RoleField {
   Order,
   ProductCategory,
   PostCategory
+}
+
+export enum UserType {
+  Admin,
+  Staff,
+  Customer
+}
+
+export enum Gender {
+  Male,
+  Female,
+  Other
+}
+
+export enum UserStatus {
+  Active,
+  Inactive
+}
+
+export enum UserVerifyStatus {
+  Verified,
+  Unverified
 }

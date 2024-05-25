@@ -10,13 +10,11 @@ type ErrorsType = Record<
 >
 
 export class ErrorWithStatus {
-  enMessage: string
-  viMessage: string
+  message: string
   status: number
 
-  constructor({ enMessage, viMessage, status }: { enMessage: string; viMessage: string; status: number }) {
-    this.enMessage = enMessage
-    this.viMessage = viMessage
+  constructor({ message, status }: { message: string; status: number }) {
+    this.message = message
     this.status = status
   }
 }
@@ -24,16 +22,8 @@ export class ErrorWithStatus {
 export class EntityError extends ErrorWithStatus {
   errors: ErrorsType
 
-  constructor({
-    enMessage = GENERAL_MESSAGES.EN_VALIDATION_ERROR,
-    viMessage = GENERAL_MESSAGES.EN_VALIDATION_ERROR,
-    errors
-  }: {
-    enMessage?: string
-    viMessage?: string
-    errors: ErrorsType
-  }) {
-    super({ enMessage, viMessage, status: HttpStatusCode.UnprocessableEntity })
+  constructor({ message = GENERAL_MESSAGES.VALIDATION_ERROR, errors }: { message?: string; errors: ErrorsType }) {
+    super({ message, status: HttpStatusCode.UnprocessableEntity })
     this.errors = errors
   }
 }

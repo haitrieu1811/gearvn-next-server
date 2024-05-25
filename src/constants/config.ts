@@ -34,7 +34,9 @@ export const ENV_CONFIG = {
   DB_USERNAME: process.env.DB_USERNAME as string,
   DB_PASSWORD: process.env.DB_PASSWORD as string,
   DB_NAME: process.env.DB_NAME as string,
-  DB_ROLE_COLLECTION_NAME: process.env.DB_ROLE_COLLECTION_NAME as string,
+  DB_ROLES_COLLECTION_NAME: process.env.DB_ROLES_COLLECTION_NAME as string,
+  DB_USERS_COLLECTION_NAME: process.env.DB_USERS_COLLECTION_NAME as string,
+  DB_REFRESH_TOKENS_COLLECTION_NAME: process.env.DB_REFRESH_TOKENS_COLLECTION_NAME as string,
 
   JWT_ACCESS_TOKEN_SECRET: process.env.JWT_ACCESS_TOKEN_SECRET as string,
   JWT_REFRESH_TOKEN_SECRET: process.env.JWT_REFRESH_TOKEN_SECRET as string,
