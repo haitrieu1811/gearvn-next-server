@@ -307,3 +307,13 @@ export const resetPasswordValidator = validate(
     ['body']
   )
 )
+
+export const changePasswordValidator = validate(
+  checkSchema(
+    {
+      password: passwordSchema,
+      confirmPassword: confirmPasswordSchema
+    },
+    ['body']
+  )
+)

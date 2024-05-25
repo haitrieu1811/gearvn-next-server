@@ -33,5 +33,6 @@ export const USERS_MESSAGES = {
     'Chúng tôi đã gửi email đặt lại mật khẩu vào email bạn vừa nhập. Vui lòng kiểm tra và đặt lại mật khẩu.',
   RESET_PASSWORD_SUCCESS: 'Đặt lại mật khẩu thành công.',
   FORGOT_PASSWORD_TOKEN_IS_REQUIRED: 'Forgot password token là bắt buộc.',
-  FORGOT_PASSWORD_TOKEN_DOES_NOT_EXIST: 'Forgot password token không tồn tại.'
+  FORGOT_PASSWORD_TOKEN_DOES_NOT_EXIST: 'Forgot password token không tồn tại.',
+  CHANGE_PASSWORD_SUCCESS: 'Đổi mật khẩu thành công.'
 } as const

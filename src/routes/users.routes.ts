@@ -1,6 +1,7 @@
 import { Router } from 'express'
 
 import {
+  changePasswordController,
   forgotPasswordController,
   loginController,
   logoutController,
@@ -13,6 +14,7 @@ import {
 import { filterReqBodyMiddleware } from '~/middlewares/common.middlewares'
 import {
   accessTokenValidator,
+  changePasswordValidator,
   forgotPasswordTokenValidator,
   forgotPasswordValidator,
   loginValidator,
@@ -50,6 +52,13 @@ usersRouter.post(
   forgotPasswordTokenValidator,
   resetPasswordValidator,
   wrapRequestHandler(resetPasswordController)
+)
+
+usersRouter.post(
+  '/change-password',
+  accessTokenValidator,
+  changePasswordValidator,
+  wrapRequestHandler(changePasswordController)
 )
 
 export default usersRouter

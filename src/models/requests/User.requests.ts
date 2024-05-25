@@ -26,3 +26,7 @@ export type RefreshTokenReqBody = {
 export type ResetPasswordReqBody = {
   password: string
 }
+
+export type ChangePasswordReqBody = {
+  password: string
+}

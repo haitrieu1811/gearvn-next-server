@@ -5,7 +5,7 @@ import { ENV_CONFIG } from '~/constants/config'
 import { TokenType, UserStatus, UserType, UserVerifyStatus } from '~/constants/enum'
 import RefreshToken from '~/models/databases/RefreshToken.database'
 import User from '~/models/databases/User.database'
-import { RegisterReqBody, ResetPasswordReqBody } from '~/models/requests/User.requests'
+import { RegisterReqBody } from '~/models/requests/User.requests'
 import databaseService from '~/services/database.services'
 import { hashPassword } from '~/utils/crypto'
 import { sendForgotPasswordEmail, sendVerifyEmail } from '~/utils/email'
@@ -338,6 +338,35 @@ class UserService {
     return {
       accessToken,
       refreshToken,
+      user: updatedUser
+    }
+  }
+
+  async changePassword({ password, userId }: { password: string; userId: ObjectId }) {
+    const updatedUser = await databaseService.users.findOneAndUpdate(
+      {
+        _id: userId
+      },
+      {
+        $set: {
+          password: hashPassword(password)
+        },
+        $currentDate: {
+          updatedAt: true
+        }
+      },
+      {
+        returnDocument: 'after',
+        projection: {
+          _id: 1,
+          fullName: 1,
+          email: 1,
+          createdAt: 1,
+          updatedAt: 1
+        }
+      }
+    )
+    return {
       user: updatedUser
     }
   }
