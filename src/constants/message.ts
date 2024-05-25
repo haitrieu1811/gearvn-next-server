@@ -17,5 +17,9 @@ export const USERS_MESSAGES = {
   CONFIRM_PASSWORD_IS_REQUIRED: 'Xác nhận mật khẩu là bắt buộc.',
   CONFIRM_PASSWORD_DO_NOT_MATCH: 'Xác nhận mật khẩu không chính xác.',
   EMAIL_OR_PASSWORD_IS_INCORRECT: 'Email hoặc mật khẩu không chính xác.',
-  LOGIN_SUCCESS: 'Đăng nhập thành công.'
+  LOGIN_SUCCESS: 'Đăng nhập thành công.',
+  LOGOUT_SUCCESS: 'Đăng xuất thành công.',
+  ACCESS_TOKEN_IS_REQUIRED: 'Vui lòng đăng nhập.',
+  REFRESH_TOKEN_IS_REQUIRED: 'Refresh token là bắt buộc.',
+  REFRESH_TOKEN_DOES_NOT_EXIST: 'Refresh token không tồn tại.'
 } as const

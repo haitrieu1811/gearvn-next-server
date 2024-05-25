@@ -1,8 +1,8 @@
 import { Router } from 'express'
 
-import { loginController, registerController } from '~/controllers/users.controllers'
+import { loginController, logoutController, registerController } from '~/controllers/users.controllers'
 import { filterReqBodyMiddleware } from '~/middlewares/common.middlewares'
-import { loginValidator, registerValidator } from '~/middlewares/users.middlewares'
+import { loginValidator, refreshTokenValidator, registerValidator } from '~/middlewares/users.middlewares'
 import { RegisterReqBody } from '~/models/requests/User.requests'
 import { wrapRequestHandler } from '~/utils/handler'
 
@@ -16,5 +16,7 @@ usersRouter.post(
 )
 
 usersRouter.post('/login', loginValidator, wrapRequestHandler(loginController))
+
+usersRouter.post('/logout', refreshTokenValidator, wrapRequestHandler(logoutController))
 
 export default usersRouter
