@@ -12,7 +12,7 @@ type UserConstructor = {
   gender?: Gender
   phoneNumber?: string
   addresses?: ObjectId[]
-  addressDefault?: ObjectId
+  defaultAddress?: ObjectId
   status?: UserStatus
   verify?: UserVerifyStatus
   verifyEmailToken?: string
@@ -31,7 +31,7 @@ export default class User {
   gender: Gender
   phoneNumber: string
   addresses: ObjectId[]
-  addressDefault: ObjectId | null
+  defaultAddress: ObjectId | null
   status: UserStatus
   verify: UserVerifyStatus
   verifyEmailToken: string
@@ -49,7 +49,7 @@ export default class User {
     gender,
     phoneNumber,
     addresses,
-    addressDefault,
+    defaultAddress,
     status,
     verify,
     verifyEmailToken,
@@ -67,7 +67,7 @@ export default class User {
     this.gender = gender || Gender.Male
     this.phoneNumber = phoneNumber || ''
     this.addresses = addresses || []
-    this.addressDefault = addressDefault || null
+    this.defaultAddress = defaultAddress || null
     this.status = status || UserStatus.Active
     this.verify = verify || UserVerifyStatus.Unverified
     this.verifyEmailToken = verifyEmailToken || ''

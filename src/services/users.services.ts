@@ -1,4 +1,5 @@
-import { ObjectId } from 'mongodb'
+import { ObjectId, WithId } from 'mongodb'
+import omit from 'lodash/omit'
 
 import { ENV_CONFIG } from '~/constants/config'
 import { TokenType, UserStatus, UserType, UserVerifyStatus } from '~/constants/enum'
@@ -134,7 +135,7 @@ class UserService {
             gender: 0,
             phoneNumber: 0,
             addresses: 0,
-            addressDefault: 0,
+            defaultAddress: 0,
             status: 0,
             verify: 0,
             verifyEmailToken: 0,
@@ -154,6 +155,42 @@ class UserService {
       accessToken,
       refreshToken,
       user: insertedUser
+    }
+  }
+
+  async login(user: WithId<User>) {
+    const { _id, type, status, verify } = user
+    const [accessToken, refreshToken] = await this.signAccessAndRefreshToken({
+      userId: _id.toString(),
+      type,
+      status,
+      verify
+    })
+    const { iat, exp } = await this.decodeRefreshToken(refreshToken)
+    await databaseService.refreshTokens.insertOne(
+      new RefreshToken({
+        token: refreshToken,
+        iat,
+        exp
+      })
+    )
+    const userConfig = omit(user, [
+      'password',
+      'avatar',
+      'type',
+      'gender',
+      'phoneNumber',
+      'addresses',
+      'defaultAddress',
+      'status',
+      'verify',
+      'verifyEmailToken',
+      'forgotPasswordToken'
+    ])
+    return {
+      accessToken,
+      refreshToken,
+      user: userConfig
     }
   }
 }
