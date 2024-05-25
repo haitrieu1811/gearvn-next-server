@@ -188,3 +188,45 @@ export const loginValidator = validate(
     ['body']
   )
 )
+
+export const verifyEmailValidator = validate(
+  checkSchema(
+    {
+      verifyEmailToken: {
+        trim: true,
+        custom: {
+          options: async (value: string, { req }) => {
+            if (!value) {
+              throw new ErrorWithStatus({
+                message: USERS_MESSAGES.VERIFY_EMAIL_TOKEN_IS_REQUIRED,
+                status: HttpStatusCode.Unauthorized
+              })
+            }
+            const user = await databaseService.users.findOne({
+              verifyEmailToken: value
+            })
+            if (!user) {
+              throw new ErrorWithStatus({
+                message: USERS_MESSAGES.VERIFY_EMAIL_TOKEN_DOES_NOT_EXIST,
+                status: HttpStatusCode.Unauthorized
+              })
+            }
+            try {
+              const decodedVerifyEmailToken = await verifyToken({
+                token: value,
+                secretOrPublicKey: ENV_CONFIG.JWT_VERIFY_EMAIL_TOKEN_SECRET
+              })
+              ;(req as Request).decodedVerifyEmailToken = decodedVerifyEmailToken
+            } catch (error) {
+              throw new ErrorWithStatus({
+                message: capitalize((error as JsonWebTokenError).message),
+                status: HttpStatusCode.Unauthorized
+              })
+            }
+          }
+        }
+      }
+    },
+    ['body']
+  )
+)

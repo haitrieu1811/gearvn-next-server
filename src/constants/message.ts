@@ -23,5 +23,9 @@ export const USERS_MESSAGES = {
   REFRESH_TOKEN_IS_REQUIRED: 'Refresh token là bắt buộc.',
   REFRESH_TOKEN_DOES_NOT_EXIST: 'Refresh token không tồn tại.',
   REFRESH_TOKEN_SUCCESS: 'Refresh token thành công.',
-  RESEND_EMAIL_VERIFY_SUCCESS: 'Gửi lại email xác minh thành công. Hãy kiểm tra email của bạn.'
+  RESEND_EMAIL_VERIFY_SUCCESS: 'Gửi lại email xác minh thành công. Hãy kiểm tra email của bạn.',
+  EMAIL_VERIFICATION_SUCCESS: 'Xác thực email thành công.',
+  VERIFY_EMAIL_TOKEN_IS_REQUIRED: 'Verify email token là bắt buộc.',
+  VERIFY_EMAIL_TOKEN_DOES_NOT_EXIST: 'Verify email token không tồn tại.',
+  USER_VERIFIED_BEFORE: 'Người dùng đã xác thực emai trước đó.'
 } as const

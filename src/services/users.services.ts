@@ -237,16 +237,16 @@ class UserService {
     }
   }
 
-  async resendEmailVerify(userId: string) {
+  async resendEmailVerify(userId: ObjectId) {
     const [verifyEmailToken, user] = await Promise.all([
-      this.signVerifyEmailToken(userId),
-      databaseService.users.findOne({ _id: new ObjectId(userId) })
+      this.signVerifyEmailToken(userId.toString()),
+      databaseService.users.findOne({ _id: userId })
     ])
     await Promise.all([
       sendVerifyEmail((user as WithId<User>).email, verifyEmailToken),
       databaseService.users.updateOne(
         {
-          _id: new ObjectId(userId)
+          _id: userId
         },
         {
           $set: {
@@ -259,6 +259,45 @@ class UserService {
       )
     ])
     return true
+  }
+
+  async verifyEmail(userId: ObjectId) {
+    const updatedUser = await databaseService.users.findOneAndUpdate(
+      {
+        _id: userId
+      },
+      {
+        $set: {
+          verifyEmailToken: '',
+          verify: UserVerifyStatus.Verified
+        },
+        $currentDate: {
+          updatedAt: true
+        }
+      },
+      {
+        returnDocument: 'after',
+        projection: {
+          _id: 1,
+          email: 1,
+          fullName: 1,
+          createdAt: 1,
+          updatedAt: 1
+        }
+      }
+    )
+    const { _id, type, status, verify } = updatedUser as WithId<User>
+    const [accessToken, refreshToken] = await this.signAccessAndRefreshToken({
+      userId: _id.toString(),
+      type,
+      status,
+      verify
+    })
+    return {
+      accessToken,
+      refreshToken,
+      user: updatedUser
+    }
   }
 }
 

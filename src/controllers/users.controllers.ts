@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
-import { WithId } from 'mongodb'
+import { ObjectId, WithId } from 'mongodb'
 
 import { USERS_MESSAGES } from '~/constants/message'
 import User from '~/models/databases/User.database'
@@ -48,8 +48,17 @@ export const refreshTokenController = async (
 
 export const resendEmailVerifyController = async (req: Request, res: Response) => {
   const { userId } = req.decodedAuthorization as TokenPayload
-  await userService.resendEmailVerify(userId)
+  await userService.resendEmailVerify(new ObjectId(userId))
   return res.json({
     message: USERS_MESSAGES.RESEND_EMAIL_VERIFY_SUCCESS
+  })
+}
+
+export const verifyEmailController = async (req: Request, res: Response) => {
+  const { userId } = req.decodedVerifyEmailToken as TokenPayload
+  const result = await userService.verifyEmail(new ObjectId(userId))
+  return res.json({
+    message: USERS_MESSAGES.EMAIL_VERIFICATION_SUCCESS,
+    data: result
   })
 }

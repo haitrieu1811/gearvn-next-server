@@ -5,14 +5,16 @@ import {
   logoutController,
   refreshTokenController,
   registerController,
-  resendEmailVerifyController
+  resendEmailVerifyController,
+  verifyEmailController
 } from '~/controllers/users.controllers'
 import { filterReqBodyMiddleware } from '~/middlewares/common.middlewares'
 import {
   accessTokenValidator,
   loginValidator,
   refreshTokenValidator,
-  registerValidator
+  registerValidator,
+  verifyEmailValidator
 } from '~/middlewares/users.middlewares'
 import { RegisterReqBody } from '~/models/requests/User.requests'
 import { wrapRequestHandler } from '~/utils/handler'
@@ -33,5 +35,7 @@ usersRouter.post('/logout', refreshTokenValidator, wrapRequestHandler(logoutCont
 usersRouter.post('/refresh-token', refreshTokenValidator, wrapRequestHandler(refreshTokenController))
 
 usersRouter.post('/resend-email-verify', accessTokenValidator, wrapRequestHandler(resendEmailVerifyController))
+
+usersRouter.post('/verify-email', verifyEmailValidator, wrapRequestHandler(verifyEmailController))
 
 export default usersRouter
