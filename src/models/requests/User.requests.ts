@@ -1,4 +1,4 @@
-import { UserStatus, UserType, UserVerifyStatus } from '~/constants/enum'
+import { Gender, UserStatus, UserType, UserVerifyStatus } from '~/constants/enum'
 
 export type TokenPayload = {
   userId: string
@@ -29,4 +29,11 @@ export type ResetPasswordReqBody = {
 
 export type ChangePasswordReqBody = {
   password: string
+}
+
+export type UpdateMeReqBody = {
+  fullName?: string
+  avatar?: string
+  gender?: Gender
+  phoneNumber?: string
 }

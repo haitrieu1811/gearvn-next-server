@@ -2,15 +2,21 @@ import { Request } from 'express'
 import { ParamSchema, checkSchema } from 'express-validator'
 import { JsonWebTokenError } from 'jsonwebtoken'
 import capitalize from 'lodash/capitalize'
+import { ObjectId } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
-import { HttpStatusCode } from '~/constants/enum'
-import { USERS_MESSAGES } from '~/constants/message'
+import { Gender, HttpStatusCode } from '~/constants/enum'
+import { GENERAL_MESSAGES, USERS_MESSAGES } from '~/constants/message'
+import { VIET_NAM_PHONE_NUMBER_REGEX } from '~/constants/regex'
 import { ErrorWithStatus } from '~/models/Errors'
+import { TokenPayload } from '~/models/requests/User.requests'
 import databaseService from '~/services/database.services'
 import { hashPassword } from '~/utils/crypto'
 import { verifyToken } from '~/utils/jwt'
+import { numberEnumToArray } from '~/utils/utils'
 import { validate } from '~/utils/validation'
+
+const genders = numberEnumToArray(Gender)
 
 const emailSchema: ParamSchema = {
   trim: true,
@@ -313,6 +319,57 @@ export const changePasswordValidator = validate(
     {
       password: passwordSchema,
       confirmPassword: confirmPasswordSchema
+    },
+    ['body']
+  )
+)
+
+export const updateMeValidator = validate(
+  checkSchema(
+    {
+      fullName: {
+        optional: true,
+        trim: true
+      },
+      gender: {
+        optional: true,
+        isIn: {
+          options: [genders],
+          errorMessage: USERS_MESSAGES.INVALID_GENDER
+        }
+      },
+      phoneNumber: {
+        optional: true,
+        trim: true,
+        custom: {
+          options: async (value: string, { req }) => {
+            if (!VIET_NAM_PHONE_NUMBER_REGEX.test(value)) {
+              throw new Error(USERS_MESSAGES.INVALID_PHONE_NUMBER)
+            }
+            const userByPhoneNumber = await databaseService.users.findOne({ phoneNumber: value })
+            const { userId } = (req as Request).decodedAuthorization as TokenPayload
+            if (userByPhoneNumber && userByPhoneNumber._id.toString() !== userId) {
+              throw new Error(USERS_MESSAGES.PHONE_NUMBER_ALREADY_EXIST)
+            }
+            return true
+          }
+        }
+      },
+      avatar: {
+        optional: true,
+        trim: true,
+        custom: {
+          options: (value: string) => {
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                message: GENERAL_MESSAGES.INVALID_IMAGE_ID,
+                status: HttpStatusCode.BadRequest
+              })
+            }
+            return true
+          }
+        }
+      }
     },
     ['body']
   )

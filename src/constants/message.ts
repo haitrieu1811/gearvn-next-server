@@ -1,7 +1,8 @@
 export const GENERAL_MESSAGES = {
   VALIDATION_ERROR: 'Lỗi xác nhận.',
   PAGE_MUST_BE_A_POSITIVE_INTEGER: 'Page phải là số nguyên dương.',
-  LIMIT_MUST_BE_A_POSITIVE_INTEGER: 'Limit phải là số nguyên dương.'
+  LIMIT_MUST_BE_A_POSITIVE_INTEGER: 'Limit phải là số nguyên dương.',
+  INVALID_IMAGE_ID: 'Image id không hợp lệ.'
 } as const
 
 export const USERS_MESSAGES = {
@@ -34,5 +35,9 @@ export const USERS_MESSAGES = {
   RESET_PASSWORD_SUCCESS: 'Đặt lại mật khẩu thành công.',
   FORGOT_PASSWORD_TOKEN_IS_REQUIRED: 'Forgot password token là bắt buộc.',
   FORGOT_PASSWORD_TOKEN_DOES_NOT_EXIST: 'Forgot password token không tồn tại.',
-  CHANGE_PASSWORD_SUCCESS: 'Đổi mật khẩu thành công.'
+  CHANGE_PASSWORD_SUCCESS: 'Đổi mật khẩu thành công.',
+  INVALID_GENDER: 'Giới tính không hợp lệ.',
+  INVALID_PHONE_NUMBER: 'Số điện thoại không hợp lệ',
+  UPDATE_ME_SUCCESS: 'Cập nhật tài khoản thành công.',
+  PHONE_NUMBER_ALREADY_EXIST: 'Số điện thoại đã tồn tại.'
 } as const

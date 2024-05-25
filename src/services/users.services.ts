@@ -1,11 +1,13 @@
 import pick from 'lodash/pick'
+import omitBy from 'lodash/omitBy'
+import isUndefined from 'lodash/isUndefined'
 import { ObjectId, WithId } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
 import { TokenType, UserStatus, UserType, UserVerifyStatus } from '~/constants/enum'
 import RefreshToken from '~/models/databases/RefreshToken.database'
 import User from '~/models/databases/User.database'
-import { RegisterReqBody } from '~/models/requests/User.requests'
+import { RegisterReqBody, UpdateMeReqBody } from '~/models/requests/User.requests'
 import databaseService from '~/services/database.services'
 import { hashPassword } from '~/utils/crypto'
 import { sendForgotPasswordEmail, sendVerifyEmail } from '~/utils/email'
@@ -361,6 +363,41 @@ class UserService {
           _id: 1,
           fullName: 1,
           email: 1,
+          createdAt: 1,
+          updatedAt: 1
+        }
+      }
+    )
+    return {
+      user: updatedUser
+    }
+  }
+
+  async updateMe({ data, userId }: { data: UpdateMeReqBody; userId: ObjectId }) {
+    const configuredData = omitBy(
+      {
+        ...data,
+        avatar: data.avatar ? new ObjectId(data.avatar) : undefined
+      },
+      isUndefined
+    )
+    const updatedUser = await databaseService.users.findOneAndUpdate(
+      {
+        _id: userId
+      },
+      {
+        $set: configuredData,
+        $currentDate: {
+          updatedAt: true
+        }
+      },
+      {
+        returnDocument: 'after',
+        projection: {
+          _id: 1,
+          fullName: 1,
+          email: 1,
+          phoneNumber: 1,
           createdAt: 1,
           updatedAt: 1
         }

@@ -9,6 +9,7 @@ import {
   registerController,
   resendEmailVerifyController,
   resetPasswordController,
+  updateMeController,
   verifyEmailController
 } from '~/controllers/users.controllers'
 import { filterReqBodyMiddleware } from '~/middlewares/common.middlewares'
@@ -21,9 +22,10 @@ import {
   refreshTokenValidator,
   registerValidator,
   resetPasswordValidator,
+  updateMeValidator,
   verifyEmailValidator
 } from '~/middlewares/users.middlewares'
-import { RegisterReqBody } from '~/models/requests/User.requests'
+import { RegisterReqBody, UpdateMeReqBody } from '~/models/requests/User.requests'
 import { wrapRequestHandler } from '~/utils/handler'
 
 const usersRouter = Router()
@@ -59,6 +61,14 @@ usersRouter.post(
   accessTokenValidator,
   changePasswordValidator,
   wrapRequestHandler(changePasswordController)
+)
+
+usersRouter.patch(
+  '/me',
+  accessTokenValidator,
+  updateMeValidator,
+  filterReqBodyMiddleware<UpdateMeReqBody>(['avatar', 'fullName', 'gender', 'phoneNumber']),
+  wrapRequestHandler(updateMeController)
 )
 
 export default usersRouter

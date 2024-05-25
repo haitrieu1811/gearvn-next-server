@@ -10,7 +10,8 @@ import {
   RefreshTokenReqBody,
   RegisterReqBody,
   ResetPasswordReqBody,
-  TokenPayload
+  TokenPayload,
+  UpdateMeReqBody
 } from '~/models/requests/User.requests'
 import userService from '~/services/users.services'
 
@@ -108,6 +109,18 @@ export const changePasswordController = async (
   })
   return res.json({
     message: USERS_MESSAGES.CHANGE_PASSWORD_SUCCESS,
+    data: result
+  })
+}
+
+export const updateMeController = async (req: Request<ParamsDictionary, any, UpdateMeReqBody>, res: Response) => {
+  const { userId } = req.decodedAuthorization as TokenPayload
+  const result = await userService.updateMe({
+    data: req.body,
+    userId: new ObjectId(userId)
+  })
+  return res.json({
+    message: USERS_MESSAGES.UPDATE_ME_SUCCESS,
     data: result
   })
 }
