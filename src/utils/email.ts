@@ -89,7 +89,7 @@ export const sendForgotPasswordEmail = async (toAddress: string, forgotPasswordT
       .replace('{{title}}', 'Reset Your Password')
       .replace(
         '{{content}}',
-        `<p>If you are an account registrant at <a href='${ENV_CONFIG.CLIENT_URL}'>NAEE</a>, please click on the link below to reset your password.</p><p>If you are not the account creator, please ignore this email and do not click on the link below.</p>`
+        `<p>If you are an account registrant at <a href='${ENV_CONFIG.CLIENT_URL}'>Gearvn Next</a>, please click on the link below to reset your password.</p><p>If you are not the account creator, please ignore this email and do not click on the link below.</p>`
       )
       .replace('{{link}}', `${ENV_CONFIG.CLIENT_URL}/reset-password?token=${forgotPasswordToken}`)
       .replace('{{linkText}}', 'Continue Reset Password')

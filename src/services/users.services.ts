@@ -1,14 +1,14 @@
+import pick from 'lodash/pick'
 import { ObjectId, WithId } from 'mongodb'
-import omit from 'lodash/omit'
 
 import { ENV_CONFIG } from '~/constants/config'
 import { TokenType, UserStatus, UserType, UserVerifyStatus } from '~/constants/enum'
 import RefreshToken from '~/models/databases/RefreshToken.database'
 import User from '~/models/databases/User.database'
-import { RegisterReqBody } from '~/models/requests/User.requests'
+import { RegisterReqBody, ResetPasswordReqBody } from '~/models/requests/User.requests'
 import databaseService from '~/services/database.services'
 import { hashPassword } from '~/utils/crypto'
-import { sendVerifyEmail } from '~/utils/email'
+import { sendForgotPasswordEmail, sendVerifyEmail } from '~/utils/email'
 import { signToken, verifyToken } from '~/utils/jwt'
 
 type SignToken = {
@@ -129,17 +129,11 @@ class UserService {
         },
         {
           projection: {
-            password: 0,
-            avatar: 0,
-            type: 0,
-            gender: 0,
-            phoneNumber: 0,
-            addresses: 0,
-            defaultAddress: 0,
-            status: 0,
-            verify: 0,
-            verifyEmailToken: 0,
-            forgotPasswordToken: 0
+            _id: 1,
+            fullName: 1,
+            email: 1,
+            createdAt: 1,
+            updatedAt: 1
           }
         }
       ),
@@ -174,19 +168,7 @@ class UserService {
         exp
       })
     )
-    const userConfig = omit(user, [
-      'password',
-      'avatar',
-      'type',
-      'gender',
-      'phoneNumber',
-      'addresses',
-      'defaultAddress',
-      'status',
-      'verify',
-      'verifyEmailToken',
-      'forgotPasswordToken'
-    ])
+    const userConfig = pick(user, ['_id', 'email', 'fullName', 'createdAt', 'updatedAt'])
     return {
       accessToken,
       refreshToken,
@@ -281,6 +263,66 @@ class UserService {
           _id: 1,
           email: 1,
           fullName: 1,
+          createdAt: 1,
+          updatedAt: 1
+        }
+      }
+    )
+    const { _id, type, status, verify } = updatedUser as WithId<User>
+    const [accessToken, refreshToken] = await this.signAccessAndRefreshToken({
+      userId: _id.toString(),
+      type,
+      status,
+      verify
+    })
+    return {
+      accessToken,
+      refreshToken,
+      user: updatedUser
+    }
+  }
+
+  async forgotPassword({ userId, email }: { userId: ObjectId; email: string }) {
+    const forgotPasswordToken = await this.signForgotPasswordToken(userId.toString())
+    await Promise.all([
+      sendForgotPasswordEmail(email, forgotPasswordToken),
+      databaseService.users.updateOne(
+        {
+          _id: new ObjectId(userId)
+        },
+        {
+          $set: {
+            forgotPasswordToken
+          },
+          $currentDate: {
+            updatedAt: true
+          }
+        }
+      )
+    ])
+    return true
+  }
+
+  async resetPassword({ password, userId }: { password: string; userId: ObjectId }) {
+    const updatedUser = await databaseService.users.findOneAndUpdate(
+      {
+        _id: userId
+      },
+      {
+        $set: {
+          password: hashPassword(password),
+          forgotPasswordToken: ''
+        },
+        $currentDate: {
+          updatedAt: true
+        }
+      },
+      {
+        returnDocument: 'after',
+        projection: {
+          _id: 1,
+          fullName: 1,
+          email: 1,
           createdAt: 1,
           updatedAt: 1
         }

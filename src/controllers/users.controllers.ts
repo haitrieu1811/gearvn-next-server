@@ -4,7 +4,13 @@ import { ObjectId, WithId } from 'mongodb'
 
 import { USERS_MESSAGES } from '~/constants/message'
 import User from '~/models/databases/User.database'
-import { LogoutReqBody, RefreshTokenReqBody, RegisterReqBody, TokenPayload } from '~/models/requests/User.requests'
+import {
+  LogoutReqBody,
+  RefreshTokenReqBody,
+  RegisterReqBody,
+  ResetPasswordReqBody,
+  TokenPayload
+} from '~/models/requests/User.requests'
 import userService from '~/services/users.services'
 
 export const registerController = async (req: Request<ParamsDictionary, any, RegisterReqBody>, res: Response) => {
@@ -59,6 +65,33 @@ export const verifyEmailController = async (req: Request, res: Response) => {
   const result = await userService.verifyEmail(new ObjectId(userId))
   return res.json({
     message: USERS_MESSAGES.EMAIL_VERIFICATION_SUCCESS,
+    data: result
+  })
+}
+
+export const forgotPasswordController = async (req: Request, res: Response) => {
+  const user = req.user as WithId<User>
+  const { _id, email } = user
+  await userService.forgotPassword({
+    userId: _id,
+    email
+  })
+  return res.json({
+    message: USERS_MESSAGES.FORGOT_PASSWORD_SUCCESS
+  })
+}
+
+export const resetPasswordController = async (
+  req: Request<ParamsDictionary, any, ResetPasswordReqBody>,
+  res: Response
+) => {
+  const { userId } = req.decodedForgotPasswordToken as TokenPayload
+  const result = await userService.resetPassword({
+    password: req.body.password,
+    userId: new ObjectId(userId)
+  })
+  return res.json({
+    message: USERS_MESSAGES.RESET_PASSWORD_SUCCESS,
     data: result
   })
 }

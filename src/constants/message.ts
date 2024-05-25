@@ -27,5 +27,11 @@ export const USERS_MESSAGES = {
   EMAIL_VERIFICATION_SUCCESS: 'Xác thực email thành công.',
   VERIFY_EMAIL_TOKEN_IS_REQUIRED: 'Verify email token là bắt buộc.',
   VERIFY_EMAIL_TOKEN_DOES_NOT_EXIST: 'Verify email token không tồn tại.',
-  USER_VERIFIED_BEFORE: 'Người dùng đã xác thực emai trước đó.'
+  USER_VERIFIED_BEFORE: 'Người dùng đã xác thực emai trước đó.',
+  EMAIL_DOES_NOT_EXIST: 'Email không tồn tại trên hệ thống.',
+  FORGOT_PASSWORD_SUCCESS:
+    'Chúng tôi đã gửi email đặt lại mật khẩu vào email bạn vừa nhập. Vui lòng kiểm tra và đặt lại mật khẩu.',
+  RESET_PASSWORD_SUCCESS: 'Đặt lại mật khẩu thành công.',
+  FORGOT_PASSWORD_TOKEN_IS_REQUIRED: 'Forgot password token là bắt buộc.',
+  FORGOT_PASSWORD_TOKEN_DOES_NOT_EXIST: 'Forgot password token không tồn tại.'
 } as const
