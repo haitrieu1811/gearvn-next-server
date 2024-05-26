@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
-import { checkSchema } from 'express-validator'
+import { ParamSchema, checkSchema } from 'express-validator'
+import { ObjectId } from 'mongodb'
 
 import { HttpStatusCode, RoleField, RoleType } from '~/constants/enum'
 import { ROLES_MESSAGES } from '~/constants/message'
@@ -13,47 +14,31 @@ import { validate } from '~/utils/validation'
 const roleTypes = numberEnumToArray(RoleType)
 const roleFields = numberEnumToArray(RoleField)
 
+const roleTypeSchema: ParamSchema = {
+  notEmpty: {
+    errorMessage: ROLES_MESSAGES.ROLE_TYPE_IS_REQUIRED
+  },
+  isIn: {
+    options: [roleTypes],
+    errorMessage: ROLES_MESSAGES.INVALID_ROLE_TYPE
+  }
+}
+
+const roleFieldSchema: ParamSchema = {
+  notEmpty: {
+    errorMessage: ROLES_MESSAGES.ROLE_FIELD_IS_REQUIRED
+  },
+  isIn: {
+    options: [roleFields],
+    errorMessage: ROLES_MESSAGES.INVALID_ROLE_FIELD
+  }
+}
+
 export const createRoleValidator = validate(
   checkSchema(
     {
-      type: {
-        custom: {
-          options: (value) => {
-            if (value === undefined) {
-              throw new ErrorWithStatus({
-                message: ROLES_MESSAGES.ROLE_TYPE_IS_REQUIRED,
-                status: HttpStatusCode.BadRequest
-              })
-            }
-            if (!roleTypes.includes(value)) {
-              throw new ErrorWithStatus({
-                message: ROLES_MESSAGES.INVALID_ROLE_TYPE,
-                status: HttpStatusCode.BadRequest
-              })
-            }
-            return true
-          }
-        }
-      },
-      field: {
-        custom: {
-          options: (value) => {
-            if (value === undefined) {
-              throw new ErrorWithStatus({
-                message: ROLES_MESSAGES.ROLE_FIELD_IS_REQUIRED,
-                status: HttpStatusCode.BadRequest
-              })
-            }
-            if (!roleFields.includes(value)) {
-              throw new ErrorWithStatus({
-                message: ROLES_MESSAGES.INVALID_ROLE_FIELD,
-                status: HttpStatusCode.BadRequest
-              })
-            }
-            return true
-          }
-        }
-      },
+      type: roleTypeSchema,
+      field: roleFieldSchema,
       name: {
         trim: true,
         notEmpty: {
@@ -89,3 +74,64 @@ export const roleNotExistValidator = async (
   }
   next()
 }
+
+export const roleIdValidator = validate(
+  checkSchema(
+    {
+      roleId: {
+        trim: true,
+        custom: {
+          options: async (value: string) => {
+            if (!value) {
+              throw new ErrorWithStatus({
+                message: ROLES_MESSAGES.ROLE_ID_IS_REQUIRED,
+                status: HttpStatusCode.BadRequest
+              })
+            }
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                message: ROLES_MESSAGES.INVALID_ROLE_ID,
+                status: HttpStatusCode.BadRequest
+              })
+            }
+            const role = await databaseService.roles.findOne({ _id: new ObjectId(value) })
+            if (!role) {
+              throw new ErrorWithStatus({
+                message: ROLES_MESSAGES.ROLE_NOT_FOUND,
+                status: HttpStatusCode.NotFound
+              })
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['params']
+  )
+)
+
+export const updateRoleValidator = validate(
+  checkSchema(
+    {
+      type: {
+        ...roleTypeSchema,
+        optional: true,
+        notEmpty: undefined
+      },
+      field: {
+        ...roleFieldSchema,
+        optional: true,
+        notEmpty: undefined
+      },
+      name: {
+        optional: true,
+        trim: true
+      },
+      description: {
+        trim: true,
+        optional: true
+      }
+    },
+    ['body']
+  )
+)
