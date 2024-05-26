@@ -2,8 +2,9 @@ import { Request, Response } from 'express'
 import { ObjectId } from 'mongodb'
 
 import { FILES_MESSAGES } from '~/constants/message'
-import { FileIdReqParams } from '~/models/requests/File.requests'
+import { FileIdReqParams, ImageNameReqParams } from '~/models/requests/File.requests'
 import fileService from '~/services/files.services'
+import { sendFileFromS3 } from '~/utils/s3'
 
 export const uploadImageController = async (req: Request, res: Response) => {
   try {
@@ -26,4 +27,9 @@ export const deleteImageController = async (req: Request<FileIdReqParams>, res: 
   } catch (error) {
     console.log(error)
   }
+}
+
+export const serveImageController = (req: Request<ImageNameReqParams>, res: Response) => {
+  const { name } = req.params
+  sendFileFromS3(res, `images/${name}`)
 }
