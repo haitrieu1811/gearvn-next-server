@@ -46,7 +46,8 @@ export const USERS_MESSAGES = {
   INVALID_USER_TYPE: 'User type không hợp lệ.',
   INVALID_USER_STATUS: 'User status không hợp lệ.',
   INVALID_USER_VERIFY_STATUS: 'User verify status không hợp lệ.',
-  ACCOUNT_LOCKED: 'Tài khoản đang bị khóa.'
+  ACCOUNT_LOCKED: 'Tài khoản đang bị khóa.',
+  UNVERIFIED_USER: 'Tài khoản chưa được xác minh.'
 } as const
 
 export const FILES_MESSAGES = {
@@ -57,4 +58,14 @@ export const FILES_MESSAGES = {
   FILE_ID_IS_REQUIRED: 'File id là bắt buộc.',
   INVALID_FILE_ID: 'File id không hợp lệ.',
   FILE_NOT_FOUND: 'Không tìm thấy file.'
+} as const
+
+export const ROLES_MESSAGES = {
+  CREATE_ROLE_SUCCESS: 'Tạo quyền mới thành công.',
+  ROLE_TYPE_IS_REQUIRED: 'Role type là bắt buộc.',
+  INVALID_ROLE_TYPE: 'Role type không hợp lệ.',
+  ROLE_FIELD_IS_REQUIRED: 'Role field là bắt buộc.',
+  INVALID_ROLE_FIELD: 'Role field là bắt buộc.',
+  ROLE_NAME_IS_REQUIRED: 'Tên quyền là bắt buộc.',
+  ROLE_ALREADY_EXIST: 'Quyền đã tồn tại.'
 } as const

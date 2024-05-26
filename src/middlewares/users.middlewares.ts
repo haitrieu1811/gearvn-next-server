@@ -403,6 +403,19 @@ export const isAdminValidator = (req: Request, _: Response, next: NextFunction) 
   next()
 }
 
+export const isVerifiedUserValidator = (req: Request, _: Response, next: NextFunction) => {
+  const { userVerifyStatus } = req.decodedAuthorization as TokenPayload
+  if (userVerifyStatus === UserVerifyStatus.Unverified) {
+    next(
+      new ErrorWithStatus({
+        message: USERS_MESSAGES.UNVERIFIED_USER,
+        status: HttpStatusCode.Forbidden
+      })
+    )
+  }
+  next()
+}
+
 export const getAllUsersValidator = validate(
   checkSchema(
     {
