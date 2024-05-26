@@ -2,7 +2,8 @@ export const GENERAL_MESSAGES = {
   VALIDATION_ERROR: 'Lỗi xác nhận.',
   PAGE_MUST_BE_A_POSITIVE_INTEGER: 'Page phải là số nguyên dương.',
   LIMIT_MUST_BE_A_POSITIVE_INTEGER: 'Limit phải là số nguyên dương.',
-  INVALID_IMAGE_ID: 'Image id không hợp lệ.'
+  INVALID_IMAGE_ID: 'Image id không hợp lệ.',
+  PERMISSION_DENIED: 'Truy cập bị từ chối.'
 } as const
 
 export const USERS_MESSAGES = {
@@ -40,7 +41,11 @@ export const USERS_MESSAGES = {
   INVALID_PHONE_NUMBER: 'Số điện thoại không hợp lệ',
   UPDATE_ME_SUCCESS: 'Cập nhật tài khoản thành công.',
   PHONE_NUMBER_ALREADY_EXIST: 'Số điện thoại đã tồn tại.',
-  GET_ME_SUCCESS: 'Lấy thông tin của tôi thành công.'
+  GET_ME_SUCCESS: 'Lấy thông tin của tôi thành công.',
+  GET_ALL_USERS_SUCCESS: 'Lấy tất cả người dùng trên hệ thống thành công.',
+  INVALID_USER_TYPE: 'User type không hợp lệ.',
+  INVALID_USER_STATUS: 'User status không hợp lệ.',
+  INVALID_USER_VERIFY_STATUS: 'User verify status không hợp lệ.'
 } as const
 
 export const FILES_MESSAGES = {

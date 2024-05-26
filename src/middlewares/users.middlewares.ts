@@ -1,11 +1,11 @@
-import { Request } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { ParamSchema, checkSchema } from 'express-validator'
 import { JsonWebTokenError } from 'jsonwebtoken'
 import capitalize from 'lodash/capitalize'
 import { ObjectId } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
-import { Gender, HttpStatusCode } from '~/constants/enum'
+import { Gender, HttpStatusCode, UserStatus, UserType, UserVerifyStatus } from '~/constants/enum'
 import { GENERAL_MESSAGES, USERS_MESSAGES } from '~/constants/message'
 import { VIET_NAM_PHONE_NUMBER_REGEX } from '~/constants/regex'
 import { ErrorWithStatus } from '~/models/Errors'
@@ -17,6 +17,9 @@ import { numberEnumToArray } from '~/utils/utils'
 import { validate } from '~/utils/validation'
 
 const genders = numberEnumToArray(Gender)
+const userTypes = numberEnumToArray(UserType)
+const userStatuses = numberEnumToArray(UserStatus)
+const userVerifyStatuses = numberEnumToArray(UserVerifyStatus)
 
 const emailSchema: ParamSchema = {
   trim: true,
@@ -61,6 +64,21 @@ const confirmPasswordSchema: ParamSchema = {
     options: (value: string, { req }) => {
       if (value !== req.body.password) {
         throw new Error(USERS_MESSAGES.CONFIRM_PASSWORD_DO_NOT_MATCH)
+      }
+      return true
+    }
+  }
+}
+
+const genderSchema: ParamSchema = {
+  optional: true,
+  custom: {
+    options: (value) => {
+      if (!genders.includes(value)) {
+        throw new ErrorWithStatus({
+          message: USERS_MESSAGES.INVALID_GENDER,
+          status: HttpStatusCode.BadRequest
+        })
       }
       return true
     }
@@ -331,13 +349,7 @@ export const updateMeValidator = validate(
         optional: true,
         trim: true
       },
-      gender: {
-        optional: true,
-        isIn: {
-          options: [genders],
-          errorMessage: USERS_MESSAGES.INVALID_GENDER
-        }
-      },
+      gender: genderSchema,
       phoneNumber: {
         optional: true,
         trim: true,
@@ -372,5 +384,69 @@ export const updateMeValidator = validate(
       }
     },
     ['body']
+  )
+)
+
+export const isAdminValidator = (req: Request, _: Response, next: NextFunction) => {
+  const { userType } = req.decodedAuthorization as TokenPayload
+  if (userType !== UserType.Admin) {
+    next(
+      new ErrorWithStatus({
+        message: GENERAL_MESSAGES.PERMISSION_DENIED,
+        status: HttpStatusCode.Forbidden
+      })
+    )
+  }
+  next()
+}
+
+export const getAllUsersValidator = validate(
+  checkSchema(
+    {
+      type: {
+        optional: true,
+        custom: {
+          options: (value) => {
+            if (!userTypes.includes(value)) {
+              throw new ErrorWithStatus({
+                message: USERS_MESSAGES.INVALID_USER_TYPE,
+                status: HttpStatusCode.BadRequest
+              })
+            }
+            return true
+          }
+        }
+      },
+      status: {
+        optional: true,
+        custom: {
+          options: (value) => {
+            if (!userStatuses.includes(value)) {
+              throw new ErrorWithStatus({
+                message: USERS_MESSAGES.INVALID_USER_STATUS,
+                status: HttpStatusCode.BadRequest
+              })
+            }
+            return true
+          }
+        }
+      },
+      verify: {
+        optional: true,
+        custom: {
+          options: (value) => {
+            if (!userVerifyStatuses.includes(value)) {
+              throw new ErrorWithStatus({
+                message: USERS_MESSAGES.INVALID_USER_VERIFY_STATUS,
+                status: HttpStatusCode.BadRequest
+              })
+            }
+            return true
+          }
+        }
+      },
+      gender: genderSchema
+    },
+    ['query']
   )
 )

@@ -1,4 +1,5 @@
 import { Gender, UserStatus, UserType, UserVerifyStatus } from '~/constants/enum'
+import { PaginationReqQuery } from '~/models/requests/Common.requests'
 
 export type TokenPayload = {
   userId: string
@@ -36,4 +37,11 @@ export type UpdateMeReqBody = {
   avatar?: string
   gender?: Gender
   phoneNumber?: string
+}
+
+export type GetAllUsersReqQuery = PaginationReqQuery & {
+  type?: UserType
+  gender?: Gender
+  status?: UserStatus
+  verify?: UserVerifyStatus
 }

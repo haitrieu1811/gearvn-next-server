@@ -3,6 +3,7 @@ import { Router } from 'express'
 import {
   changePasswordController,
   forgotPasswordController,
+  getAllUsersController,
   getMeController,
   loginController,
   logoutController,
@@ -13,12 +14,14 @@ import {
   updateMeController,
   verifyEmailController
 } from '~/controllers/users.controllers'
-import { filterReqBodyMiddleware } from '~/middlewares/common.middlewares'
+import { filterReqBodyMiddleware, paginationValidator } from '~/middlewares/common.middlewares'
 import {
   accessTokenValidator,
   changePasswordValidator,
   forgotPasswordTokenValidator,
   forgotPasswordValidator,
+  getAllUsersValidator,
+  isAdminValidator,
   loginValidator,
   refreshTokenValidator,
   registerValidator,
@@ -73,5 +76,14 @@ usersRouter.patch(
 )
 
 usersRouter.get('/me', accessTokenValidator, wrapRequestHandler(getMeController))
+
+usersRouter.get(
+  '/all',
+  accessTokenValidator,
+  isAdminValidator,
+  paginationValidator,
+  getAllUsersValidator,
+  wrapRequestHandler(getAllUsersController)
+)
 
 export default usersRouter

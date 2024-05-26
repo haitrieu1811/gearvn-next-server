@@ -6,6 +6,7 @@ import { USERS_MESSAGES } from '~/constants/message'
 import User from '~/models/databases/User.database'
 import {
   ChangePasswordReqBody,
+  GetAllUsersReqQuery,
   LogoutReqBody,
   RefreshTokenReqBody,
   RegisterReqBody,
@@ -131,5 +132,19 @@ export const getMeController = async (req: Request, res: Response) => {
   return res.json({
     message: USERS_MESSAGES.GET_ME_SUCCESS,
     data: result
+  })
+}
+
+export const getAllUsersController = async (
+  req: Request<ParamsDictionary, any, any, GetAllUsersReqQuery>,
+  res: Response
+) => {
+  const { users, ...pagination } = await userService.getAllUsers(req.query)
+  return res.json({
+    message: USERS_MESSAGES.GET_ALL_USERS_SUCCESS,
+    data: {
+      users,
+      pagination
+    }
   })
 }
