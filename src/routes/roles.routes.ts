@@ -1,6 +1,11 @@
 import { Router } from 'express'
 
-import { createRoleController, getAllRolesController, updateRoleController } from '~/controllers/roles.controllers'
+import {
+  createRoleController,
+  getAllRolesController,
+  getRoleDetailController,
+  updateRoleController
+} from '~/controllers/roles.controllers'
 import { filterReqBodyMiddleware, paginationValidator } from '~/middlewares/common.middlewares'
 import {
   createRoleValidator,
@@ -42,6 +47,15 @@ rolesRouter.get(
   isAdminValidator,
   paginationValidator,
   wrapRequestHandler(getAllRolesController)
+)
+
+rolesRouter.get(
+  '/:roleId',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  isAdminValidator,
+  roleIdValidator,
+  wrapRequestHandler(getRoleDetailController)
 )
 
 export default rolesRouter

@@ -65,6 +65,22 @@ class RoleService {
       totalPages: Math.ceil(totalRows / limit)
     }
   }
+
+  async findById(roleId: ObjectId) {
+    const role = await databaseService.roles.findOne(
+      {
+        _id: roleId
+      },
+      {
+        projection: {
+          userId: 0
+        }
+      }
+    )
+    return {
+      role
+    }
+  }
 }
 
 const roleService = new RoleService()

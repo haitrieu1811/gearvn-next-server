@@ -38,3 +38,11 @@ export const getAllRolesController = async (
     }
   })
 }
+
+export const getRoleDetailController = async (req: Request<RoleIdReqParams>, res: Response) => {
+  const result = await roleService.findById(new ObjectId(req.params.roleId))
+  return res.json({
+    message: ROLES_MESSAGES.GET_ROLE_DETAIL_SUCCESS,
+    data: result
+  })
+}
