@@ -39,7 +39,8 @@ export const USERS_MESSAGES = {
   INVALID_GENDER: 'Giới tính không hợp lệ.',
   INVALID_PHONE_NUMBER: 'Số điện thoại không hợp lệ',
   UPDATE_ME_SUCCESS: 'Cập nhật tài khoản thành công.',
-  PHONE_NUMBER_ALREADY_EXIST: 'Số điện thoại đã tồn tại.'
+  PHONE_NUMBER_ALREADY_EXIST: 'Số điện thoại đã tồn tại.',
+  GET_ME_SUCCESS: 'Lấy thông tin của tôi thành công.'
 } as const
 
 export const FILES_MESSAGES = {

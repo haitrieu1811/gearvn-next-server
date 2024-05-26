@@ -3,6 +3,7 @@ import { Router } from 'express'
 import {
   changePasswordController,
   forgotPasswordController,
+  getMeController,
   loginController,
   logoutController,
   refreshTokenController,
@@ -70,5 +71,7 @@ usersRouter.patch(
   filterReqBodyMiddleware<UpdateMeReqBody>(['avatar', 'fullName', 'gender', 'phoneNumber']),
   wrapRequestHandler(updateMeController)
 )
+
+usersRouter.get('/me', accessTokenValidator, wrapRequestHandler(getMeController))
 
 export default usersRouter

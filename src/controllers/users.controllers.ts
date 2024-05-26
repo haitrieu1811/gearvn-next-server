@@ -124,3 +124,12 @@ export const updateMeController = async (req: Request<ParamsDictionary, any, Upd
     data: result
   })
 }
+
+export const getMeController = async (req: Request, res: Response) => {
+  const { userId } = req.decodedAuthorization as TokenPayload
+  const result = await userService.getMe(new ObjectId(userId))
+  return res.json({
+    message: USERS_MESSAGES.GET_ME_SUCCESS,
+    data: result
+  })
+}

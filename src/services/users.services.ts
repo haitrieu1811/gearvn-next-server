@@ -1,6 +1,5 @@
 import isUndefined from 'lodash/isUndefined'
 import omitBy from 'lodash/omitBy'
-import pick from 'lodash/pick'
 import { ObjectId, WithId } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
@@ -109,6 +108,78 @@ class UserService {
     })
   }
 
+  async aggregateLoggedUser(userId: ObjectId) {
+    const users = await databaseService.users
+      .aggregate([
+        {
+          $match: {
+            _id: userId
+          }
+        },
+        {
+          $lookup: {
+            from: 'files',
+            localField: 'avatar',
+            foreignField: '_id',
+            as: 'avatar'
+          }
+        },
+        {
+          $unwind: {
+            path: '$avatar',
+            preserveNullAndEmptyArrays: true
+          }
+        },
+        {
+          $addFields: {
+            avatar: {
+              $cond: {
+                if: '$avatar',
+                then: {
+                  $concat: [ENV_CONFIG.HOST, '/', ENV_CONFIG.STATIC_IMAGES_PATH, '/', '$avatar.name']
+                },
+                else: ''
+              }
+            }
+          }
+        },
+        {
+          $group: {
+            _id: '$_id',
+            email: {
+              $first: '$email'
+            },
+            fullName: {
+              $first: '$fullName'
+            },
+            avatar: {
+              $first: '$avatar'
+            },
+            type: {
+              $first: '$type'
+            },
+            gender: {
+              $first: '$gender'
+            },
+            status: {
+              $first: '$status'
+            },
+            verify: {
+              $first: '$verify'
+            },
+            createdAt: {
+              $first: '$createdAt'
+            },
+            updatedAt: {
+              $first: '$updatedAt'
+            }
+          }
+        }
+      ])
+      .toArray()
+    return users[0]
+  }
+
   async register(data: RegisterReqBody) {
     const userId = new ObjectId()
     const verifyEmailToken = await this.signVerifyEmailToken(userId.toString())
@@ -155,8 +226,8 @@ class UserService {
     }
   }
 
-  async login(user: WithId<User>) {
-    const { _id, type, status, verify } = user
+  async login(userInput: WithId<User>) {
+    const { _id, type, status, verify } = userInput
     const [accessToken, refreshToken] = await this.signAccessAndRefreshToken({
       userId: _id.toString(),
       type,
@@ -171,11 +242,11 @@ class UserService {
         exp
       })
     )
-    const userConfig = pick(user, ['_id', 'email', 'fullName', 'createdAt', 'updatedAt'])
+    const user = await this.aggregateLoggedUser(_id)
     return {
       accessToken,
       refreshToken,
-      user: userConfig
+      user
     }
   }
 
@@ -401,22 +472,16 @@ class UserService {
     if (updatedUser && updatedUser.avatar && configuredData.avatar) {
       await fileService.deleteImage(updatedUser.avatar)
     }
-    const user = await databaseService.users.findOne(
-      {
-        _id: userId
-      },
-      {
-        projection: {
-          _id: 1,
-          email: 1,
-          fullName: 1,
-          createdAt: 1,
-          updatedAt: 1
-        }
-      }
-    )
+    const user = await this.aggregateLoggedUser(userId)
     return {
       user
+    }
+  }
+
+  async getMe(userId: ObjectId) {
+    const me = await this.aggregateLoggedUser(userId)
+    return {
+      me
     }
   }
 }
