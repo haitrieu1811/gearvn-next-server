@@ -71,5 +71,6 @@ export const ROLES_MESSAGES = {
   ROLE_ID_IS_REQUIRED: 'Role id là bắt buộc.',
   INVALID_ROLE_ID: 'Role id không hợp lệ.',
   ROLE_NOT_FOUND: 'Không tìm thấy role.',
-  UPDATE_ROLE_SUCCESS: 'Cập nhật role thành công.'
+  UPDATE_ROLE_SUCCESS: 'Cập nhật role thành công.',
+  GET_ALL_ROLES_SUCCESS: 'Lấy danh sách tất cả quyền thành công.'
 } as const

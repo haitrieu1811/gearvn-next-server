@@ -3,6 +3,7 @@ import { ParamsDictionary } from 'express-serve-static-core'
 import { ObjectId } from 'mongodb'
 
 import { ROLES_MESSAGES } from '~/constants/message'
+import { PaginationReqQuery } from '~/models/requests/Common.requests'
 import { CreateRoleReqBody, RoleIdReqParams, UpdateRoleReqBody } from '~/models/requests/Role.requests'
 import { TokenPayload } from '~/models/requests/User.requests'
 import roleService from '~/services/roles.services'
@@ -21,5 +22,19 @@ export const updateRoleController = async (req: Request<RoleIdReqParams, any, Up
   return res.json({
     message: ROLES_MESSAGES.UPDATE_ROLE_SUCCESS,
     data: result
+  })
+}
+
+export const getAllRolesController = async (
+  req: Request<ParamsDictionary, any, any, PaginationReqQuery>,
+  res: Response
+) => {
+  const { roles, ...pagination } = await roleService.findAll(req.query)
+  return res.json({
+    message: ROLES_MESSAGES.GET_ALL_ROLES_SUCCESS,
+    data: {
+      roles,
+      pagination
+    }
   })
 }
