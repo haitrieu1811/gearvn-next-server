@@ -1,6 +1,7 @@
 import { Collection, Db, MongoClient } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
+import File from '~/models/databases/File.database'
 import RefreshToken from '~/models/databases/RefreshToken.database'
 import User from '~/models/databases/User.database'
 
@@ -30,6 +31,10 @@ class DatabaseService {
 
   get refreshTokens(): Collection<RefreshToken> {
     return this.db.collection(ENV_CONFIG.DB_REFRESH_TOKENS_COLLECTION_NAME)
+  }
+
+  get files(): Collection<File> {
+    return this.db.collection(ENV_CONFIG.DB_FILES_COLLECTION_NAME)
   }
 }
 

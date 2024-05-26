@@ -41,3 +41,9 @@ export const USERS_MESSAGES = {
   UPDATE_ME_SUCCESS: 'Cập nhật tài khoản thành công.',
   PHONE_NUMBER_ALREADY_EXIST: 'Số điện thoại đã tồn tại.'
 } as const
+
+export const FILES_MESSAGES = {
+  IMAGE_FILE_TYPE_INVALID: 'Loại file ảnh không hợp lệ.',
+  IMAGE_FIELD_IS_REQUIRED: 'Trường image là bắt buộc.',
+  UPLOAD_IMAGE_SUCCESS: 'Tải ảnh lên thành công.'
+} as const
