@@ -92,6 +92,14 @@ class RoleService {
     )
     return true
   }
+
+  async unassignRoleOfUser({ roleId, userId }: { roleId: ObjectId; userId: ObjectId }) {
+    await databaseService.userRoles.deleteOne({
+      roleId,
+      userId
+    })
+    return true
+  }
 }
 
 const roleService = new RoleService()

@@ -61,3 +61,13 @@ export const assignRoleToUserController = async (req: Request<AssignRoleToUserRe
     message: ROLES_MESSAGES.ASSIGN_ROLE_TO_USER_SUCCESS
   })
 }
+
+export const unassignRoleOfUserController = async (req: Request<AssignRoleToUserReqParams>, res: Response) => {
+  await roleService.unassignRoleOfUser({
+    roleId: new ObjectId(req.params.roleId),
+    userId: new ObjectId(req.params.userId)
+  })
+  return res.json({
+    message: ROLES_MESSAGES.UNASSIGN_ROLE_TO_USER_SUCCESS
+  })
+}

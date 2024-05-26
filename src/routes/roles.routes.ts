@@ -5,11 +5,13 @@ import {
   createRoleController,
   getAllRolesController,
   getRoleDetailController,
+  unassignRoleOfUserController,
   updateRoleController
 } from '~/controllers/roles.controllers'
 import { filterReqBodyMiddleware, paginationValidator } from '~/middlewares/common.middlewares'
 import {
   createRoleValidator,
+  existedUserRoleValidator,
   roleIdValidator,
   roleNotExistValidator,
   updateRoleValidator,
@@ -74,6 +76,17 @@ rolesRouter.post(
   userIdValidator,
   userRoleNotExistValidator,
   wrapRequestHandler(assignRoleToUserController)
+)
+
+rolesRouter.delete(
+  '/:roleId/unassign/user/:userId',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  isAdminValidator,
+  roleIdValidator,
+  userIdValidator,
+  existedUserRoleValidator,
+  wrapRequestHandler(unassignRoleOfUserController)
 )
 
 export default rolesRouter

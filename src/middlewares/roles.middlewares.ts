@@ -156,3 +156,24 @@ export const userRoleNotExistValidator = async (
   }
   next()
 }
+
+export const existedUserRoleValidator = async (
+  req: Request<AssignRoleToUserReqParams>,
+  _: Response,
+  next: NextFunction
+) => {
+  const { roleId, userId } = req.params
+  const userRole = await databaseService.userRoles.findOne({
+    roleId: new ObjectId(roleId),
+    userId: new ObjectId(userId)
+  })
+  if (!userRole) {
+    next(
+      new ErrorWithStatus({
+        message: USERS_MESSAGES.USER_ROLE_NOT_EXIST,
+        status: HttpStatusCode.BadRequest
+      })
+    )
+  }
+  next()
+}
