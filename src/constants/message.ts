@@ -45,7 +45,8 @@ export const USERS_MESSAGES = {
   GET_ALL_USERS_SUCCESS: 'Lấy tất cả người dùng trên hệ thống thành công.',
   INVALID_USER_TYPE: 'User type không hợp lệ.',
   INVALID_USER_STATUS: 'User status không hợp lệ.',
-  INVALID_USER_VERIFY_STATUS: 'User verify status không hợp lệ.'
+  INVALID_USER_VERIFY_STATUS: 'User verify status không hợp lệ.',
+  ACCOUNT_LOCKED: 'Tài khoản đang bị khóa.'
 } as const
 
 export const FILES_MESSAGES = {

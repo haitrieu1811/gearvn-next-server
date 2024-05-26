@@ -207,6 +207,9 @@ export const loginValidator = validate(
             if (!user) {
               throw new Error(USERS_MESSAGES.EMAIL_OR_PASSWORD_IS_INCORRECT)
             }
+            if (user.status === UserStatus.Inactive) {
+              throw new Error(USERS_MESSAGES.ACCOUNT_LOCKED)
+            }
             ;(req as Request).user = user
             return true
           }
