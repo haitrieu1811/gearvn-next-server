@@ -47,7 +47,11 @@ export const USERS_MESSAGES = {
   INVALID_USER_STATUS: 'User status không hợp lệ.',
   INVALID_USER_VERIFY_STATUS: 'User verify status không hợp lệ.',
   ACCOUNT_LOCKED: 'Tài khoản đang bị khóa.',
-  UNVERIFIED_USER: 'Tài khoản chưa được xác minh.'
+  UNVERIFIED_USER: 'Tài khoản chưa được xác minh.',
+  USER_ID_IS_REQUIRED: 'User id là bắt buộc.',
+  INVALID_USER_ID: 'User id không hợp lệ.',
+  USER_NOT_FOUND: 'Không tìm thấy user.',
+  USER_ROLE_ALREADY_EXIST: 'User đã có quyền này.'
 } as const
 
 export const FILES_MESSAGES = {
@@ -73,5 +77,6 @@ export const ROLES_MESSAGES = {
   ROLE_NOT_FOUND: 'Không tìm thấy role.',
   UPDATE_ROLE_SUCCESS: 'Cập nhật role thành công.',
   GET_ALL_ROLES_SUCCESS: 'Lấy danh sách tất cả quyền thành công.',
-  GET_ROLE_DETAIL_SUCCESS: 'Lấy thông tin chi tiết quyền thành công.'
+  GET_ROLE_DETAIL_SUCCESS: 'Lấy thông tin chi tiết quyền thành công.',
+  ASSIGN_ROLE_TO_USER_SUCCESS: 'Gán vai trò cho user thành công.'
 } as const

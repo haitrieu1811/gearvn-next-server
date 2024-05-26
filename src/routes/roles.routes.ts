@@ -1,6 +1,7 @@
 import { Router } from 'express'
 
 import {
+  assignRoleToUserController,
   createRoleController,
   getAllRolesController,
   getRoleDetailController,
@@ -11,9 +12,15 @@ import {
   createRoleValidator,
   roleIdValidator,
   roleNotExistValidator,
-  updateRoleValidator
+  updateRoleValidator,
+  userRoleNotExistValidator
 } from '~/middlewares/roles.middlewares'
-import { accessTokenValidator, isAdminValidator, isVerifiedUserValidator } from '~/middlewares/users.middlewares'
+import {
+  accessTokenValidator,
+  isAdminValidator,
+  isVerifiedUserValidator,
+  userIdValidator
+} from '~/middlewares/users.middlewares'
 import { UpdateRoleReqBody } from '~/models/requests/Role.requests'
 import { wrapRequestHandler } from '~/utils/handler'
 
@@ -56,6 +63,17 @@ rolesRouter.get(
   isAdminValidator,
   roleIdValidator,
   wrapRequestHandler(getRoleDetailController)
+)
+
+rolesRouter.post(
+  '/:roleId/assign/user/:userId',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  isAdminValidator,
+  roleIdValidator,
+  userIdValidator,
+  userRoleNotExistValidator,
+  wrapRequestHandler(assignRoleToUserController)
 )
 
 export default rolesRouter

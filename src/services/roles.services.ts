@@ -3,6 +3,7 @@ import omitBy from 'lodash/omitBy'
 import { ObjectId } from 'mongodb'
 
 import Role from '~/models/databases/Role.database'
+import UserRole from '~/models/databases/UserRole.database'
 import { PaginationReqQuery } from '~/models/requests/Common.requests'
 import { CreateRoleReqBody, UpdateRoleReqBody } from '~/models/requests/Role.requests'
 import databaseService from '~/services/database.services'
@@ -80,6 +81,16 @@ class RoleService {
     return {
       role
     }
+  }
+
+  async assignRoleToUser({ roleId, userId }: { roleId: ObjectId; userId: ObjectId }) {
+    await databaseService.userRoles.insertOne(
+      new UserRole({
+        roleId,
+        userId
+      })
+    )
+    return true
   }
 }
 

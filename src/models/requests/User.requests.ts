@@ -1,3 +1,5 @@
+import { ParamsDictionary } from 'express-serve-static-core'
+
 import { Gender, UserStatus, UserType, UserVerifyStatus } from '~/constants/enum'
 import { PaginationReqQuery } from '~/models/requests/Common.requests'
 
@@ -44,4 +46,8 @@ export type GetAllUsersReqQuery = PaginationReqQuery & {
   gender?: Gender
   status?: UserStatus
   verify?: UserVerifyStatus
+}
+
+export type UserIdReqParams = ParamsDictionary & {
+  userId: string
 }

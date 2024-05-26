@@ -466,3 +466,38 @@ export const getAllUsersValidator = validate(
     ['query']
   )
 )
+
+export const userIdValidator = validate(
+  checkSchema(
+    {
+      userId: {
+        trim: true,
+        custom: {
+          options: async (value: string) => {
+            if (!value) {
+              throw new ErrorWithStatus({
+                message: USERS_MESSAGES.USER_ID_IS_REQUIRED,
+                status: HttpStatusCode.BadRequest
+              })
+            }
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                message: USERS_MESSAGES.INVALID_USER_ID,
+                status: HttpStatusCode.BadRequest
+              })
+            }
+            const user = await databaseService.users.findOne({ _id: new ObjectId(value) })
+            if (!user) {
+              throw new ErrorWithStatus({
+                message: USERS_MESSAGES.USER_NOT_FOUND,
+                status: HttpStatusCode.NotFound
+              })
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['params']
+  )
+)

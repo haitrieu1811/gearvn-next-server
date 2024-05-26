@@ -5,6 +5,7 @@ import File from '~/models/databases/File.database'
 import RefreshToken from '~/models/databases/RefreshToken.database'
 import Role from '~/models/databases/Role.database'
 import User from '~/models/databases/User.database'
+import UserRole from '~/models/databases/UserRole.database'
 
 const uri = `mongodb+srv://${ENV_CONFIG.DB_USERNAME}:${ENV_CONFIG.DB_PASSWORD}@gearvnnextcluster.zyet3vs.mongodb.net/?retryWrites=true&w=majority&appName=gearvnNextCluster`
 class DatabaseService {
@@ -40,6 +41,10 @@ class DatabaseService {
 
   get roles(): Collection<Role> {
     return this.db.collection(ENV_CONFIG.DB_ROLES_COLLECTION_NAME)
+  }
+
+  get userRoles(): Collection<UserRole> {
+    return this.db.collection(ENV_CONFIG.DB_USER_ROLES_COLLECTION_NAME)
   }
 }
 

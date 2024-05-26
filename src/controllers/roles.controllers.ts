@@ -4,7 +4,12 @@ import { ObjectId } from 'mongodb'
 
 import { ROLES_MESSAGES } from '~/constants/message'
 import { PaginationReqQuery } from '~/models/requests/Common.requests'
-import { CreateRoleReqBody, RoleIdReqParams, UpdateRoleReqBody } from '~/models/requests/Role.requests'
+import {
+  AssignRoleToUserReqParams,
+  CreateRoleReqBody,
+  RoleIdReqParams,
+  UpdateRoleReqBody
+} from '~/models/requests/Role.requests'
 import { TokenPayload } from '~/models/requests/User.requests'
 import roleService from '~/services/roles.services'
 
@@ -44,5 +49,15 @@ export const getRoleDetailController = async (req: Request<RoleIdReqParams>, res
   return res.json({
     message: ROLES_MESSAGES.GET_ROLE_DETAIL_SUCCESS,
     data: result
+  })
+}
+
+export const assignRoleToUserController = async (req: Request<AssignRoleToUserReqParams>, res: Response) => {
+  await roleService.assignRoleToUser({
+    roleId: new ObjectId(req.params.roleId),
+    userId: new ObjectId(req.params.userId)
+  })
+  return res.json({
+    message: ROLES_MESSAGES.ASSIGN_ROLE_TO_USER_SUCCESS
   })
 }

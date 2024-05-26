@@ -4,9 +4,9 @@ import { ParamSchema, checkSchema } from 'express-validator'
 import { ObjectId } from 'mongodb'
 
 import { HttpStatusCode, RoleField, RoleType } from '~/constants/enum'
-import { ROLES_MESSAGES } from '~/constants/message'
+import { ROLES_MESSAGES, USERS_MESSAGES } from '~/constants/message'
 import { ErrorWithStatus } from '~/models/Errors'
-import { CreateRoleReqBody } from '~/models/requests/Role.requests'
+import { AssignRoleToUserReqParams, CreateRoleReqBody } from '~/models/requests/Role.requests'
 import databaseService from '~/services/database.services'
 import { numberEnumToArray } from '~/utils/utils'
 import { validate } from '~/utils/validation'
@@ -135,3 +135,24 @@ export const updateRoleValidator = validate(
     ['body']
   )
 )
+
+export const userRoleNotExistValidator = async (
+  req: Request<AssignRoleToUserReqParams>,
+  _: Response,
+  next: NextFunction
+) => {
+  const { roleId, userId } = req.params
+  const userRole = await databaseService.userRoles.findOne({
+    roleId: new ObjectId(roleId),
+    userId: new ObjectId(userId)
+  })
+  if (userRole) {
+    next(
+      new ErrorWithStatus({
+        message: USERS_MESSAGES.USER_ROLE_ALREADY_EXIST,
+        status: HttpStatusCode.BadRequest
+      })
+    )
+  }
+  next()
+}
