@@ -53,9 +53,9 @@ export const sendFileFromS3 = async (res: Response, filepath: string) => {
   }
 }
 
-export const deleteFileFromS3 = async (filepath: string) => {
+export const deleteFileFromS3 = async (filname: string) => {
   return s3.deleteObject({
     Bucket: ENV_CONFIG.AWS_S3_BUCKET_NAME,
-    Key: filepath
+    Key: filname
   })
 }

@@ -1,6 +1,7 @@
 import { Request } from 'express'
 import fsPromise from 'fs/promises'
 import mime from 'mime-types'
+import { ObjectId, WithId } from 'mongodb'
 import path from 'path'
 import sharp from 'sharp'
 
@@ -10,7 +11,7 @@ import { FileType } from '~/constants/enum'
 import File from '~/models/databases/File.database'
 import databaseService from '~/services/database.services'
 import { getNameFromFullName, handleUploadImage } from '~/utils/file'
-import { uploadFileToS3 } from '~/utils/s3'
+import { deleteFileFromS3, uploadFileToS3 } from '~/utils/s3'
 
 class FileService {
   async uploadImage(req: Request) {
@@ -52,6 +53,13 @@ class FileService {
     return {
       images: result
     }
+  }
+
+  async deleteImage(imageId: ObjectId) {
+    const deletedImage = await databaseService.files.findOneAndDelete({ _id: imageId })
+    const { name } = deletedImage as WithId<File>
+    await deleteFileFromS3(`images/${name}`)
+    return true
   }
 }
 
