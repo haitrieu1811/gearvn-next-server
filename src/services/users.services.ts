@@ -1,6 +1,6 @@
-import pick from 'lodash/pick'
-import omitBy from 'lodash/omitBy'
 import isUndefined from 'lodash/isUndefined'
+import omitBy from 'lodash/omitBy'
+import pick from 'lodash/pick'
 import { ObjectId, WithId } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
@@ -9,6 +9,7 @@ import RefreshToken from '~/models/databases/RefreshToken.database'
 import User from '~/models/databases/User.database'
 import { RegisterReqBody, UpdateMeReqBody } from '~/models/requests/User.requests'
 import databaseService from '~/services/database.services'
+import fileService from '~/services/files.services'
 import { hashPassword } from '~/utils/crypto'
 import { sendForgotPasswordEmail, sendVerifyEmail } from '~/utils/email'
 import { signToken, verifyToken } from '~/utils/jwt'
@@ -392,19 +393,30 @@ class UserService {
         }
       },
       {
-        returnDocument: 'after',
+        projection: {
+          avatar: 1
+        }
+      }
+    )
+    if (updatedUser && updatedUser.avatar && configuredData.avatar) {
+      await fileService.deleteImage(updatedUser.avatar)
+    }
+    const user = await databaseService.users.findOne(
+      {
+        _id: userId
+      },
+      {
         projection: {
           _id: 1,
-          fullName: 1,
           email: 1,
-          phoneNumber: 1,
+          fullName: 1,
           createdAt: 1,
           updatedAt: 1
         }
       }
     )
     return {
-      user: updatedUser
+      user
     }
   }
 }
