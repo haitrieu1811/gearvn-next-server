@@ -3,6 +3,7 @@ import { Router } from 'express'
 import {
   createAddressController,
   getDistrictsController,
+  getMyAddressesController,
   getProvincesController,
   getStreetsController,
   getWardsController,
@@ -10,7 +11,7 @@ import {
   updateAddressController
 } from '~/controllers/addresses.controllers'
 import { addressAuthorValidator, addressIdValidator, createAddressValidator } from '~/middlewares/addresses.middlewares'
-import { filterReqBodyMiddleware } from '~/middlewares/common.middlewares'
+import { filterReqBodyMiddleware, paginationValidator } from '~/middlewares/common.middlewares'
 import { accessTokenValidator, isVerifiedUserValidator } from '~/middlewares/users.middlewares'
 import { CreateAddressReqBody } from '~/models/requests/Address.requests'
 import { wrapRequestHandler } from '~/utils/handler'
@@ -70,6 +71,14 @@ addressesRouter.post(
   addressIdValidator,
   addressAuthorValidator,
   wrapRequestHandler(setDefaultAddressController)
+)
+
+addressesRouter.get(
+  '/me',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  paginationValidator,
+  wrapRequestHandler(getMyAddressesController)
 )
 
 export default addressesRouter

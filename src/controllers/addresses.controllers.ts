@@ -9,6 +9,7 @@ import {
   DistrictIdReqParams,
   ProvinceIdReqParams
 } from '~/models/requests/Address.requests'
+import { PaginationReqQuery } from '~/models/requests/Common.requests'
 import { TokenPayload } from '~/models/requests/User.requests'
 import addressService from '~/services/addresses.services'
 
@@ -77,5 +78,23 @@ export const setDefaultAddressController = async (req: Request<AddressIdReqParam
   })
   return res.json({
     message: ADDRESS_MESSAGES.SET_DEFAULT_ADDRESS_SUCCESS
+  })
+}
+
+export const getMyAddressesController = async (
+  req: Request<ParamsDictionary, any, any, PaginationReqQuery>,
+  res: Response
+) => {
+  const { userId } = req.decodedAuthorization as TokenPayload
+  const { addresses, ...pagination } = await addressService.getMyAddresses({
+    userId: new ObjectId(userId),
+    query: req.query
+  })
+  return res.json({
+    message: ADDRESS_MESSAGES.GET_MY_ADDRESSES_SUCCESS,
+    data: {
+      addresses,
+      pagination
+    }
   })
 }

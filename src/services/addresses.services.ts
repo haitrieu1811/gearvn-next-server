@@ -2,7 +2,9 @@ import { ObjectId } from 'mongodb'
 
 import Address from '~/models/databases/Address.database'
 import { CreateAddressReqBody } from '~/models/requests/Address.requests'
+import { PaginationReqQuery } from '~/models/requests/Common.requests'
 import databaseService from '~/services/database.services'
+import { paginationConfig } from '~/utils/utils'
 
 class AddressService {
   async getAllProvinces() {
@@ -220,6 +222,171 @@ class AddressService {
       }
     )
     return true
+  }
+
+  private aggregateAddress() {
+    return [
+      {
+        $lookup: {
+          from: 'provinces',
+          localField: 'provinceId',
+          foreignField: '_id',
+          as: 'province'
+        }
+      },
+      {
+        $unwind: {
+          path: '$province'
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: '_id',
+          foreignField: 'defaultAddress',
+          as: 'defaultAddress'
+        }
+      },
+      {
+        $addFields: {
+          district: {
+            $filter: {
+              input: '$province.districts',
+              as: 'district',
+              cond: {
+                $eq: ['$$district.id', '$districtId']
+              }
+            }
+          },
+          isDefaultAddress: {
+            $cond: {
+              if: {
+                $size: '$defaultAddress'
+              },
+              then: true,
+              else: false
+            }
+          }
+        }
+      },
+      {
+        $unwind: {
+          path: '$district'
+        }
+      },
+      {
+        $addFields: {
+          ward: {
+            $filter: {
+              input: '$district.wards',
+              as: 'ward',
+              cond: {
+                $eq: ['$$ward.id', '$wardId']
+              }
+            }
+          },
+          street: {
+            $filter: {
+              input: '$district.streets',
+              as: 'street',
+              cond: {
+                $eq: ['$$street.id', '$streetId']
+              }
+            }
+          }
+        }
+      },
+      {
+        $unwind: {
+          path: '$ward'
+        }
+      },
+      {
+        $unwind: {
+          path: '$street'
+        }
+      },
+      {
+        $group: {
+          _id: '$_id',
+          fullName: {
+            $first: '$fullName'
+          },
+          phoneNumber: {
+            $first: '$phoneNumber'
+          },
+          province: {
+            $first: '$province'
+          },
+          district: {
+            $first: '$district'
+          },
+          ward: {
+            $first: '$ward'
+          },
+          street: {
+            $first: '$street'
+          },
+          addressDetail: {
+            $first: '$addressDetail'
+          },
+          type: {
+            $first: '$type'
+          },
+          isDefaultAddress: {
+            $first: '$isDefaultAddress'
+          },
+          createdAt: {
+            $first: '$createdAt'
+          },
+          updatedAt: {
+            $first: '$updatedAt'
+          }
+        }
+      },
+      {
+        $project: {
+          'province.id': 0,
+          'province.districts': 0,
+          'district.wards': 0,
+          'district.streets': 0,
+          'district.projects': 0
+        }
+      }
+    ]
+  }
+
+  async getMyAddresses({ userId, query }: { userId: ObjectId; query: PaginationReqQuery }) {
+    const { page, limit, skip } = paginationConfig(query)
+    const match = { userId }
+    const aggregate = [
+      {
+        $match: match
+      },
+      ...this.aggregateAddress(),
+      {
+        $sort: {
+          createdAt: -1
+        }
+      },
+      {
+        $skip: skip
+      },
+      {
+        $limit: limit
+      }
+    ]
+    const [addresses, totalRows] = await Promise.all([
+      databaseService.addresses.aggregate(aggregate).toArray(),
+      databaseService.addresses.countDocuments(match)
+    ])
+    return {
+      addresses,
+      page,
+      limit,
+      totalRows,
+      totalPages: Math.ceil(totalRows / limit)
+    }
   }
 }
 
