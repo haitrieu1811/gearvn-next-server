@@ -2,6 +2,7 @@ import { Router } from 'express'
 
 import {
   createAddressController,
+  getAddressDetailController,
   getDistrictsController,
   getMyAddressesController,
   getProvincesController,
@@ -79,6 +80,15 @@ addressesRouter.get(
   isVerifiedUserValidator,
   paginationValidator,
   wrapRequestHandler(getMyAddressesController)
+)
+
+addressesRouter.get(
+  '/:addressId',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  addressIdValidator,
+  addressAuthorValidator,
+  wrapRequestHandler(getAddressDetailController)
 )
 
 export default addressesRouter

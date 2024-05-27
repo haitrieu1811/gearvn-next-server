@@ -98,3 +98,11 @@ export const getMyAddressesController = async (
     }
   })
 }
+
+export const getAddressDetailController = async (req: Request<AddressIdReqParams>, res: Response) => {
+  const result = await addressService.findById(new ObjectId(req.params.addressId))
+  return res.json({
+    message: ADDRESS_MESSAGES.GET_ADDRESS_DETAIL_SUCCESS,
+    data: result
+  })
+}

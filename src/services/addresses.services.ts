@@ -388,6 +388,21 @@ class AddressService {
       totalPages: Math.ceil(totalRows / limit)
     }
   }
+
+  async findById(addressId: ObjectId) {
+    const aggregate = [
+      {
+        $match: {
+          _id: addressId
+        }
+      },
+      ...this.aggregateAddress()
+    ]
+    const addresses = await databaseService.addresses.aggregate(aggregate).toArray()
+    return {
+      address: addresses[0]
+    }
+  }
 }
 
 const addressService = new AddressService()
