@@ -1,6 +1,7 @@
-import { ObjectId } from 'mongodb'
+import { ObjectId, WithId } from 'mongodb'
 
 import Address from '~/models/databases/Address.database'
+import User from '~/models/databases/User.database'
 import { CreateAddressReqBody } from '~/models/requests/Address.requests'
 import { PaginationReqQuery } from '~/models/requests/Common.requests'
 import databaseService from '~/services/database.services'
@@ -402,6 +403,31 @@ class AddressService {
     return {
       address: addresses[0]
     }
+  }
+
+  async delete({ addressId, userId }: { addressId: ObjectId; userId: ObjectId }) {
+    const user = (await databaseService.users.findOne({ _id: userId })) as WithId<User>
+    const newDefaultAddress = user.defaultAddress?.toString() === addressId.toString() ? null : user.defaultAddress
+    await Promise.all([
+      databaseService.addresses.deleteOne({ _id: addressId }),
+      databaseService.users.updateOne(
+        {
+          _id: userId
+        },
+        {
+          $pull: {
+            addresses: addressId
+          },
+          $set: {
+            defaultAddress: newDefaultAddress
+          },
+          $currentDate: {
+            updatedAt: true
+          }
+        }
+      )
+    ])
+    return true
   }
 }
 

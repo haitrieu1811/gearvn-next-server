@@ -108,5 +108,6 @@ export const ADDRESS_MESSAGES = {
   UPDATE_ADDRESS_SUCCESS: 'Cập nhật địa chỉ thành công.',
   SET_DEFAULT_ADDRESS_SUCCESS: 'Đặt địa chỉ thành mặc định thành công.',
   GET_MY_ADDRESSES_SUCCESS: 'Lấy địa chỉ của tôi thành công.',
-  GET_ADDRESS_DETAIL_SUCCESS: 'Lấy thông tin chi tiết địa chỉ thành công.'
+  GET_ADDRESS_DETAIL_SUCCESS: 'Lấy thông tin chi tiết địa chỉ thành công.',
+  DELETE_ADDRESS_SUCCESS: 'Xóa địa chỉ thành công.'
 } as const
