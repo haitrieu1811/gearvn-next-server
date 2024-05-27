@@ -2,9 +2,10 @@ import { Router } from 'express'
 
 import {
   createProductCategoryController,
+  getProductCategoriesController,
   updateProductCategoryController
 } from '~/controllers/productCategories.controllers'
-import { filterReqBodyMiddleware } from '~/middlewares/common.middlewares'
+import { filterReqBodyMiddleware, paginationValidator } from '~/middlewares/common.middlewares'
 import {
   createProductCategoryValidator,
   productCategoryIdValidator,
@@ -36,5 +37,7 @@ productCategoriesRouter.patch(
   filterReqBodyMiddleware<UpdateProductCategoryReqBody>(['description', 'name', 'orderNumber', 'status', 'thumbnail']),
   wrapRequestHandler(updateProductCategoryController)
 )
+
+productCategoriesRouter.get('/', paginationValidator, wrapRequestHandler(getProductCategoriesController))
 
 export default productCategoriesRouter

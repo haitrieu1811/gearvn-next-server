@@ -3,6 +3,7 @@ import { ParamsDictionary } from 'express-serve-static-core'
 import { ObjectId } from 'mongodb'
 
 import { PRODUCT_CATEGORY_MESSAGES } from '~/constants/message'
+import { PaginationReqQuery } from '~/models/requests/Common.requests'
 import {
   CreateProductCategoryReqBody,
   ProductCategoryIdReqParams,
@@ -34,5 +35,19 @@ export const updateProductCategoryController = async (
   return res.json({
     message: PRODUCT_CATEGORY_MESSAGES.UPDATE_PRODUCT_CATEGORY_SUCCESS,
     data: result
+  })
+}
+
+export const getProductCategoriesController = async (
+  req: Request<ParamsDictionary, any, any, PaginationReqQuery>,
+  res: Response
+) => {
+  const { productCategories, ...pagination } = await productCategoryService.findMany(req.query)
+  return res.json({
+    message: PRODUCT_CATEGORY_MESSAGES.GET_PRODUCT_CATEGORIES_SUCCESS,
+    data: {
+      productCategories,
+      pagination
+    }
   })
 }

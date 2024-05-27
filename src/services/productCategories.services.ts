@@ -2,10 +2,14 @@ import isUndefined from 'lodash/isUndefined'
 import omitBy from 'lodash/omitBy'
 import { ObjectId } from 'mongodb'
 
+import { ENV_CONFIG } from '~/constants/config'
+import { ProductCategoryStatus } from '~/constants/enum'
 import ProductCategory from '~/models/databases/ProductCategory.database'
+import { PaginationReqQuery } from '~/models/requests/Common.requests'
 import { CreateProductCategoryReqBody, UpdateProductCategoryReqBody } from '~/models/requests/ProductCategory.requests'
 import databaseService from '~/services/database.services'
 import fileService from '~/services/files.services'
+import { paginationConfig } from '~/utils/utils'
 
 class ProductCategoryService {
   async create({ data, userId }: { data: CreateProductCategoryReqBody; userId: ObjectId }) {
@@ -47,6 +51,69 @@ class ProductCategoryService {
     const productCategory = await databaseService.productCategories.findOne({ _id: productCategoryId })
     return {
       productCategory
+    }
+  }
+
+  private aggregateProductCategory() {
+    return [
+      {
+        $lookup: {
+          from: 'files',
+          localField: 'thumbnail',
+          foreignField: '_id',
+          as: 'thumbnail'
+        }
+      },
+      {
+        $unwind: {
+          path: '$thumbnail'
+        }
+      },
+      {
+        $addFields: {
+          thumbnail: {
+            $concat: [ENV_CONFIG.HOST, '/', ENV_CONFIG.STATIC_IMAGES_PATH, '/', '$thumbnail.name']
+          }
+        }
+      },
+      {
+        $project: {
+          userId: 0
+        }
+      }
+    ]
+  }
+
+  async findMany(query: PaginationReqQuery) {
+    const { page, limit, skip } = paginationConfig(query)
+    const match = { status: ProductCategoryStatus.Active }
+    const aggregate = [
+      {
+        $match: match
+      },
+      ...this.aggregateProductCategory(),
+      {
+        $sort: {
+          orderNumber: 1
+        }
+      },
+      {
+        $skip: skip
+      },
+      {
+        $limit: limit
+      }
+    ]
+    const [productCategories, totalRows] = await Promise.all([
+      databaseService.productCategories.aggregate(aggregate).toArray(),
+      databaseService.productCategories.countDocuments(match)
+    ])
+    return {
+      productCategories,
+      page,
+      limit,
+      totalRows,
+      totalPages: Math.ceil(totalRows / limit)
     }
   }
 }
