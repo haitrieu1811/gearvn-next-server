@@ -111,3 +111,12 @@ export const ADDRESS_MESSAGES = {
   GET_ADDRESS_DETAIL_SUCCESS: 'Lấy thông tin chi tiết địa chỉ thành công.',
   DELETE_ADDRESS_SUCCESS: 'Xóa địa chỉ thành công.'
 } as const
+
+export const PRODUCT_CATEGORY_MESSAGES = {
+  CREATE_PRODUCT_CATEGORY_SUCCESS: 'Tạo danh mục sản phẩm thành công.',
+  PRODUCT_CATEGORY_THUMBNAIL_IS_REQUIRED: 'Ảnh đại diện danh mục sản phẩm là bắt buộc.',
+  INVALID_PRODUCT_CATEGORY_THUMBNAIL: 'Ảnh đại diện sản phẩm không hợp lệ.',
+  PRODUCT_CATEGORY_NAME_IS_REQUIRED: 'Tên danh mục sản phẩm là bắt buộc.',
+  INVALID_PRODUCT_CATEGORY_STATUS: 'Trạng thái danh mục sản phẩm không hợp lệ.',
+  ORDER_NUMBER_MUST_BE_A_POSITIVE_INTEGER: 'Số thứ tự sắp xếp danh mục sản phẩm phải là một số nguyên dương.'
+} as const

@@ -121,3 +121,8 @@ export enum AddressType {
   Office,
   Other
 }
+
+export enum ProductCategoryStatus {
+  Active,
+  Inactive
+}

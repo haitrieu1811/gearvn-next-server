@@ -3,6 +3,7 @@ import { Collection, Db, MongoClient } from 'mongodb'
 import { ENV_CONFIG } from '~/constants/config'
 import Address from '~/models/databases/Address.database'
 import File from '~/models/databases/File.database'
+import ProductCategory from '~/models/databases/ProductCategory.database'
 import { Province } from '~/models/databases/Province.database'
 import RefreshToken from '~/models/databases/RefreshToken.database'
 import Role from '~/models/databases/Role.database'
@@ -55,6 +56,10 @@ class DatabaseService {
 
   get provinces(): Collection<Province> {
     return this.db.collection(ENV_CONFIG.DB_PROVINCES_COLLECTION_NAME)
+  }
+
+  get productCategories(): Collection<ProductCategory> {
+    return this.db.collection(ENV_CONFIG.DB_PRODUCT_CATEGORIES_COLLECTION_NAME)
   }
 }
 
