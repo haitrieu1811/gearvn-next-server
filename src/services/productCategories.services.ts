@@ -161,6 +161,14 @@ class ProductCategoryService {
       productCategory: productCategories[0]
     }
   }
+
+  async delete(productCategoryId: ObjectId) {
+    const deletedProductCategory = await databaseService.productCategories.findOneAndDelete({ _id: productCategoryId })
+    if (deletedProductCategory && deletedProductCategory.thumbnail) {
+      await fileService.deleteImage(deletedProductCategory.thumbnail)
+    }
+    return true
+  }
 }
 
 const productCategoryService = new ProductCategoryService()

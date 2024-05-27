@@ -73,3 +73,10 @@ export const getProductCategoryDetailController = async (req: Request<ProductCat
     data: result
   })
 }
+
+export const deleteProductCategoryController = async (req: Request<ProductCategoryIdReqParams>, res: Response) => {
+  await productCategoryService.delete(new ObjectId(req.params.productCategoryId))
+  return res.json({
+    message: PRODUCT_CATEGORY_MESSAGES.DELETE_PRODUCT_CATEGORY_SUCCESS
+  })
+}

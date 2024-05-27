@@ -2,6 +2,7 @@ import { Router } from 'express'
 
 import {
   createProductCategoryController,
+  deleteProductCategoryController,
   getAllProductCategoriesController,
   getProductCategoriesController,
   getProductCategoryDetailController,
@@ -58,6 +59,15 @@ productCategoriesRouter.get(
   isAdminValidator,
   productCategoryIdValidator,
   wrapRequestHandler(getProductCategoryDetailController)
+)
+
+productCategoriesRouter.delete(
+  '/:productCategoryId',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  isAdminValidator,
+  productCategoryIdValidator,
+  wrapRequestHandler(deleteProductCategoryController)
 )
 
 export default productCategoriesRouter
