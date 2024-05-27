@@ -2,6 +2,7 @@ import { Router } from 'express'
 
 import {
   createProductCategoryController,
+  getAllProductCategoriesController,
   getProductCategoriesController,
   updateProductCategoryController
 } from '~/controllers/productCategories.controllers'
@@ -39,5 +40,14 @@ productCategoriesRouter.patch(
 )
 
 productCategoriesRouter.get('/', paginationValidator, wrapRequestHandler(getProductCategoriesController))
+
+productCategoriesRouter.get(
+  '/all',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  isAdminValidator,
+  paginationValidator,
+  wrapRequestHandler(getAllProductCategoriesController)
+)
 
 export default productCategoriesRouter

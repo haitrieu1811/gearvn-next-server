@@ -51,3 +51,17 @@ export const getProductCategoriesController = async (
     }
   })
 }
+
+export const getAllProductCategoriesController = async (
+  req: Request<ParamsDictionary, any, any, PaginationReqQuery>,
+  res: Response
+) => {
+  const { productCategories, ...pagination } = await productCategoryService.findAll(req.query)
+  return res.json({
+    message: PRODUCT_CATEGORY_MESSAGES.GET_ALL_PRODUCT_CATEGORIES_SUCCESS,
+    data: {
+      productCategories,
+      pagination
+    }
+  })
+}

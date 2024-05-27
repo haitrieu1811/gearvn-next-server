@@ -116,6 +116,36 @@ class ProductCategoryService {
       totalPages: Math.ceil(totalRows / limit)
     }
   }
+
+  async findAll(query: PaginationReqQuery) {
+    const { page, limit, skip } = paginationConfig(query)
+
+    const aggregate = [
+      ...this.aggregateProductCategory(),
+      {
+        $sort: {
+          orderNumber: 1
+        }
+      },
+      {
+        $skip: skip
+      },
+      {
+        $limit: limit
+      }
+    ]
+    const [productCategories, totalRows] = await Promise.all([
+      databaseService.productCategories.aggregate(aggregate).toArray(),
+      databaseService.productCategories.countDocuments({})
+    ])
+    return {
+      productCategories,
+      page,
+      limit,
+      totalRows,
+      totalPages: Math.ceil(totalRows / limit)
+    }
+  }
 }
 
 const productCategoryService = new ProductCategoryService()
