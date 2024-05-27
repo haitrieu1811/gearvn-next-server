@@ -3,7 +3,11 @@ import { ParamsDictionary } from 'express-serve-static-core'
 import { ObjectId } from 'mongodb'
 
 import { PRODUCT_CATEGORY_MESSAGES } from '~/constants/message'
-import { CreateProductCategoryReqBody } from '~/models/requests/ProductCategory.requests'
+import {
+  CreateProductCategoryReqBody,
+  ProductCategoryIdReqParams,
+  UpdateProductCategoryReqBody
+} from '~/models/requests/ProductCategory.requests'
 import { TokenPayload } from '~/models/requests/User.requests'
 import productCategoryService from '~/services/productCategories.services'
 
@@ -15,6 +19,20 @@ export const createProductCategoryController = async (
   const result = await productCategoryService.create({ data: req.body, userId: new ObjectId(userId) })
   return res.json({
     message: PRODUCT_CATEGORY_MESSAGES.CREATE_PRODUCT_CATEGORY_SUCCESS,
+    data: result
+  })
+}
+
+export const updateProductCategoryController = async (
+  req: Request<ProductCategoryIdReqParams, any, UpdateProductCategoryReqBody>,
+  res: Response
+) => {
+  const result = await productCategoryService.update({
+    data: req.body,
+    productCategoryId: new ObjectId(req.params.productCategoryId)
+  })
+  return res.json({
+    message: PRODUCT_CATEGORY_MESSAGES.UPDATE_PRODUCT_CATEGORY_SUCCESS,
     data: result
   })
 }

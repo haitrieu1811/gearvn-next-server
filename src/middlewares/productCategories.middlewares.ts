@@ -1,52 +1,118 @@
-import { checkSchema } from 'express-validator'
+import { ParamSchema, checkSchema } from 'express-validator'
+import { ObjectId } from 'mongodb'
 
-import { ProductCategoryStatus } from '~/constants/enum'
+import { HttpStatusCode, ProductCategoryStatus } from '~/constants/enum'
 import { PRODUCT_CATEGORY_MESSAGES } from '~/constants/message'
+import { ErrorWithStatus } from '~/models/Errors'
+import databaseService from '~/services/database.services'
 import { numberEnumToArray } from '~/utils/utils'
 import { validate } from '~/utils/validation'
 
 const productCategoryStatuses = numberEnumToArray(ProductCategoryStatus)
 
+const thumbnailSchema: ParamSchema = {
+  trim: true,
+  notEmpty: {
+    errorMessage: PRODUCT_CATEGORY_MESSAGES.PRODUCT_CATEGORY_THUMBNAIL_IS_REQUIRED
+  },
+  isMongoId: {
+    errorMessage: PRODUCT_CATEGORY_MESSAGES.INVALID_PRODUCT_CATEGORY_THUMBNAIL
+  }
+}
+
+const descriptionSchema: ParamSchema = {
+  trim: true,
+  optional: true
+}
+
+const statusSchema: ParamSchema = {
+  optional: true,
+  isIn: {
+    options: [productCategoryStatuses],
+    errorMessage: PRODUCT_CATEGORY_MESSAGES.INVALID_PRODUCT_CATEGORY_STATUS
+  }
+}
+
+const orderNumberSchema: ParamSchema = {
+  optional: true,
+  custom: {
+    options: (value) => {
+      if (!Number.isInteger(value) || value < 0) {
+        throw new Error(PRODUCT_CATEGORY_MESSAGES.ORDER_NUMBER_MUST_BE_A_POSITIVE_INTEGER)
+      }
+      return true
+    }
+  }
+}
+
 export const createProductCategoryValidator = validate(
   checkSchema(
     {
-      thumbnail: {
-        trim: true,
-        notEmpty: {
-          errorMessage: PRODUCT_CATEGORY_MESSAGES.PRODUCT_CATEGORY_THUMBNAIL_IS_REQUIRED
-        },
-        isMongoId: {
-          errorMessage: PRODUCT_CATEGORY_MESSAGES.INVALID_PRODUCT_CATEGORY_THUMBNAIL
-        }
-      },
+      thumbnail: thumbnailSchema,
       name: {
         trim: true,
         notEmpty: {
           errorMessage: PRODUCT_CATEGORY_MESSAGES.PRODUCT_CATEGORY_NAME_IS_REQUIRED
         }
       },
-      description: {
+      description: descriptionSchema,
+      status: statusSchema,
+      orderNumber: orderNumberSchema
+    },
+    ['body']
+  )
+)
+
+export const productCategoryIdValidator = validate(
+  checkSchema(
+    {
+      productCategoryId: {
         trim: true,
-        optional: true
-      },
-      status: {
-        optional: true,
-        isIn: {
-          options: [productCategoryStatuses],
-          errorMessage: PRODUCT_CATEGORY_MESSAGES.INVALID_PRODUCT_CATEGORY_STATUS
-        }
-      },
-      orderNumber: {
-        optional: true,
         custom: {
-          options: (value) => {
-            if (!Number.isInteger(value) || value < 0) {
-              throw new Error(PRODUCT_CATEGORY_MESSAGES.ORDER_NUMBER_MUST_BE_A_POSITIVE_INTEGER)
+          options: async (value: string) => {
+            if (!value) {
+              throw new ErrorWithStatus({
+                message: PRODUCT_CATEGORY_MESSAGES.PRODUCT_CATEGORY_ID_IS_REQUIRED,
+                status: HttpStatusCode.BadRequest
+              })
+            }
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                message: PRODUCT_CATEGORY_MESSAGES.INVALID_PRODUCT_CATEGORY_ID,
+                status: HttpStatusCode.BadRequest
+              })
+            }
+            const productCategory = await databaseService.productCategories.findOne({ _id: new ObjectId(value) })
+            if (!productCategory) {
+              throw new ErrorWithStatus({
+                message: PRODUCT_CATEGORY_MESSAGES.PRODUCT_CATEGORY_NOT_FOUND,
+                status: HttpStatusCode.BadRequest
+              })
             }
             return true
           }
         }
       }
+    },
+    ['params']
+  )
+)
+
+export const updateProductCategoryValidator = validate(
+  checkSchema(
+    {
+      thumbnail: {
+        ...thumbnailSchema,
+        optional: true,
+        notEmpty: undefined
+      },
+      name: {
+        trim: true,
+        optional: true
+      },
+      description: descriptionSchema,
+      status: statusSchema,
+      orderNumber: orderNumberSchema
     },
     ['body']
   )

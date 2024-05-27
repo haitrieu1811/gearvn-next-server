@@ -56,9 +56,12 @@ class FileService {
   }
 
   async deleteImage(imageId: ObjectId) {
-    const deletedImage = await databaseService.files.findOneAndDelete({ _id: imageId })
-    const { name } = deletedImage as WithId<File>
-    await deleteFileFromS3(`images/${name}`)
+    const file = await databaseService.files.findOne({ _id: imageId })
+    if (file) {
+      const deletedImage = await databaseService.files.findOneAndDelete({ _id: imageId })
+      const { name } = deletedImage as WithId<File>
+      await deleteFileFromS3(`images/${name}`)
+    }
     return true
   }
 }

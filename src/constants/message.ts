@@ -118,5 +118,9 @@ export const PRODUCT_CATEGORY_MESSAGES = {
   INVALID_PRODUCT_CATEGORY_THUMBNAIL: 'Ảnh đại diện sản phẩm không hợp lệ.',
   PRODUCT_CATEGORY_NAME_IS_REQUIRED: 'Tên danh mục sản phẩm là bắt buộc.',
   INVALID_PRODUCT_CATEGORY_STATUS: 'Trạng thái danh mục sản phẩm không hợp lệ.',
-  ORDER_NUMBER_MUST_BE_A_POSITIVE_INTEGER: 'Số thứ tự sắp xếp danh mục sản phẩm phải là một số nguyên dương.'
+  ORDER_NUMBER_MUST_BE_A_POSITIVE_INTEGER: 'Số thứ tự sắp xếp danh mục sản phẩm phải là một số nguyên dương.',
+  UPDATE_PRODUCT_CATEGORY_SUCCESS: 'Cập nhật danh mục sản phẩm thành công.',
+  PRODUCT_CATEGORY_ID_IS_REQUIRED: 'ID danh mục sản phẩm là bắt buộc.',
+  INVALID_PRODUCT_CATEGORY_ID: 'ID danh mục sản phẩm không hợp lệ.',
+  PRODUCT_CATEGORY_NOT_FOUND: 'Không tìm thấy danh mục sản phẩm.'
 } as const

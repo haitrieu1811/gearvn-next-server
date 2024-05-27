@@ -471,7 +471,7 @@ class UserService {
         }
       }
     )
-    if (updatedUser && updatedUser.avatar && configuredData.avatar) {
+    if (updatedUser && updatedUser.avatar && updatedUser.avatar !== configuredData.avatar) {
       await fileService.deleteImage(updatedUser.avatar)
     }
     const user = await this.aggregateLoggedUser(userId)
