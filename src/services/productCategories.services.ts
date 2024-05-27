@@ -146,6 +146,21 @@ class ProductCategoryService {
       totalPages: Math.ceil(totalRows / limit)
     }
   }
+
+  async findById(productCategoryId: ObjectId) {
+    const aggregate = [
+      {
+        $match: {
+          _id: productCategoryId
+        }
+      },
+      ...this.aggregateProductCategory()
+    ]
+    const productCategories = await databaseService.productCategories.aggregate(aggregate).toArray()
+    return {
+      productCategory: productCategories[0]
+    }
+  }
 }
 
 const productCategoryService = new ProductCategoryService()

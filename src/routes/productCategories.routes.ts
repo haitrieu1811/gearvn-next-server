@@ -4,6 +4,7 @@ import {
   createProductCategoryController,
   getAllProductCategoriesController,
   getProductCategoriesController,
+  getProductCategoryDetailController,
   updateProductCategoryController
 } from '~/controllers/productCategories.controllers'
 import { filterReqBodyMiddleware, paginationValidator } from '~/middlewares/common.middlewares'
@@ -48,6 +49,15 @@ productCategoriesRouter.get(
   isAdminValidator,
   paginationValidator,
   wrapRequestHandler(getAllProductCategoriesController)
+)
+
+productCategoriesRouter.get(
+  '/:productCategoryId',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  isAdminValidator,
+  productCategoryIdValidator,
+  wrapRequestHandler(getProductCategoryDetailController)
 )
 
 export default productCategoriesRouter

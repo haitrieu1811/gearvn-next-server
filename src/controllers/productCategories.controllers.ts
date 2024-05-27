@@ -65,3 +65,11 @@ export const getAllProductCategoriesController = async (
     }
   })
 }
+
+export const getProductCategoryDetailController = async (req: Request<ProductCategoryIdReqParams>, res: Response) => {
+  const result = await productCategoryService.findById(new ObjectId(req.params.productCategoryId))
+  return res.json({
+    message: PRODUCT_CATEGORY_MESSAGES.GET_PRODUCT_CATEGORY_DETAIL_SUCCESS,
+    data: result
+  })
+}

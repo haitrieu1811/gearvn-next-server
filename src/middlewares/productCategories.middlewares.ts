@@ -86,7 +86,7 @@ export const productCategoryIdValidator = validate(
             if (!productCategory) {
               throw new ErrorWithStatus({
                 message: PRODUCT_CATEGORY_MESSAGES.PRODUCT_CATEGORY_NOT_FOUND,
-                status: HttpStatusCode.BadRequest
+                status: HttpStatusCode.NotFound
               })
             }
             return true

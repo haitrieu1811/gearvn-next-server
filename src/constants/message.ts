@@ -124,5 +124,6 @@ export const PRODUCT_CATEGORY_MESSAGES = {
   INVALID_PRODUCT_CATEGORY_ID: 'ID danh mục sản phẩm không hợp lệ.',
   PRODUCT_CATEGORY_NOT_FOUND: 'Không tìm thấy danh mục sản phẩm.',
   GET_PRODUCT_CATEGORIES_SUCCESS: 'Lấy danh sách danh mục sản phẩm thành công.',
-  GET_ALL_PRODUCT_CATEGORIES_SUCCESS: 'Lấy danh sách tất cả danh mục sản phẩm thành công.'
+  GET_ALL_PRODUCT_CATEGORIES_SUCCESS: 'Lấy danh sách tất cả danh mục sản phẩm thành công.',
+  GET_PRODUCT_CATEGORY_DETAIL_SUCCESS: 'Lấy thông tin chi tiết danh mục sản phẩm thành công.'
 } as const
