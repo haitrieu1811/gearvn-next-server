@@ -6,6 +6,7 @@ import {
   getProvincesController,
   getStreetsController,
   getWardsController,
+  setDefaultAddressController,
   updateAddressController
 } from '~/controllers/addresses.controllers'
 import { addressAuthorValidator, addressIdValidator, createAddressValidator } from '~/middlewares/addresses.middlewares'
@@ -60,6 +61,15 @@ addressesRouter.put(
     'wardId'
   ]),
   wrapRequestHandler(updateAddressController)
+)
+
+addressesRouter.post(
+  '/:addressId/set-default',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  addressIdValidator,
+  addressAuthorValidator,
+  wrapRequestHandler(setDefaultAddressController)
 )
 
 export default addressesRouter

@@ -198,6 +198,29 @@ class AddressService {
       address: updatedAddress
     }
   }
+
+  async setDefault({ addressId, userId }: { addressId: ObjectId; userId: ObjectId }) {
+    await databaseService.users.findOneAndUpdate(
+      {
+        _id: userId
+      },
+      {
+        $set: {
+          defaultAddress: addressId
+        },
+        $currentDate: {
+          updatedAt: true
+        }
+      },
+      {
+        returnDocument: 'after',
+        projection: {
+          userId: 0
+        }
+      }
+    )
+    return true
+  }
 }
 
 const addressService = new AddressService()

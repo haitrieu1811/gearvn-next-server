@@ -68,3 +68,14 @@ export const updateAddressController = async (
     data: result
   })
 }
+
+export const setDefaultAddressController = async (req: Request<AddressIdReqParams>, res: Response) => {
+  const { userId } = req.decodedAuthorization as TokenPayload
+  await addressService.setDefault({
+    addressId: new ObjectId(req.params.addressId),
+    userId: new ObjectId(userId)
+  })
+  return res.json({
+    message: ADDRESS_MESSAGES.SET_DEFAULT_ADDRESS_SUCCESS
+  })
+}

@@ -105,5 +105,6 @@ export const ADDRESS_MESSAGES = {
   ADDRESS_ID_IS_REQUIRED: 'ID địa chỉ là bắt buộc.',
   INVALID_ADDRESS_ID: 'ID địa chỉ không hợp lệ.',
   ADDRESS_NOT_FOUND: 'Không tìm thấy địa chỉ.',
-  UPDATE_ADDRESS_SUCCESS: 'Cập nhật địa chỉ thành công.'
+  UPDATE_ADDRESS_SUCCESS: 'Cập nhật địa chỉ thành công.',
+  SET_DEFAULT_ADDRESS_SUCCESS: 'Đặt địa chỉ thành mặc định thành công.'
 } as const
