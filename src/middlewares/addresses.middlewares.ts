@@ -1,10 +1,13 @@
+import { NextFunction, Request, Response } from 'express'
 import { ParamSchema, checkSchema } from 'express-validator'
 import { ObjectId } from 'mongodb'
 
 import { AddressType, HttpStatusCode } from '~/constants/enum'
-import { ADDRESS_MESSAGES, USERS_MESSAGES } from '~/constants/message'
+import { ADDRESS_MESSAGES, GENERAL_MESSAGES, USERS_MESSAGES } from '~/constants/message'
 import { VIET_NAM_PHONE_NUMBER_REGEX } from '~/constants/regex'
 import { ErrorWithStatus } from '~/models/Errors'
+import { AddressIdReqParams } from '~/models/requests/Address.requests'
+import { TokenPayload } from '~/models/requests/User.requests'
 import databaseService from '~/services/database.services'
 import { numberEnumToArray } from '~/utils/utils'
 import { validate } from '~/utils/validation'
@@ -156,3 +159,52 @@ export const createAddressValidator = validate(
     ['body']
   )
 )
+
+export const addressIdValidator = validate(
+  checkSchema(
+    {
+      addressId: {
+        trim: true,
+        custom: {
+          options: async (value: string) => {
+            if (!value) {
+              throw new ErrorWithStatus({
+                message: ADDRESS_MESSAGES.ADDRESS_ID_IS_REQUIRED,
+                status: HttpStatusCode.BadRequest
+              })
+            }
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                message: ADDRESS_MESSAGES.INVALID_ADDRESS_ID,
+                status: HttpStatusCode.BadRequest
+              })
+            }
+            const address = await databaseService.addresses.findOne({ _id: new ObjectId(value) })
+            if (!address) {
+              throw new ErrorWithStatus({
+                message: ADDRESS_MESSAGES.ADDRESS_NOT_FOUND,
+                status: HttpStatusCode.NotFound
+              })
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['params']
+  )
+)
+
+export const addressAuthorValidator = async (req: Request<AddressIdReqParams>, _: Response, next: NextFunction) => {
+  const { userId } = req.decodedAuthorization as TokenPayload
+  const address = await databaseService.addresses.findOne({ _id: new ObjectId(req.params.addressId) })
+  if (address?.userId.toString() !== userId) {
+    next(
+      new ErrorWithStatus({
+        message: GENERAL_MESSAGES.PERMISSION_DENIED,
+        status: HttpStatusCode.Forbidden
+      })
+    )
+  }
+  next()
+}

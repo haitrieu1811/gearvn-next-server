@@ -5,9 +5,10 @@ import {
   getDistrictsController,
   getProvincesController,
   getStreetsController,
-  getWardsController
+  getWardsController,
+  updateAddressController
 } from '~/controllers/addresses.controllers'
-import { createAddressValidator } from '~/middlewares/addresses.middlewares'
+import { addressAuthorValidator, addressIdValidator, createAddressValidator } from '~/middlewares/addresses.middlewares'
 import { filterReqBodyMiddleware } from '~/middlewares/common.middlewares'
 import { accessTokenValidator, isVerifiedUserValidator } from '~/middlewares/users.middlewares'
 import { CreateAddressReqBody } from '~/models/requests/Address.requests'
@@ -39,6 +40,26 @@ addressesRouter.post(
     'wardId'
   ]),
   wrapRequestHandler(createAddressController)
+)
+
+addressesRouter.put(
+  '/:addressId',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  addressIdValidator,
+  addressAuthorValidator,
+  createAddressValidator,
+  filterReqBodyMiddleware<CreateAddressReqBody>([
+    'addressDetail',
+    'districtId',
+    'fullName',
+    'phoneNumber',
+    'provinceId',
+    'streetId',
+    'type',
+    'wardId'
+  ]),
+  wrapRequestHandler(updateAddressController)
 )
 
 export default addressesRouter

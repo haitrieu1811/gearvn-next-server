@@ -101,5 +101,9 @@ export const ADDRESS_MESSAGES = {
   ADDRESS_TYPE_IS_REQUIRED: 'Loại địa chỉ là bắt buộc.',
   INVALID_ADDRESS_TYPE: 'Loại địa chỉ không hợp lệ.',
   STREET_ID_IS_REQUIRED: 'ID đường là bắt buộc.',
-  STREET_NOT_FOUND: 'Không tìm thấy đường.'
+  STREET_NOT_FOUND: 'Không tìm thấy đường.',
+  ADDRESS_ID_IS_REQUIRED: 'ID địa chỉ là bắt buộc.',
+  INVALID_ADDRESS_ID: 'ID địa chỉ không hợp lệ.',
+  ADDRESS_NOT_FOUND: 'Không tìm thấy địa chỉ.',
+  UPDATE_ADDRESS_SUCCESS: 'Cập nhật địa chỉ thành công.'
 } as const

@@ -172,6 +172,32 @@ class AddressService {
       address: insertedAddress
     }
   }
+
+  async update({ data, addressId }: { data: CreateAddressReqBody; addressId: ObjectId }) {
+    const updatedAddress = await databaseService.addresses.findOneAndUpdate(
+      {
+        _id: addressId
+      },
+      {
+        $set: {
+          ...data,
+          provinceId: new ObjectId(data.provinceId)
+        },
+        $currentDate: {
+          updatedAt: true
+        }
+      },
+      {
+        returnDocument: 'after',
+        projection: {
+          userId: 0
+        }
+      }
+    )
+    return {
+      address: updatedAddress
+    }
+  }
 }
 
 const addressService = new AddressService()
