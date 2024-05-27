@@ -115,3 +115,9 @@ export enum FileType {
   Image,
   Video
 }
+
+export enum AddressType {
+  Home,
+  Office,
+  Other
+}

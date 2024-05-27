@@ -52,7 +52,8 @@ export const USERS_MESSAGES = {
   INVALID_USER_ID: 'User id không hợp lệ.',
   USER_NOT_FOUND: 'Không tìm thấy user.',
   USER_ROLE_ALREADY_EXIST: 'User đã có quyền này.',
-  USER_ROLE_NOT_EXIST: 'User không có vai trò này.'
+  USER_ROLE_NOT_EXIST: 'User không có vai trò này.',
+  PHONE_NUMBER_IS_REQUIRED: 'Số điện thoại là bắt buộc.'
 } as const
 
 export const FILES_MESSAGES = {
@@ -81,4 +82,24 @@ export const ROLES_MESSAGES = {
   GET_ROLE_DETAIL_SUCCESS: 'Lấy thông tin chi tiết quyền thành công.',
   ASSIGN_ROLE_TO_USER_SUCCESS: 'Gán vai trò cho user thành công.',
   UNASSIGN_ROLE_TO_USER_SUCCESS: 'Bỏ gán vai trò của user thành công.'
+} as const
+
+export const ADDRESS_MESSAGES = {
+  GET_ALL_PROVINCES_SUCCESS: 'Lấy danh sách tất cả tỉnh/thành thành công.',
+  GET_DISTRICTS_SUCCESS: 'Lấy danh sách các quận/huyện thành công.',
+  GET_WARDS_SUCCESS: 'Lấy danh sách các phường/xã thành công.',
+  GET_STREETS_SUCCESS: 'Lấy danh sách đường thành công.',
+  CREATE_ADDRESS_SUCCESS: 'Tạo địa chỉ thành công.',
+  PROVINCE_ID_IS_REQUIRED: 'ID tỉnh/thành phố là bắt buộc.',
+  INVALID_PROVINCE_ID: 'ID tỉnh/thành phố không hợp lệ.',
+  PROVINCE_NOT_FOUND: 'Không tìm thấy tỉnh/thành phố.',
+  DISTRICT_ID_IS_REQUIRED: 'ID quận/huyện là bắt buộc.',
+  DISTRICT_NOT_FOUND: 'Không tìm thấy quận/huyện.',
+  WARD_ID_IS_REQUIRED: 'ID phường/xã là bắt buộc.',
+  WARD_NOT_FOUND: 'Không tìm thấy phường/xã.',
+  ADDRESS_DETAIL_IS_REQUIRED: 'Địa chỉ chi tiết là bắt buộc.',
+  ADDRESS_TYPE_IS_REQUIRED: 'Loại địa chỉ là bắt buộc.',
+  INVALID_ADDRESS_TYPE: 'Loại địa chỉ không hợp lệ.',
+  STREET_ID_IS_REQUIRED: 'ID đường là bắt buộc.',
+  STREET_NOT_FOUND: 'Không tìm thấy đường.'
 } as const
