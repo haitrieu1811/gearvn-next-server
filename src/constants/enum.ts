@@ -126,3 +126,8 @@ export enum ProductCategoryStatus {
   Active,
   Inactive
 }
+
+export enum BrandStatus {
+  Active,
+  Inactive
+}

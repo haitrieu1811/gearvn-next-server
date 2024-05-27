@@ -128,3 +128,20 @@ export const PRODUCT_CATEGORY_MESSAGES = {
   GET_PRODUCT_CATEGORY_DETAIL_SUCCESS: 'Lấy thông tin chi tiết danh mục sản phẩm thành công.',
   DELETE_PRODUCT_CATEGORY_SUCCESS: 'Xóa danh mục sản phẩm thành công.'
 } as const
+
+export const BRANDS_MESSAGES = {
+  CREATE_BRAND_SUCCESS: 'Tạo thương hiệu thành công.',
+  UPDATE_BRAND_SUCCESS: 'Cập nhật thương hiệu thành công',
+  DELETE_BRAND_SUCCESS: 'Xóa thương hiệu thành công.',
+  BRAND_ID_IS_REQUIRED: 'ID thương hiệu là bắt buộc.',
+  INVALID_BRAND_ID: 'ID thương hiệu không hợp lệ.',
+  BRAND_NOT_FOUND: 'Không tìm thấy thương hiệu.',
+  BRAND_THUMBNAIL_IS_REQUIRED: 'Ảnh đại diện thương hiệu là bắt buộc.',
+  INVALID_BRAND_THUMBNAIL: 'Ảnh đại diện thương hiệu không hợp lệ.',
+  INVALID_BRAND_STATUS: 'Trạng thái thương hiệu không hợp lệ.',
+  BRAND_NAME_IS_REQUIRED: 'Tên thương hiệu là bắt buộc.',
+  ORDER_NUMBER_MUST_BE_A_POSITIVE_INTEGER: 'Thứ tự sắp xếp nhãn hiệu phải là một số nguyên dương.',
+  GET_ALL_BRANDS_SUCCESS: 'Lấy danh sách tất cả thương hiệu thành công.',
+  GET_BRAND_DETAIL_SUCCESS: 'Lấy thông tin chi tiết thương hiệu thành công.',
+  GET_BRANDS_SUCCESS: 'Lấy danh sách nhãn hiệu thành công.'
+} as const
