@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb'
+import omit from 'lodash/omit'
 
 import { ProductApprovalStatus, UserType } from '~/constants/enum'
 import Product, { ProductSpecification } from '~/models/databases/Product.database'
@@ -31,6 +32,40 @@ class ProductService {
     const insertedProduct = await databaseService.products.findOne({ _id: insertedId })
     return {
       product: insertedProduct
+    }
+  }
+
+  async update({ data, productId }: { data: CreateProductReqBody; productId: ObjectId }) {
+    const specifications = data.specifications?.map(
+      (specification) =>
+        new ProductSpecification({
+          key: specification.key,
+          value: specification.value
+        })
+    )
+    const updatedProduct = await databaseService.products.findOneAndUpdate(
+      {
+        _id: productId
+      },
+      {
+        $set: {
+          ...data,
+          productCategoryId: new ObjectId(data.productCategoryId),
+          brandId: new ObjectId(data.brandId),
+          photos: data.photos.map((photo) => new ObjectId(photo)),
+          thumbnail: new ObjectId(data.thumbnail),
+          specifications
+        },
+        $currentDate: {
+          updatedAt: true
+        }
+      },
+      {
+        returnDocument: 'after'
+      }
+    )
+    return {
+      product: updatedProduct
     }
   }
 }

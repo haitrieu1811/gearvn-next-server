@@ -163,5 +163,9 @@ export const PRODUCTS_MESSAGES = {
   PRODUCT_SPECIFICATIONS_CAN_NOT_BE_EMPTY: 'Thông số kỹ thuật sản phẩm không được rỗng.',
   INVALID_PRODUCT_SPECIFICATIONS: 'Thông số kỹ thuật không hợp lệ.',
   INVALID_PRODUCT_STATUS: 'Trạng thái sản phẩm không hợp lệ.',
-  INVALID_PRODUCT_APPROVAL_STATUS: 'Trạng thái phê duyện sản phẩm không hợp lệ.'
+  INVALID_PRODUCT_APPROVAL_STATUS: 'Trạng thái phê duyện sản phẩm không hợp lệ.',
+  PRODUCT_ID_IS_REQUIRED: 'ID sản phẩm là bắt buộc.',
+  INVALID_PRODUCT_ID: 'ID sản phẩm không hợp lệ.',
+  PRODUCT_NOT_FOUND: 'Không tìm thấy sản phẩm.',
+  UPDATE_PRODUCT_SUCCESS: 'Cập nhật sản phẩm thành công.'
 } as const

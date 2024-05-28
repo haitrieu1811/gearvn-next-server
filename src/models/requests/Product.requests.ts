@@ -1,3 +1,5 @@
+import { ParamsDictionary } from 'express-serve-static-core'
+
 import { ProductApprovalStatus, ProductStatus } from '~/constants/enum'
 
 export type CreateProductReqBody = {
@@ -17,4 +19,8 @@ export type CreateProductReqBody = {
   }[]
   status?: ProductStatus
   approvalStatus?: ProductApprovalStatus
+}
+
+export type ProductIdReqParams = ParamsDictionary & {
+  productId: string
 }

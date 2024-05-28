@@ -1,13 +1,15 @@
 import { NextFunction, Request, Response } from 'express'
 import { checkSchema } from 'express-validator'
 import isPlainObject from 'lodash/isPlainObject'
-import { ObjectId } from 'mongodb'
+import { ObjectId, WithId } from 'mongodb'
 
 import { HttpStatusCode, ProductApprovalStatus, ProductStatus, RoleField, RoleType, UserType } from '~/constants/enum'
 import { GENERAL_MESSAGES, PRODUCTS_MESSAGES } from '~/constants/message'
 import { brandIdSchema } from '~/middlewares/brands.middlewares'
 import { productCategoryIdSchema } from '~/middlewares/productCategories.middlewares'
 import { ErrorWithStatus } from '~/models/Errors'
+import Product from '~/models/databases/Product.database'
+import { ProductIdReqParams } from '~/models/requests/Product.requests'
 import { TokenPayload } from '~/models/requests/User.requests'
 import databaseService from '~/services/database.services'
 import { numberEnumToArray } from '~/utils/utils'
@@ -200,7 +202,42 @@ export const createProductValidator = validate(
   )
 )
 
-export const createProductRoleValidator = async (req: Request, _: Response, next: NextFunction) => {
+export const productIdValidator = validate(
+  checkSchema(
+    {
+      productId: {
+        trim: true,
+        custom: {
+          options: async (value: string) => {
+            if (!value) {
+              throw new ErrorWithStatus({
+                message: PRODUCTS_MESSAGES.PRODUCT_ID_IS_REQUIRED,
+                status: HttpStatusCode.BadRequest
+              })
+            }
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                message: PRODUCTS_MESSAGES.INVALID_PRODUCT_ID,
+                status: HttpStatusCode.BadRequest
+              })
+            }
+            const product = await databaseService.products.findOne({ _id: new ObjectId(value) })
+            if (!product) {
+              throw new ErrorWithStatus({
+                message: PRODUCTS_MESSAGES.PRODUCT_NOT_FOUND,
+                status: HttpStatusCode.NotFound
+              })
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['params']
+  )
+)
+
+export const authorProductValidator = async (req: Request<ProductIdReqParams>, _: Response, next: NextFunction) => {
   const { userId, userType } = req.decodedAuthorization as TokenPayload
   if (userType === UserType.Admin) {
     next()
@@ -212,15 +249,10 @@ export const createProductRoleValidator = async (req: Request, _: Response, next
       })
     )
   } else {
-    const createProductRole = await databaseService.roles.findOne({
-      type: RoleType.Create,
-      field: RoleField.Product
+    const product = await databaseService.products.findOne({
+      _id: new ObjectId(req.params.productId)
     })
-    const role = await databaseService.userRoles.findOne({
-      userId: new ObjectId(userId),
-      roleId: createProductRole?._id
-    })
-    if (!role) {
+    if ((product as WithId<Product>).userId.toString() !== userId) {
       next(
         new ErrorWithStatus({
           message: GENERAL_MESSAGES.PERMISSION_DENIED,
@@ -231,3 +263,41 @@ export const createProductRoleValidator = async (req: Request, _: Response, next
     next()
   }
 }
+
+export const roleValidator =
+  ({ roleType, roleField }: { roleType: RoleType; roleField: RoleField }) =>
+  async (req: Request, _: Response, next: NextFunction) => {
+    const { userId, userType } = req.decodedAuthorization as TokenPayload
+    if (userType === UserType.Admin) {
+      next()
+    } else if (userType === UserType.Customer) {
+      next(
+        new ErrorWithStatus({
+          message: GENERAL_MESSAGES.PERMISSION_DENIED,
+          status: HttpStatusCode.Forbidden
+        })
+      )
+    } else {
+      const actionRole = await databaseService.roles.findOne({
+        type: roleType,
+        field: roleField
+      })
+      const role = await databaseService.userRoles.findOne({
+        userId: new ObjectId(userId),
+        roleId: actionRole?._id
+      })
+      if (!role) {
+        next(
+          new ErrorWithStatus({
+            message: GENERAL_MESSAGES.PERMISSION_DENIED,
+            status: HttpStatusCode.Forbidden
+          })
+        )
+      }
+      next()
+    }
+  }
+
+export const createProductRoleValidator = roleValidator({ roleType: RoleType.Create, roleField: RoleField.Product })
+
+export const updateProductRoleValidator = roleValidator({ roleType: RoleType.Update, roleField: RoleField.Product })
