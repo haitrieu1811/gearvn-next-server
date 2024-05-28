@@ -4,6 +4,7 @@ import { ENV_CONFIG } from '~/constants/config'
 import Address from '~/models/databases/Address.database'
 import Brand from '~/models/databases/Brand.database'
 import File from '~/models/databases/File.database'
+import Product from '~/models/databases/Product.database'
 import ProductCategory from '~/models/databases/ProductCategory.database'
 import { Province } from '~/models/databases/Province.database'
 import RefreshToken from '~/models/databases/RefreshToken.database'
@@ -65,6 +66,10 @@ class DatabaseService {
 
   get brands(): Collection<Brand> {
     return this.db.collection(ENV_CONFIG.DB_BRANDS_COLLECTION_NAME)
+  }
+
+  get products(): Collection<Product> {
+    return this.db.collection(ENV_CONFIG.DB_PRODUCTS_COLLECTION_NAME)
   }
 }
 

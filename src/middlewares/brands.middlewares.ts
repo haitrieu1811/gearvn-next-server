@@ -45,6 +45,34 @@ const orderNumberSchema: ParamSchema = {
   }
 }
 
+export const brandIdSchema: ParamSchema = {
+  trim: true,
+  custom: {
+    options: async (value: string) => {
+      if (!value) {
+        throw new ErrorWithStatus({
+          message: BRANDS_MESSAGES.BRAND_ID_IS_REQUIRED,
+          status: HttpStatusCode.BadRequest
+        })
+      }
+      if (!ObjectId.isValid(value)) {
+        throw new ErrorWithStatus({
+          message: BRANDS_MESSAGES.INVALID_BRAND_ID,
+          status: HttpStatusCode.BadRequest
+        })
+      }
+      const brand = await databaseService.brands.findOne({ _id: new ObjectId(value) })
+      if (!brand) {
+        throw new ErrorWithStatus({
+          message: BRANDS_MESSAGES.BRAND_NOT_FOUND,
+          status: HttpStatusCode.NotFound
+        })
+      }
+      return true
+    }
+  }
+}
+
 export const createBrandValidator = validate(
   checkSchema(
     {
@@ -66,33 +94,7 @@ export const createBrandValidator = validate(
 export const brandIdValidator = validate(
   checkSchema(
     {
-      brandId: {
-        trim: true,
-        custom: {
-          options: async (value: string) => {
-            if (!value) {
-              throw new ErrorWithStatus({
-                message: BRANDS_MESSAGES.BRAND_ID_IS_REQUIRED,
-                status: HttpStatusCode.BadRequest
-              })
-            }
-            if (!ObjectId.isValid(value)) {
-              throw new ErrorWithStatus({
-                message: BRANDS_MESSAGES.INVALID_BRAND_ID,
-                status: HttpStatusCode.BadRequest
-              })
-            }
-            const brand = await databaseService.brands.findOne({ _id: new ObjectId(value) })
-            if (!brand) {
-              throw new ErrorWithStatus({
-                message: BRANDS_MESSAGES.BRAND_NOT_FOUND,
-                status: HttpStatusCode.NotFound
-              })
-            }
-            return true
-          }
-        }
-      }
+      brandId: brandIdSchema
     },
     ['params']
   )

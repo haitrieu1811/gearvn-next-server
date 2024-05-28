@@ -45,6 +45,34 @@ const orderNumberSchema: ParamSchema = {
   }
 }
 
+export const productCategoryIdSchema: ParamSchema = {
+  trim: true,
+  custom: {
+    options: async (value: string) => {
+      if (!value) {
+        throw new ErrorWithStatus({
+          message: PRODUCT_CATEGORY_MESSAGES.PRODUCT_CATEGORY_ID_IS_REQUIRED,
+          status: HttpStatusCode.BadRequest
+        })
+      }
+      if (!ObjectId.isValid(value)) {
+        throw new ErrorWithStatus({
+          message: PRODUCT_CATEGORY_MESSAGES.INVALID_PRODUCT_CATEGORY_ID,
+          status: HttpStatusCode.BadRequest
+        })
+      }
+      const productCategory = await databaseService.productCategories.findOne({ _id: new ObjectId(value) })
+      if (!productCategory) {
+        throw new ErrorWithStatus({
+          message: PRODUCT_CATEGORY_MESSAGES.PRODUCT_CATEGORY_NOT_FOUND,
+          status: HttpStatusCode.NotFound
+        })
+      }
+      return true
+    }
+  }
+}
+
 export const createProductCategoryValidator = validate(
   checkSchema(
     {
@@ -66,33 +94,7 @@ export const createProductCategoryValidator = validate(
 export const productCategoryIdValidator = validate(
   checkSchema(
     {
-      productCategoryId: {
-        trim: true,
-        custom: {
-          options: async (value: string) => {
-            if (!value) {
-              throw new ErrorWithStatus({
-                message: PRODUCT_CATEGORY_MESSAGES.PRODUCT_CATEGORY_ID_IS_REQUIRED,
-                status: HttpStatusCode.BadRequest
-              })
-            }
-            if (!ObjectId.isValid(value)) {
-              throw new ErrorWithStatus({
-                message: PRODUCT_CATEGORY_MESSAGES.INVALID_PRODUCT_CATEGORY_ID,
-                status: HttpStatusCode.BadRequest
-              })
-            }
-            const productCategory = await databaseService.productCategories.findOne({ _id: new ObjectId(value) })
-            if (!productCategory) {
-              throw new ErrorWithStatus({
-                message: PRODUCT_CATEGORY_MESSAGES.PRODUCT_CATEGORY_NOT_FOUND,
-                status: HttpStatusCode.NotFound
-              })
-            }
-            return true
-          }
-        }
-      }
+      productCategoryId: productCategoryIdSchema
     },
     ['params']
   )

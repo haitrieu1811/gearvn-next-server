@@ -131,3 +131,13 @@ export enum BrandStatus {
   Active,
   Inactive
 }
+
+export enum ProductStatus {
+  Active,
+  Inactive
+}
+
+export enum ProductApprovalStatus {
+  Approved,
+  Unapproved
+}

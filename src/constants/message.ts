@@ -145,3 +145,23 @@ export const BRANDS_MESSAGES = {
   GET_BRAND_DETAIL_SUCCESS: 'Lấy thông tin chi tiết thương hiệu thành công.',
   GET_BRANDS_SUCCESS: 'Lấy danh sách nhãn hiệu thành công.'
 } as const
+
+export const PRODUCTS_MESSAGES = {
+  CREATE_PRODUCT_SUCCESS: 'Tạo sản phẩm thành công.',
+  PRODUCT_NAME_IS_REQUIRED: 'Tên sản phẩm là bắt buộc.',
+  PRODUCT_ORIGINAL_PRICE_IS_REQUIRED: 'Giá gốc sản phẩm là bắt buộc.',
+  PRODUCT_ORIGINAL_PRICE_MUST_BE_A_POSITIVE_INTEGER: 'Giá gốc sản phẩm phải là một số nguyên dương.',
+  PRODUCT_PRICE_AFTER_DISCOUNT_MUST_BE_A_POSITIVE_INTEGER: 'Giá sau khi giảm phải là một số nguyên dương.',
+  PRODUCT_PHOTOS_IS_REQUIRED: 'Hình ảnh sản phẩm là bắt buộc.',
+  PRODUCT_PHOTOS_MUST_BE_AN_ARRAY: 'Hình ảnh sản phẩm phải là một mảng.',
+  PRODUCT_PHOTOS_CAN_NOT_BE_EMPTY: 'Hình ảnh sản phẩm không được rỗng.',
+  INVALID_PRODUCT_PHOTOS: 'Hình ảnh sản phẩm không hợp lệ.',
+  PRODUCT_THUMBNAIL_IS_REQUIRED: 'Hình nhỏ sản phẩm là bắt buộc.',
+  INVALID_PRODUCT_THUMBNAIL: 'Hình nhỏ sản phẩm không hợp lệ.',
+  PRODUCT_ORDER_NUMBER_MUST_BE_A_POSITIVE_INTEGER: 'Thứ tự sắp xếp sản phẩm phải là một số nguyên dương.',
+  PRODUCT_SPECIFICATIONS_MUST_BE_AN_ARRAY: 'Thông số kỹ thuật sản phẩm phải là một mảng.',
+  PRODUCT_SPECIFICATIONS_CAN_NOT_BE_EMPTY: 'Thông số kỹ thuật sản phẩm không được rỗng.',
+  INVALID_PRODUCT_SPECIFICATIONS: 'Thông số kỹ thuật không hợp lệ.',
+  INVALID_PRODUCT_STATUS: 'Trạng thái sản phẩm không hợp lệ.',
+  INVALID_PRODUCT_APPROVAL_STATUS: 'Trạng thái phê duyện sản phẩm không hợp lệ.'
+} as const
