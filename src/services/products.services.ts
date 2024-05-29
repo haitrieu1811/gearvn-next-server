@@ -1,10 +1,10 @@
-import { ObjectId } from 'mongodb'
-import omit from 'lodash/omit'
+import { ObjectId, WithId } from 'mongodb'
 
 import { ProductApprovalStatus, UserType } from '~/constants/enum'
 import Product, { ProductSpecification } from '~/models/databases/Product.database'
 import { CreateProductReqBody } from '~/models/requests/Product.requests'
 import databaseService from '~/services/database.services'
+import fileService from '~/services/files.services'
 
 class ProductService {
   async create({ data, userId, userType }: { data: CreateProductReqBody; userId: ObjectId; userType: UserType }) {
@@ -43,7 +43,8 @@ class ProductService {
           value: specification.value
         })
     )
-    const updatedProduct = await databaseService.products.findOneAndUpdate(
+    const beforeProduct = (await databaseService.products.findOne({ _id: productId })) as WithId<Product>
+    const updatedProduct = (await databaseService.products.findOneAndUpdate(
       {
         _id: productId
       },
@@ -63,7 +64,19 @@ class ProductService {
       {
         returnDocument: 'after'
       }
-    )
+    )) as WithId<Product>
+    if (updatedProduct.thumbnail.toString() !== beforeProduct.thumbnail.toString()) {
+      await fileService.deleteImage(beforeProduct.thumbnail)
+    }
+    const newPhotosToString = updatedProduct.photos.map((photo) => photo.toString())
+    const deletedImages = beforeProduct.photos.filter((photo) => !newPhotosToString.includes(photo.toString()))
+    if (deletedImages.length > 0) {
+      await Promise.all(
+        deletedImages.map(async (imageId) => {
+          await fileService.deleteImage(imageId)
+        })
+      )
+    }
     return {
       product: updatedProduct
     }
