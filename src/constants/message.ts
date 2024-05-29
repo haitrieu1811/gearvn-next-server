@@ -3,7 +3,7 @@ export const GENERAL_MESSAGES = {
   PAGE_MUST_BE_A_POSITIVE_INTEGER: 'Page phải là số nguyên dương.',
   LIMIT_MUST_BE_A_POSITIVE_INTEGER: 'Limit phải là số nguyên dương.',
   INVALID_IMAGE_ID: 'Image id không hợp lệ.',
-  PERMISSION_DENIED: 'Truy cập bị từ chối.'
+  PERMISSION_DENIED: 'Truy cập API bị từ chối.'
 } as const
 
 export const USERS_MESSAGES = {
@@ -167,5 +167,6 @@ export const PRODUCTS_MESSAGES = {
   PRODUCT_ID_IS_REQUIRED: 'ID sản phẩm là bắt buộc.',
   INVALID_PRODUCT_ID: 'ID sản phẩm không hợp lệ.',
   PRODUCT_NOT_FOUND: 'Không tìm thấy sản phẩm.',
-  UPDATE_PRODUCT_SUCCESS: 'Cập nhật sản phẩm thành công.'
+  UPDATE_PRODUCT_SUCCESS: 'Cập nhật sản phẩm thành công.',
+  DELETE_PRODUCT_SUCCESS: 'Xóa sản phẩm thành công.'
 } as const

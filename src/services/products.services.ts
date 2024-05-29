@@ -81,6 +81,18 @@ class ProductService {
       product: updatedProduct
     }
   }
+
+  async delete(productId: ObjectId) {
+    const deletedProduct = await databaseService.products.findOneAndDelete({ _id: productId })
+    if (deletedProduct) {
+      await Promise.all(
+        [deletedProduct.thumbnail, ...deletedProduct.photos].map(async (photo) => {
+          await fileService.deleteImage(photo)
+        })
+      )
+    }
+    return true
+  }
 }
 
 const productService = new ProductService()

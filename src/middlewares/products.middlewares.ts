@@ -301,3 +301,5 @@ export const roleValidator =
 export const createProductRoleValidator = roleValidator({ roleType: RoleType.Create, roleField: RoleField.Product })
 
 export const updateProductRoleValidator = roleValidator({ roleType: RoleType.Update, roleField: RoleField.Product })
+
+export const deleteProductRoleValidator = roleValidator({ roleType: RoleType.Delete, roleField: RoleField.Product })

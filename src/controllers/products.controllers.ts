@@ -36,3 +36,10 @@ export const updateProductController = async (
     data: result
   })
 }
+
+export const deleteProductController = async (req: Request<ProductIdReqParams>, res: Response) => {
+  await productService.delete(new ObjectId(req.params.productId))
+  return res.json({
+    message: PRODUCTS_MESSAGES.DELETE_PRODUCT_SUCCESS
+  })
+}

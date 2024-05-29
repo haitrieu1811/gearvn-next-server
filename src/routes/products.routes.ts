@@ -1,9 +1,14 @@
 import { Router } from 'express'
 
-import { createProductController, updateProductController } from '~/controllers/products.controllers'
+import {
+  createProductController,
+  deleteProductController,
+  updateProductController
+} from '~/controllers/products.controllers'
 import {
   createProductRoleValidator,
   createProductValidator,
+  deleteProductRoleValidator,
   productIdValidator,
   updateProductRoleValidator
 } from '~/middlewares/products.middlewares'
@@ -29,6 +34,15 @@ productsRouter.put(
   productIdValidator,
   createProductValidator,
   wrapRequestHandler(updateProductController)
+)
+
+productsRouter.delete(
+  '/:productId',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  deleteProductRoleValidator,
+  productIdValidator,
+  wrapRequestHandler(deleteProductController)
 )
 
 export default productsRouter
