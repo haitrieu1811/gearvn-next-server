@@ -1,6 +1,7 @@
 import { ParamsDictionary } from 'express-serve-static-core'
 
 import { ProductApprovalStatus, ProductStatus } from '~/constants/enum'
+import { PaginationReqQuery } from '~/models/requests/Common.requests'
 
 export type CreateProductReqBody = {
   productCategoryId: string
@@ -23,4 +24,12 @@ export type CreateProductReqBody = {
 
 export type ProductIdReqParams = ParamsDictionary & {
   productId: string
+}
+
+export type GetProductsReqQuery = PaginationReqQuery & {
+  categoryId?: string
+  brandId?: string
+  name?: string
+  lowestPrice?: string
+  highestPrice?: string
 }

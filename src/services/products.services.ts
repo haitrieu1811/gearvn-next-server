@@ -1,10 +1,14 @@
+import isUndefined from 'lodash/isUndefined'
+import omitBy from 'lodash/omitBy'
 import { ObjectId, WithId } from 'mongodb'
 
-import { ProductApprovalStatus, UserType } from '~/constants/enum'
+import { ENV_CONFIG } from '~/constants/config'
+import { ProductApprovalStatus, ProductStatus, UserType } from '~/constants/enum'
 import Product, { ProductSpecification } from '~/models/databases/Product.database'
-import { CreateProductReqBody } from '~/models/requests/Product.requests'
+import { CreateProductReqBody, GetProductsReqQuery } from '~/models/requests/Product.requests'
 import databaseService from '~/services/database.services'
 import fileService from '~/services/files.services'
+import { paginationConfig } from '~/utils/utils'
 
 class ProductService {
   async create({ data, userId, userType }: { data: CreateProductReqBody; userId: ObjectId; userType: UserType }) {
@@ -92,6 +96,269 @@ class ProductService {
       )
     }
     return true
+  }
+
+  aggregateProduct() {
+    return [
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'author'
+        }
+      },
+      {
+        $unwind: {
+          path: '$author'
+        }
+      },
+      {
+        $lookup: {
+          from: 'files',
+          localField: 'author.avatar',
+          foreignField: '_id',
+          as: 'authorAvatar'
+        }
+      },
+      {
+        $unwind: {
+          path: '$authorAvatar',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: 'productCategories',
+          localField: 'productCategoryId',
+          foreignField: '_id',
+          as: 'category'
+        }
+      },
+      {
+        $unwind: {
+          path: '$category'
+        }
+      },
+      {
+        $lookup: {
+          from: 'files',
+          localField: 'category.thumbnail',
+          foreignField: '_id',
+          as: 'categoryThumbnail'
+        }
+      },
+      {
+        $unwind: {
+          path: '$categoryThumbnail'
+        }
+      },
+      {
+        $lookup: {
+          from: 'brands',
+          localField: 'brandId',
+          foreignField: '_id',
+          as: 'brand'
+        }
+      },
+      {
+        $unwind: {
+          path: '$brand'
+        }
+      },
+      {
+        $lookup: {
+          from: 'files',
+          localField: 'brand.thumbnail',
+          foreignField: '_id',
+          as: 'brandThumbnail'
+        }
+      },
+      {
+        $unwind: {
+          path: '$brandThumbnail'
+        }
+      },
+      {
+        $lookup: {
+          from: 'files',
+          localField: 'thumbnail',
+          foreignField: '_id',
+          as: 'thumbnail'
+        }
+      },
+      {
+        $unwind: {
+          path: '$thumbnail'
+        }
+      },
+      {
+        $lookup: {
+          from: 'files',
+          localField: 'photos',
+          foreignField: '_id',
+          as: 'photos'
+        }
+      },
+      {
+        $addFields: {
+          'author.avatar': {
+            $cond: {
+              if: '$authorAvatar',
+              then: {
+                $concat: [ENV_CONFIG.HOST, '/', ENV_CONFIG.STATIC_IMAGES_PATH, '/', '$authorAvatar.name']
+              },
+              else: ''
+            }
+          },
+          'category.thumbnail': {
+            $concat: [ENV_CONFIG.HOST, '/', ENV_CONFIG.STATIC_IMAGES_PATH, '/', '$categoryThumbnail.name']
+          },
+          'brand.thumbnail': {
+            $concat: [ENV_CONFIG.HOST, '/', ENV_CONFIG.STATIC_IMAGES_PATH, '/', '$brandThumbnail.name']
+          },
+          thumbnail: {
+            $concat: [ENV_CONFIG.HOST, '/', ENV_CONFIG.STATIC_IMAGES_PATH, '/', '$thumbnail.name']
+          },
+          photos: {
+            $map: {
+              input: '$photos',
+              as: 'photo',
+              in: {
+                $concat: [ENV_CONFIG.HOST, '/', ENV_CONFIG.STATIC_IMAGES_PATH, '/', '$$photo.name']
+              }
+            }
+          }
+        }
+      },
+      {
+        $group: {
+          _id: '$_id',
+          name: {
+            $first: '$name'
+          },
+          thumbnail: {
+            $first: '$thumbnail'
+          },
+          originalPrice: {
+            $first: '$originalPrice'
+          },
+          priceAfterDiscount: {
+            $first: '$priceAfterDiscount'
+          },
+          status: {
+            $first: '$status'
+          },
+          approvalStatus: {
+            $first: '$approvalStatus'
+          },
+          orderNumber: {
+            $first: '$orderNumber'
+          },
+          specifications: {
+            $first: '$specifications'
+          },
+          photos: {
+            $first: '$photos'
+          },
+          author: {
+            $first: '$author'
+          },
+          category: {
+            $first: '$category'
+          },
+          brand: {
+            $first: '$brand'
+          },
+          createdAt: {
+            $first: '$createdAt'
+          },
+          updatedAt: {
+            $first: '$updatedAt'
+          }
+        }
+      },
+      {
+        $project: {
+          'author.password': 0,
+          'author.phoneNumber': 0,
+          'author.addresses': 0,
+          'author.defaultAddress': 0,
+          'author.verifyEmailToken': 0,
+          'author.forgotPasswordToken': 0,
+          'author.type': 0,
+          'author.gender': 0,
+          'author.status': 0,
+          'author.verify': 0,
+          'category.userId': 0,
+          'category.status': 0,
+          'category.orderNumber': 0,
+          'category.description': 0,
+          'brand.userId': 0,
+          'brand.status': 0,
+          'brand.orderNumber': 0,
+          'brand.description': 0
+        }
+      }
+    ]
+  }
+
+  async findMany(query: GetProductsReqQuery) {
+    const { page, limit, skip } = paginationConfig(query)
+    const { categoryId, brandId, lowestPrice, highestPrice } = query
+    const match = omitBy(
+      {
+        status: ProductStatus.Active,
+        approvalStatus: ProductApprovalStatus.Approved,
+        productCategoryId: categoryId ? new ObjectId(categoryId) : undefined,
+        brandId: brandId ? new ObjectId(brandId) : undefined,
+        $and: [
+          lowestPrice
+            ? {
+                priceAfterDiscount: {
+                  $gte: Number(lowestPrice)
+                }
+              }
+            : {},
+          highestPrice
+            ? {
+                priceAfterDiscount: {
+                  $lte: Number(highestPrice)
+                }
+              }
+            : {}
+        ]
+      },
+      isUndefined
+    )
+    const aggregate = [
+      {
+        $match: match
+      },
+      ...this.aggregateProduct(),
+      {
+        $sort: {
+          orderNumber: 1
+        }
+      },
+      {
+        $skip: skip
+      },
+      {
+        $limit: limit
+      }
+    ]
+    const [products, totalRows] = await Promise.all([
+      databaseService.products.aggregate(aggregate).toArray(),
+      databaseService.products.countDocuments(match)
+    ])
+    return {
+      products,
+      page,
+      limit,
+      totalRows,
+      totalPages: Math.ceil(totalRows / limit)
+    }
   }
 }
 

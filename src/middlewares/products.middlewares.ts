@@ -5,8 +5,9 @@ import { ObjectId, WithId } from 'mongodb'
 
 import { HttpStatusCode, ProductApprovalStatus, ProductStatus, RoleField, RoleType, UserType } from '~/constants/enum'
 import { GENERAL_MESSAGES, PRODUCTS_MESSAGES } from '~/constants/message'
+import { NUMBER_REGEX } from '~/constants/regex'
 import { brandIdSchema } from '~/middlewares/brands.middlewares'
-import { productCategoryIdSchema } from '~/middlewares/productCategories.middlewares'
+import { productCategoryIdSchema, productCategoryIdValidator } from '~/middlewares/productCategories.middlewares'
 import { ErrorWithStatus } from '~/models/Errors'
 import Product from '~/models/databases/Product.database'
 import { ProductIdReqParams } from '~/models/requests/Product.requests'
@@ -303,3 +304,53 @@ export const createProductRoleValidator = roleValidator({ roleType: RoleType.Cre
 export const updateProductRoleValidator = roleValidator({ roleType: RoleType.Update, roleField: RoleField.Product })
 
 export const deleteProductRoleValidator = roleValidator({ roleType: RoleType.Delete, roleField: RoleField.Product })
+
+export const getProductsValidator = validate(
+  checkSchema(
+    {
+      categoryId: {
+        ...productCategoryIdSchema,
+        optional: true
+      },
+      brandId: {
+        ...brandIdSchema,
+        optional: true
+      },
+      name: {
+        optional: true,
+        trim: true
+      },
+      lowestPrice: {
+        trim: true,
+        optional: true,
+        custom: {
+          options: (value: string) => {
+            if (!Number.isInteger(Number(value)) || Number(value) < 0) {
+              throw new ErrorWithStatus({
+                message: PRODUCTS_MESSAGES.LOWEST_PRICE_MUST_BE_AN_POSITIVE_INTEGER,
+                status: HttpStatusCode.BadRequest
+              })
+            }
+            return true
+          }
+        }
+      },
+      highestPrice: {
+        trim: true,
+        optional: true,
+        custom: {
+          options: (value: string) => {
+            if (!Number.isInteger(Number(value)) || Number(value) < 0) {
+              throw new ErrorWithStatus({
+                message: PRODUCTS_MESSAGES.HIGHEST_PRICE_MUST_BE_AN_POSITIVE_INTEGER,
+                status: HttpStatusCode.BadRequest
+              })
+            }
+            return true
+          }
+        }
+      }
+    },
+    ['query']
+  )
+)

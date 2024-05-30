@@ -168,5 +168,8 @@ export const PRODUCTS_MESSAGES = {
   INVALID_PRODUCT_ID: 'ID sản phẩm không hợp lệ.',
   PRODUCT_NOT_FOUND: 'Không tìm thấy sản phẩm.',
   UPDATE_PRODUCT_SUCCESS: 'Cập nhật sản phẩm thành công.',
-  DELETE_PRODUCT_SUCCESS: 'Xóa sản phẩm thành công.'
+  DELETE_PRODUCT_SUCCESS: 'Xóa sản phẩm thành công.',
+  GET_PRODUCTS_SUCCESS: 'Lấy danh sách sản phẩm thành công.',
+  LOWEST_PRICE_MUST_BE_AN_POSITIVE_INTEGER: 'Giá thấp nhất phải là một số nguyên dương.',
+  HIGHEST_PRICE_MUST_BE_AN_POSITIVE_INTEGER: 'Giá cao nhất phải là một số nguyên dương.'
 } as const

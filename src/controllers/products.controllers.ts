@@ -3,7 +3,7 @@ import { ParamsDictionary } from 'express-serve-static-core'
 import { ObjectId } from 'mongodb'
 
 import { PRODUCTS_MESSAGES } from '~/constants/message'
-import { CreateProductReqBody, ProductIdReqParams } from '~/models/requests/Product.requests'
+import { CreateProductReqBody, GetProductsReqQuery, ProductIdReqParams } from '~/models/requests/Product.requests'
 import { TokenPayload } from '~/models/requests/User.requests'
 import productService from '~/services/products.services'
 
@@ -41,5 +41,19 @@ export const deleteProductController = async (req: Request<ProductIdReqParams>, 
   await productService.delete(new ObjectId(req.params.productId))
   return res.json({
     message: PRODUCTS_MESSAGES.DELETE_PRODUCT_SUCCESS
+  })
+}
+
+export const getProductsController = async (
+  req: Request<ParamsDictionary, any, any, GetProductsReqQuery>,
+  res: Response
+) => {
+  const { products, ...pagination } = await productService.findMany(req.query)
+  return res.json({
+    message: PRODUCTS_MESSAGES.GET_PRODUCTS_SUCCESS,
+    data: {
+      products,
+      pagination
+    }
   })
 }
