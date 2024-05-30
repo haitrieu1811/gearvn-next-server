@@ -1,9 +1,11 @@
+import { NextFunction, Request, Response } from 'express'
 import { ParamSchema, checkSchema } from 'express-validator'
 import { ObjectId } from 'mongodb'
 
 import { HttpStatusCode, ProductCategoryStatus } from '~/constants/enum'
 import { PRODUCT_CATEGORY_MESSAGES } from '~/constants/message'
 import { ErrorWithStatus } from '~/models/Errors'
+import { ProductCategoryIdReqParams } from '~/models/requests/ProductCategory.requests'
 import databaseService from '~/services/database.services'
 import { numberEnumToArray } from '~/utils/utils'
 import { validate } from '~/utils/validation'
@@ -119,3 +121,24 @@ export const updateProductCategoryValidator = validate(
     ['body']
   )
 )
+
+export const isEmptyProductCategoryValidator = async (
+  req: Request<ProductCategoryIdReqParams>,
+  _: Response,
+  next: NextFunction
+) => {
+  const productsByCategoryId = await databaseService.products
+    .find({
+      productCategoryId: new ObjectId(req.params.productCategoryId)
+    })
+    .toArray()
+  if (productsByCategoryId.length > 0) {
+    next(
+      new ErrorWithStatus({
+        message: PRODUCT_CATEGORY_MESSAGES.PRODUCT_CATEGORY_NOT_EMPTY,
+        status: HttpStatusCode.BadRequest
+      })
+    )
+  }
+  next()
+}

@@ -8,7 +8,12 @@ import {
   getbrandsController,
   updateBrandController
 } from '~/controllers/brands.controllers'
-import { brandIdValidator, createBrandValidator, updateBrandValidator } from '~/middlewares/brands.middlewares'
+import {
+  brandIdValidator,
+  createBrandValidator,
+  isEmptyBrandValidator,
+  updateBrandValidator
+} from '~/middlewares/brands.middlewares'
 import { filterReqBodyMiddleware, paginationValidator } from '~/middlewares/common.middlewares'
 import { accessTokenValidator, isAdminValidator, isVerifiedUserValidator } from '~/middlewares/users.middlewares'
 import { CreateBrandReqBody, UpdateBrandReqBody } from '~/models/requests/Brand.requests'
@@ -63,6 +68,7 @@ brandsRouter.delete(
   isVerifiedUserValidator,
   isAdminValidator,
   brandIdValidator,
+  isEmptyBrandValidator,
   wrapRequestHandler(deleteBrandController)
 )
 

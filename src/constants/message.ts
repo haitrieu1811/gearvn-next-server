@@ -126,7 +126,8 @@ export const PRODUCT_CATEGORY_MESSAGES = {
   GET_PRODUCT_CATEGORIES_SUCCESS: 'Lấy danh sách danh mục sản phẩm thành công.',
   GET_ALL_PRODUCT_CATEGORIES_SUCCESS: 'Lấy danh sách tất cả danh mục sản phẩm thành công.',
   GET_PRODUCT_CATEGORY_DETAIL_SUCCESS: 'Lấy thông tin chi tiết danh mục sản phẩm thành công.',
-  DELETE_PRODUCT_CATEGORY_SUCCESS: 'Xóa danh mục sản phẩm thành công.'
+  DELETE_PRODUCT_CATEGORY_SUCCESS: 'Xóa danh mục sản phẩm thành công.',
+  PRODUCT_CATEGORY_NOT_EMPTY: 'Danh mục sản phẩm đang có sản phẩm.'
 } as const
 
 export const BRANDS_MESSAGES = {
@@ -143,7 +144,8 @@ export const BRANDS_MESSAGES = {
   ORDER_NUMBER_MUST_BE_A_POSITIVE_INTEGER: 'Thứ tự sắp xếp nhãn hiệu phải là một số nguyên dương.',
   GET_ALL_BRANDS_SUCCESS: 'Lấy danh sách tất cả thương hiệu thành công.',
   GET_BRAND_DETAIL_SUCCESS: 'Lấy thông tin chi tiết thương hiệu thành công.',
-  GET_BRANDS_SUCCESS: 'Lấy danh sách nhãn hiệu thành công.'
+  GET_BRANDS_SUCCESS: 'Lấy danh sách nhãn hiệu thành công.',
+  BRAND_NOT_EMPTY: 'Thương hiệu đang có sản phẩm.'
 } as const
 
 export const PRODUCTS_MESSAGES = {

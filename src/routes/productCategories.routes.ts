@@ -11,6 +11,7 @@ import {
 import { filterReqBodyMiddleware, paginationValidator } from '~/middlewares/common.middlewares'
 import {
   createProductCategoryValidator,
+  isEmptyProductCategoryValidator,
   productCategoryIdValidator,
   updateProductCategoryValidator
 } from '~/middlewares/productCategories.middlewares'
@@ -67,6 +68,7 @@ productCategoriesRouter.delete(
   isVerifiedUserValidator,
   isAdminValidator,
   productCategoryIdValidator,
+  isEmptyProductCategoryValidator,
   wrapRequestHandler(deleteProductCategoryController)
 )
 

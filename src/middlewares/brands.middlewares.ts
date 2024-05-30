@@ -1,9 +1,11 @@
+import { NextFunction, Request, Response } from 'express'
 import { ParamSchema, checkSchema } from 'express-validator'
 import { ObjectId } from 'mongodb'
 
 import { BrandStatus, HttpStatusCode } from '~/constants/enum'
 import { BRANDS_MESSAGES } from '~/constants/message'
 import { ErrorWithStatus } from '~/models/Errors'
+import { BrandIdReqParams } from '~/models/requests/Brand.requests'
 import databaseService from '~/services/database.services'
 import { numberEnumToArray } from '~/utils/utils'
 import { validate } from '~/utils/validation'
@@ -119,3 +121,20 @@ export const updateBrandValidator = validate(
     ['body']
   )
 )
+
+export const isEmptyBrandValidator = async (req: Request<BrandIdReqParams>, _: Response, next: NextFunction) => {
+  const productsByBrandId = await databaseService.products
+    .find({
+      brandId: new ObjectId(req.params.brandId)
+    })
+    .toArray()
+  if (productsByBrandId.length > 0) {
+    next(
+      new ErrorWithStatus({
+        message: BRANDS_MESSAGES.BRAND_NOT_EMPTY,
+        status: HttpStatusCode.BadRequest
+      })
+    )
+  }
+  next()
+}
