@@ -217,15 +217,21 @@ class ProductService {
           'brand.thumbnail': {
             $concat: [ENV_CONFIG.HOST, '/', ENV_CONFIG.STATIC_IMAGES_PATH, '/', '$brandThumbnail.name']
           },
-          thumbnail: {
-            $concat: [ENV_CONFIG.HOST, '/', ENV_CONFIG.STATIC_IMAGES_PATH, '/', '$thumbnail.name']
+          thumbnailClone: {
+            _id: '$thumbnail._id',
+            url: {
+              $concat: [ENV_CONFIG.HOST, '/', ENV_CONFIG.STATIC_IMAGES_PATH, '/', '$thumbnail.name']
+            }
           },
           photos: {
             $map: {
               input: '$photos',
               as: 'photo',
               in: {
-                $concat: [ENV_CONFIG.HOST, '/', ENV_CONFIG.STATIC_IMAGES_PATH, '/', '$$photo.name']
+                _id: '$$photo._id',
+                url: {
+                  $concat: [ENV_CONFIG.HOST, '/', ENV_CONFIG.STATIC_IMAGES_PATH, '/', '$$photo.name']
+                }
               }
             }
           }
@@ -238,7 +244,7 @@ class ProductService {
             $first: '$name'
           },
           thumbnail: {
-            $first: '$thumbnail'
+            $first: '$thumbnailClone'
           },
           originalPrice: {
             $first: '$originalPrice'

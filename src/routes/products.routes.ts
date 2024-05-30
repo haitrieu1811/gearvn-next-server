@@ -4,7 +4,8 @@ import {
   createProductController,
   deleteProductController,
   getAllProductsController,
-  getProductDetailController,
+  getProductDetailForReadController,
+  getProductDetailForUpdateController,
   getProductsController,
   updateProductController
 } from '~/controllers/products.controllers'
@@ -15,6 +16,7 @@ import {
   deleteProductRoleValidator,
   getAllProductsRoleValidator,
   getProductsValidator,
+  isPublicProductValidator,
   productIdValidator,
   updateProductRoleValidator
 } from '~/middlewares/products.middlewares'
@@ -93,6 +95,20 @@ productsRouter.get(
   wrapRequestHandler(getAllProductsController)
 )
 
-productsRouter.get('/:productId/for-read', productIdValidator, wrapRequestHandler(getProductDetailController))
+productsRouter.get(
+  '/:productId/for-read',
+  productIdValidator,
+  isPublicProductValidator,
+  wrapRequestHandler(getProductDetailForReadController)
+)
+
+productsRouter.get(
+  '/:productId/for-update',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  updateProductRoleValidator,
+  productIdValidator,
+  wrapRequestHandler(getProductDetailForUpdateController)
+)
 
 export default productsRouter

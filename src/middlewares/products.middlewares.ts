@@ -5,9 +5,8 @@ import { ObjectId, WithId } from 'mongodb'
 
 import { HttpStatusCode, ProductApprovalStatus, ProductStatus, RoleField, RoleType, UserType } from '~/constants/enum'
 import { GENERAL_MESSAGES, PRODUCTS_MESSAGES } from '~/constants/message'
-import { NUMBER_REGEX } from '~/constants/regex'
 import { brandIdSchema } from '~/middlewares/brands.middlewares'
-import { productCategoryIdSchema, productCategoryIdValidator } from '~/middlewares/productCategories.middlewares'
+import { productCategoryIdSchema } from '~/middlewares/productCategories.middlewares'
 import { ErrorWithStatus } from '~/models/Errors'
 import Product from '~/models/databases/Product.database'
 import { ProductIdReqParams } from '~/models/requests/Product.requests'
@@ -209,7 +208,7 @@ export const productIdValidator = validate(
       productId: {
         trim: true,
         custom: {
-          options: async (value: string) => {
+          options: async (value: string, { req }) => {
             if (!value) {
               throw new ErrorWithStatus({
                 message: PRODUCTS_MESSAGES.PRODUCT_ID_IS_REQUIRED,
@@ -229,6 +228,7 @@ export const productIdValidator = validate(
                 status: HttpStatusCode.NotFound
               })
             }
+            ;(req as Request).product = product
             return true
           }
         }
@@ -356,3 +356,17 @@ export const getProductsValidator = validate(
     ['query']
   )
 )
+
+export const isPublicProductValidator = async (req: Request, _: Response, next: NextFunction) => {
+  const product = req.product as WithId<Product>
+  const { status, approvalStatus } = product
+  if (status !== ProductStatus.Active || approvalStatus !== ProductApprovalStatus.Approved) {
+    next(
+      new ErrorWithStatus({
+        message: PRODUCTS_MESSAGES.PRODUCT_NOT_PUBLIC,
+        status: HttpStatusCode.Forbidden
+      })
+    )
+  }
+  next()
+}
