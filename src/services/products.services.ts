@@ -416,6 +416,21 @@ class ProductService {
       totalPages: Math.ceil(totalRows / limit)
     }
   }
+
+  async findById(productId: ObjectId) {
+    const aggregate = [
+      {
+        $match: {
+          _id: productId
+        }
+      },
+      ...this.aggregateProduct()
+    ]
+    const products = await databaseService.products.aggregate(aggregate).toArray()
+    return {
+      product: products[0]
+    }
+  }
 }
 
 const productService = new ProductService()

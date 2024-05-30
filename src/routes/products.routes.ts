@@ -4,6 +4,7 @@ import {
   createProductController,
   deleteProductController,
   getAllProductsController,
+  getProductDetailController,
   getProductsController,
   updateProductController
 } from '~/controllers/products.controllers'
@@ -91,5 +92,7 @@ productsRouter.get(
   paginationValidator,
   wrapRequestHandler(getAllProductsController)
 )
+
+productsRouter.get('/:productId/for-read', productIdValidator, wrapRequestHandler(getProductDetailController))
 
 export default productsRouter

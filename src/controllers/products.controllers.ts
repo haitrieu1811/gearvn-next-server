@@ -71,3 +71,11 @@ export const getAllProductsController = async (
     }
   })
 }
+
+export const getProductDetailController = async (req: Request<ProductIdReqParams>, res: Response) => {
+  const result = await productService.findById(new ObjectId(req.params.productId))
+  return res.json({
+    message: PRODUCTS_MESSAGES.GET_PRODUCT_DETAIL_SUCCESS,
+    data: result
+  })
+}
