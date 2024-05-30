@@ -305,6 +305,8 @@ export const updateProductRoleValidator = roleValidator({ roleType: RoleType.Upd
 
 export const deleteProductRoleValidator = roleValidator({ roleType: RoleType.Delete, roleField: RoleField.Product })
 
+export const getAllProductsRoleValidator = roleValidator({ roleType: RoleType.Read, roleField: RoleField.Product })
+
 export const getProductsValidator = validate(
   checkSchema(
     {

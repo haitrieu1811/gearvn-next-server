@@ -360,6 +360,62 @@ class ProductService {
       totalPages: Math.ceil(totalRows / limit)
     }
   }
+
+  async findAll(query: GetProductsReqQuery) {
+    const { page, limit, skip } = paginationConfig(query)
+    const { categoryId, brandId, lowestPrice, highestPrice } = query
+    const match = omitBy(
+      {
+        productCategoryId: categoryId ? new ObjectId(categoryId) : undefined,
+        brandId: brandId ? new ObjectId(brandId) : undefined,
+        $and: [
+          lowestPrice
+            ? {
+                priceAfterDiscount: {
+                  $gte: Number(lowestPrice)
+                }
+              }
+            : {},
+          highestPrice
+            ? {
+                priceAfterDiscount: {
+                  $lte: Number(highestPrice)
+                }
+              }
+            : {}
+        ]
+      },
+      isUndefined
+    )
+    const aggregate = [
+      {
+        $match: match
+      },
+      ...this.aggregateProduct(),
+      {
+        $sort: {
+          orderNumber: 1
+        }
+      },
+      {
+        $skip: skip
+      },
+      {
+        $limit: limit
+      }
+    ]
+    const [products, totalRows] = await Promise.all([
+      databaseService.products.aggregate(aggregate).toArray(),
+      databaseService.products.countDocuments(match)
+    ])
+    return {
+      products,
+      page,
+      limit,
+      totalRows,
+      totalPages: Math.ceil(totalRows / limit)
+    }
+  }
 }
 
 const productService = new ProductService()

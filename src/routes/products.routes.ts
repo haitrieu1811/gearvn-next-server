@@ -3,6 +3,7 @@ import { Router } from 'express'
 import {
   createProductController,
   deleteProductController,
+  getAllProductsController,
   getProductsController,
   updateProductController
 } from '~/controllers/products.controllers'
@@ -11,6 +12,7 @@ import {
   createProductRoleValidator,
   createProductValidator,
   deleteProductRoleValidator,
+  getAllProductsRoleValidator,
   getProductsValidator,
   productIdValidator,
   updateProductRoleValidator
@@ -80,5 +82,14 @@ productsRouter.delete(
 )
 
 productsRouter.get('/', getProductsValidator, paginationValidator, wrapRequestHandler(getProductsController))
+
+productsRouter.get(
+  '/all',
+  accessTokenValidator,
+  getAllProductsRoleValidator,
+  getProductsValidator,
+  paginationValidator,
+  wrapRequestHandler(getAllProductsController)
+)
 
 export default productsRouter

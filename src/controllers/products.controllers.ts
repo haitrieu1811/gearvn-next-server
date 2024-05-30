@@ -57,3 +57,17 @@ export const getProductsController = async (
     }
   })
 }
+
+export const getAllProductsController = async (
+  req: Request<ParamsDictionary, any, any, GetProductsReqQuery>,
+  res: Response
+) => {
+  const { products, ...pagination } = await productService.findAll(req.query)
+  return res.json({
+    message: PRODUCTS_MESSAGES.GET_ALL_PRODUCTS_SUCCESS,
+    data: {
+      products,
+      pagination
+    }
+  })
+}

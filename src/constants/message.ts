@@ -171,5 +171,6 @@ export const PRODUCTS_MESSAGES = {
   DELETE_PRODUCT_SUCCESS: 'Xóa sản phẩm thành công.',
   GET_PRODUCTS_SUCCESS: 'Lấy danh sách sản phẩm thành công.',
   LOWEST_PRICE_MUST_BE_AN_POSITIVE_INTEGER: 'Giá thấp nhất phải là một số nguyên dương.',
-  HIGHEST_PRICE_MUST_BE_AN_POSITIVE_INTEGER: 'Giá cao nhất phải là một số nguyên dương.'
+  HIGHEST_PRICE_MUST_BE_AN_POSITIVE_INTEGER: 'Giá cao nhất phải là một số nguyên dương.',
+  GET_ALL_PRODUCTS_SUCCESS: 'Lấy danh sách tất cả sản phẩm thành công.'
 } as const
