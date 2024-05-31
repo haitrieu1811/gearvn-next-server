@@ -193,5 +193,6 @@ export const REVIEWS_MESSAGES = {
   REPLY_REVIEW_SUCCESS: 'Phản hồi review thành công.',
   REVIEW_REPLY_CONTENT_IS_REQUIRED: 'Nội dung phản hồi review là bắt buộc.',
   UPDATE_REVIEW_SUCCESS: 'Cập nhật review thành công.',
-  GET_REVIEWS_SUCCESS: 'Lấy danh sách review thành công.'
+  GET_REVIEWS_SUCCESS: 'Lấy danh sách review thành công.',
+  GET_REVIEW_DETAIL_SUCCESS: 'Lấy chi tiết review thành công.'
 } as const

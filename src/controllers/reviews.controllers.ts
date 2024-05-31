@@ -82,3 +82,11 @@ export const getReviewByProductIdController = async (
     }
   })
 }
+
+export const getReviewDetailController = async (req: Request<ReviewIdReqParams>, res: Response) => {
+  const result = await reviewService.findById(new ObjectId(req.params.reviewId))
+  return res.json({
+    message: REVIEWS_MESSAGES.GET_REVIEW_DETAIL_SUCCESS,
+    data: result
+  })
+}

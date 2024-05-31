@@ -3,6 +3,7 @@ import { Router } from 'express'
 import {
   createReviewController,
   getReviewByProductIdController,
+  getReviewDetailController,
   replyReviewController,
   updateReviewController
 } from '~/controllers/reviews.controllers'
@@ -60,5 +61,7 @@ reviewsRouter.get(
   paginationValidator,
   wrapRequestHandler(getReviewByProductIdController)
 )
+
+reviewsRouter.get('/:reviewId', reviewIdValidator, wrapRequestHandler(getReviewDetailController))
 
 export default reviewsRouter

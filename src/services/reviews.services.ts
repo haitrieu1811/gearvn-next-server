@@ -262,6 +262,21 @@ class ReviewService {
       totalPages: Math.ceil(totalRows / limit)
     }
   }
+
+  async findById(reviewId: ObjectId) {
+    const aggregate = [
+      {
+        $match: {
+          _id: reviewId
+        }
+      },
+      ...this.aggregateReview()
+    ]
+    const reviews = await databaseService.reviews.aggregate(aggregate).toArray()
+    return {
+      review: reviews[0]
+    }
+  }
 }
 
 const reviewService = new ReviewService()
