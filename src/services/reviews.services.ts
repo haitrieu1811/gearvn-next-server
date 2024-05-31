@@ -231,7 +231,7 @@ class ReviewService {
     ]
   }
 
-  async findMany({ query, match }: { query: PaginationReqQuery; match: any }) {
+  async findMany({ query, match = {} }: { query: PaginationReqQuery; match?: any }) {
     const { page, limit, skip } = paginationConfig(query)
     const aggregate = [
       {

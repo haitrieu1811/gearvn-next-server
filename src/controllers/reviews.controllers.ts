@@ -90,3 +90,22 @@ export const getReviewDetailController = async (req: Request<ReviewIdReqParams>,
     data: result
   })
 }
+
+export const getAllReviewsController = async (
+  req: Request<ProductIdReqParams, any, any, PaginationReqQuery>,
+  res: Response
+) => {
+  const { reviews, ...pagination } = await reviewService.findMany({
+    query: req.query,
+    match: {
+      parentId: null
+    }
+  })
+  return res.json({
+    message: REVIEWS_MESSAGES.GET_ALL_REVIEWS_SUCCESS,
+    data: {
+      reviews,
+      pagination
+    }
+  })
+}

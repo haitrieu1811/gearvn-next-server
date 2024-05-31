@@ -2,6 +2,7 @@ import { Router } from 'express'
 
 import {
   createReviewController,
+  getAllReviewsController,
   getReviewByProductIdController,
   getReviewDetailController,
   replyReviewController,
@@ -17,7 +18,7 @@ import {
   reviewIdValidator,
   updateReviewValidator
 } from '~/middlewares/reviews.middlewares'
-import { accessTokenValidator, isVerifiedUserValidator } from '~/middlewares/users.middlewares'
+import { accessTokenValidator, isAdminValidator, isVerifiedUserValidator } from '~/middlewares/users.middlewares'
 import { CreateReviewReqBody, UpdateReviewReqBody } from '~/models/requests/Review.requests'
 import { wrapRequestHandler } from '~/utils/handler'
 
@@ -60,6 +61,15 @@ reviewsRouter.get(
   isActiveProductValidator,
   paginationValidator,
   wrapRequestHandler(getReviewByProductIdController)
+)
+
+reviewsRouter.get(
+  '/all',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  isAdminValidator,
+  paginationValidator,
+  wrapRequestHandler(getAllReviewsController)
 )
 
 reviewsRouter.get('/:reviewId', reviewIdValidator, wrapRequestHandler(getReviewDetailController))
