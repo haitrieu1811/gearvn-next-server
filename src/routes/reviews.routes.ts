@@ -5,6 +5,7 @@ import {
   getAllReviewsController,
   getReviewByProductIdController,
   getReviewDetailController,
+  getReviewRepliesController,
   replyReviewController,
   updateReviewController
 } from '~/controllers/reviews.controllers'
@@ -73,5 +74,12 @@ reviewsRouter.get(
 )
 
 reviewsRouter.get('/:reviewId', reviewIdValidator, wrapRequestHandler(getReviewDetailController))
+
+reviewsRouter.get(
+  '/:reviewId/replies',
+  reviewIdValidator,
+  paginationValidator,
+  wrapRequestHandler(getReviewRepliesController)
+)
 
 export default reviewsRouter

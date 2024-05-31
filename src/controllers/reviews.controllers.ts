@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { ObjectId, WithId } from 'mongodb'
+import { ParamsDictionary } from 'express-serve-static-core'
 
 import { REVIEWS_MESSAGES } from '~/constants/message'
 import Review from '~/models/databases/Review.database'
@@ -92,7 +93,7 @@ export const getReviewDetailController = async (req: Request<ReviewIdReqParams>,
 }
 
 export const getAllReviewsController = async (
-  req: Request<ProductIdReqParams, any, any, PaginationReqQuery>,
+  req: Request<ParamsDictionary, any, any, PaginationReqQuery>,
   res: Response
 ) => {
   const { reviews, ...pagination } = await reviewService.findMany({
@@ -103,6 +104,25 @@ export const getAllReviewsController = async (
   })
   return res.json({
     message: REVIEWS_MESSAGES.GET_ALL_REVIEWS_SUCCESS,
+    data: {
+      reviews,
+      pagination
+    }
+  })
+}
+
+export const getReviewRepliesController = async (
+  req: Request<ReviewIdReqParams, any, any, PaginationReqQuery>,
+  res: Response
+) => {
+  const { reviews, ...pagination } = await reviewService.findMany({
+    query: req.query,
+    match: {
+      parentId: new ObjectId(req.params.reviewId)
+    }
+  })
+  return res.json({
+    message: REVIEWS_MESSAGES.GET_REVIEW_REPLIES_SUCCESS,
     data: {
       reviews,
       pagination
