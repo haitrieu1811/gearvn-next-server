@@ -8,6 +8,7 @@ import Product from '~/models/databases/Product.database'
 import ProductCategory from '~/models/databases/ProductCategory.database'
 import { Province } from '~/models/databases/Province.database'
 import RefreshToken from '~/models/databases/RefreshToken.database'
+import Review from '~/models/databases/Review.database'
 import Role from '~/models/databases/Role.database'
 import User from '~/models/databases/User.database'
 import UserRole from '~/models/databases/UserRole.database'
@@ -70,6 +71,10 @@ class DatabaseService {
 
   get products(): Collection<Product> {
     return this.db.collection(ENV_CONFIG.DB_PRODUCTS_COLLECTION_NAME)
+  }
+
+  get reviews(): Collection<Review> {
+    return this.db.collection(ENV_CONFIG.DB_REVIEWS_COLLECTION_NAME)
   }
 }
 

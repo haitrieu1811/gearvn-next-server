@@ -178,3 +178,12 @@ export const PRODUCTS_MESSAGES = {
   GET_PRODUCT_DETAIL_SUCCESS: 'Lấy thông tin chi tiết sản phẩm thành công.',
   PRODUCT_NOT_PUBLIC: 'Sản phẩm không được công khai.'
 } as const
+
+export const REVIEWS_MESSAGES = {
+  CREATE_REVIEW_SUCCESS: 'Thêm đánh giá thành công.',
+  STAR_POINT_IS_REQUIRED: 'Số sao là bắt buộc.',
+  INVALID_STAR_POINT: 'Số sao không hợp lệ.',
+  PHOTOS_MUST_BE_AN_ARRAY_NOT_EMPTY: 'Hình ảnh đánh giá phải là một mảng không rỗng.',
+  INVALID_PHOTOS: 'Hình ảnh đánh giá không hợp lệ.',
+  REVIEWD_BEFORE: 'Đã đánh giá trước đó.'
+} as const
