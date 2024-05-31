@@ -15,3 +15,9 @@ export type ReplyReviewReqBody = {
 export type ReviewIdReqParams = ParamsDictionary & {
   reviewId: string
 }
+
+export type UpdateReviewReqBody = {
+  starPoint?: StarPointType
+  content?: string
+  photos?: string[]
+}

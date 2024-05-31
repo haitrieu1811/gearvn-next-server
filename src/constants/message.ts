@@ -190,5 +190,6 @@ export const REVIEWS_MESSAGES = {
   INVALID_REVIEW_ID: 'ID review không hợp lệ.',
   REVIEW_NOT_FOUND: 'Không tìm thấy review.',
   REPLY_REVIEW_SUCCESS: 'Phản hồi review thành công.',
-  REVIEW_REPLY_CONTENT_IS_REQUIRED: 'Nội dung phản hồi review là bắt buộc.'
+  REVIEW_REPLY_CONTENT_IS_REQUIRED: 'Nội dung phản hồi review là bắt buộc.',
+  UPDATE_REVIEW_SUCCESS: 'Cập nhật review thành công.'
 } as const

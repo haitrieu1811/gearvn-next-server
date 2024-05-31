@@ -4,7 +4,12 @@ import { ObjectId, WithId } from 'mongodb'
 import { REVIEWS_MESSAGES } from '~/constants/message'
 import Review from '~/models/databases/Review.database'
 import { ProductIdReqParams } from '~/models/requests/Product.requests'
-import { CreateReviewReqBody, ReplyReviewReqBody, ReviewIdReqParams } from '~/models/requests/Review.requests'
+import {
+  CreateReviewReqBody,
+  ReplyReviewReqBody,
+  ReviewIdReqParams,
+  UpdateReviewReqBody
+} from '~/models/requests/Review.requests'
 import { TokenPayload } from '~/models/requests/User.requests'
 import reviewService from '~/services/reviews.services'
 
@@ -38,6 +43,21 @@ export const replyReviewController = async (
   })
   return res.json({
     message: REVIEWS_MESSAGES.REPLY_REVIEW_SUCCESS,
+    data: result
+  })
+}
+
+export const updateReviewController = async (
+  req: Request<ReviewIdReqParams, any, UpdateReviewReqBody>,
+  res: Response
+) => {
+  const review = req.review as WithId<Review>
+  const result = await reviewService.update({
+    data: req.body,
+    review
+  })
+  return res.json({
+    message: REVIEWS_MESSAGES.UPDATE_REVIEW_SUCCESS,
     data: result
   })
 }

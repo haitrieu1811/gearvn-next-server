@@ -1,16 +1,22 @@
 import { Router } from 'express'
 
-import { createReviewController, replyReviewController } from '~/controllers/reviews.controllers'
+import {
+  createReviewController,
+  replyReviewController,
+  updateReviewController
+} from '~/controllers/reviews.controllers'
 import { filterReqBodyMiddleware } from '~/middlewares/common.middlewares'
 import { productIdValidator } from '~/middlewares/products.middlewares'
 import {
+  authorReviewValidator,
   createReviewValidator,
   notReviewBeforeValidator,
   replyReviewValidator,
-  reviewIdValidator
+  reviewIdValidator,
+  updateReviewValidator
 } from '~/middlewares/reviews.middlewares'
 import { accessTokenValidator, isVerifiedUserValidator } from '~/middlewares/users.middlewares'
-import { CreateReviewReqBody } from '~/models/requests/Review.requests'
+import { CreateReviewReqBody, UpdateReviewReqBody } from '~/models/requests/Review.requests'
 import { wrapRequestHandler } from '~/utils/handler'
 
 const reviewsRouter = Router()
@@ -33,6 +39,17 @@ reviewsRouter.post(
   reviewIdValidator,
   replyReviewValidator,
   wrapRequestHandler(replyReviewController)
+)
+
+reviewsRouter.patch(
+  '/:reviewId',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  reviewIdValidator,
+  authorReviewValidator,
+  updateReviewValidator,
+  filterReqBodyMiddleware<UpdateReviewReqBody>(['content', 'photos', 'starPoint']),
+  wrapRequestHandler(updateReviewController)
 )
 
 export default reviewsRouter
