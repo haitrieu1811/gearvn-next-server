@@ -3,10 +3,9 @@ import { ParamSchema, checkSchema } from 'express-validator'
 import range from 'lodash/range'
 import { ObjectId, WithId } from 'mongodb'
 
-import { HttpStatusCode, ProductApprovalStatus, ProductStatus } from '~/constants/enum'
-import { GENERAL_MESSAGES, PRODUCTS_MESSAGES, REVIEWS_MESSAGES } from '~/constants/message'
+import { HttpStatusCode } from '~/constants/enum'
+import { GENERAL_MESSAGES, REVIEWS_MESSAGES } from '~/constants/message'
 import { ErrorWithStatus } from '~/models/Errors'
-import Product from '~/models/databases/Product.database'
 import Review from '~/models/databases/Review.database'
 import { ProductIdReqParams } from '~/models/requests/Product.requests'
 import { TokenPayload } from '~/models/requests/User.requests'
@@ -156,7 +155,7 @@ export const updateReviewValidator = validate(
   )
 )
 
-export const authorReviewValidator = async (req: Request, _: Response, next: NextFunction) => {
+export const reviewAuthorValidator = async (req: Request, _: Response, next: NextFunction) => {
   const review = req.review as WithId<Review>
   const { userId } = req.decodedAuthorization as TokenPayload
   if (review.userId.toString() !== userId) {

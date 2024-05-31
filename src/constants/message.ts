@@ -196,5 +196,6 @@ export const REVIEWS_MESSAGES = {
   GET_REVIEWS_SUCCESS: 'Lấy danh sách review thành công.',
   GET_REVIEW_DETAIL_SUCCESS: 'Lấy chi tiết review thành công.',
   GET_ALL_REVIEWS_SUCCESS: 'Lấy tất cả đánh giá có trên hệ thống thành công.',
-  GET_REVIEW_REPLIES_SUCCESS: 'Lấy danh sách phản hồi review thành công.'
+  GET_REVIEW_REPLIES_SUCCESS: 'Lấy danh sách phản hồi review thành công.',
+  DELETE_REVIEW_SUCCESS: 'Xóa review thành công.'
 } as const

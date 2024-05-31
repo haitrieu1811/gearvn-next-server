@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import { ObjectId, WithId } from 'mongodb'
 import { ParamsDictionary } from 'express-serve-static-core'
+import { ObjectId, WithId } from 'mongodb'
 
 import { REVIEWS_MESSAGES } from '~/constants/message'
 import Review from '~/models/databases/Review.database'
@@ -127,5 +127,12 @@ export const getReviewRepliesController = async (
       reviews,
       pagination
     }
+  })
+}
+
+export const deleteReviewController = async (req: Request<ReviewIdReqParams>, res: Response) => {
+  await reviewService.delete(new ObjectId(req.params.reviewId))
+  return res.json({
+    message: REVIEWS_MESSAGES.DELETE_REVIEW_SUCCESS
   })
 }

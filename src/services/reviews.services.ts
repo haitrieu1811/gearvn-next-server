@@ -277,6 +277,19 @@ class ReviewService {
       review: reviews[0]
     }
   }
+
+  async delete(reviewId: ObjectId) {
+    const deletedReview = await databaseService.reviews.findOneAndDelete({ _id: reviewId })
+    await Promise.all([
+      ...(deletedReview?.photos.map(async (photo) => {
+        await fileService.deleteImage(photo)
+      }) || []),
+      databaseService.reviews.deleteMany({
+        parentId: deletedReview?._id
+      })
+    ])
+    return true
+  }
 }
 
 const reviewService = new ReviewService()
