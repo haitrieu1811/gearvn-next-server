@@ -176,7 +176,8 @@ export const PRODUCTS_MESSAGES = {
   HIGHEST_PRICE_MUST_BE_AN_POSITIVE_INTEGER: 'Giá cao nhất phải là một số nguyên dương.',
   GET_ALL_PRODUCTS_SUCCESS: 'Lấy danh sách tất cả sản phẩm thành công.',
   GET_PRODUCT_DETAIL_SUCCESS: 'Lấy thông tin chi tiết sản phẩm thành công.',
-  PRODUCT_NOT_PUBLIC: 'Sản phẩm không được công khai.'
+  PRODUCT_NOT_PUBLIC: 'Sản phẩm không được công khai.',
+  INACTIVE_PRODUCT: 'Sản phẩm không hoạt động.'
 } as const
 
 export const REVIEWS_MESSAGES = {
@@ -191,5 +192,6 @@ export const REVIEWS_MESSAGES = {
   REVIEW_NOT_FOUND: 'Không tìm thấy review.',
   REPLY_REVIEW_SUCCESS: 'Phản hồi review thành công.',
   REVIEW_REPLY_CONTENT_IS_REQUIRED: 'Nội dung phản hồi review là bắt buộc.',
-  UPDATE_REVIEW_SUCCESS: 'Cập nhật review thành công.'
+  UPDATE_REVIEW_SUCCESS: 'Cập nhật review thành công.',
+  GET_REVIEWS_SUCCESS: 'Lấy danh sách review thành công.'
 } as const

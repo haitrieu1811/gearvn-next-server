@@ -370,3 +370,16 @@ export const isPublicProductValidator = async (req: Request, _: Response, next: 
   }
   next()
 }
+
+export const isActiveProductValidator = (req: Request, _: Response, next: NextFunction) => {
+  const product = req.product as WithId<Product>
+  if (product.status !== ProductStatus.Active || product.approvalStatus !== ProductApprovalStatus.Approved) {
+    next(
+      new ErrorWithStatus({
+        message: PRODUCTS_MESSAGES.INACTIVE_PRODUCT,
+        status: HttpStatusCode.BadRequest
+      })
+    )
+  }
+  next()
+}

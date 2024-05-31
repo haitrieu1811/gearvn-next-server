@@ -3,6 +3,7 @@ import { ObjectId, WithId } from 'mongodb'
 
 import { REVIEWS_MESSAGES } from '~/constants/message'
 import Review from '~/models/databases/Review.database'
+import { PaginationReqQuery } from '~/models/requests/Common.requests'
 import { ProductIdReqParams } from '~/models/requests/Product.requests'
 import {
   CreateReviewReqBody,
@@ -59,5 +60,25 @@ export const updateReviewController = async (
   return res.json({
     message: REVIEWS_MESSAGES.UPDATE_REVIEW_SUCCESS,
     data: result
+  })
+}
+
+export const getReviewByProductIdController = async (
+  req: Request<ProductIdReqParams, any, any, PaginationReqQuery>,
+  res: Response
+) => {
+  const { reviews, ...pagination } = await reviewService.findMany({
+    query: req.query,
+    match: {
+      productId: new ObjectId(req.params.productId),
+      parentId: null
+    }
+  })
+  return res.json({
+    message: REVIEWS_MESSAGES.GET_REVIEWS_SUCCESS,
+    data: {
+      reviews,
+      pagination
+    }
   })
 }

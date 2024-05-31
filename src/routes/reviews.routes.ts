@@ -2,11 +2,12 @@ import { Router } from 'express'
 
 import {
   createReviewController,
+  getReviewByProductIdController,
   replyReviewController,
   updateReviewController
 } from '~/controllers/reviews.controllers'
-import { filterReqBodyMiddleware } from '~/middlewares/common.middlewares'
-import { productIdValidator } from '~/middlewares/products.middlewares'
+import { filterReqBodyMiddleware, paginationValidator } from '~/middlewares/common.middlewares'
+import { isActiveProductValidator, productIdValidator } from '~/middlewares/products.middlewares'
 import {
   authorReviewValidator,
   createReviewValidator,
@@ -50,6 +51,14 @@ reviewsRouter.patch(
   updateReviewValidator,
   filterReqBodyMiddleware<UpdateReviewReqBody>(['content', 'photos', 'starPoint']),
   wrapRequestHandler(updateReviewController)
+)
+
+reviewsRouter.get(
+  '/product/:productId',
+  productIdValidator,
+  isActiveProductValidator,
+  paginationValidator,
+  wrapRequestHandler(getReviewByProductIdController)
 )
 
 export default reviewsRouter
