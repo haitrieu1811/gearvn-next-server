@@ -185,5 +185,10 @@ export const REVIEWS_MESSAGES = {
   INVALID_STAR_POINT: 'Số sao không hợp lệ.',
   PHOTOS_MUST_BE_AN_ARRAY_NOT_EMPTY: 'Hình ảnh đánh giá phải là một mảng không rỗng.',
   INVALID_PHOTOS: 'Hình ảnh đánh giá không hợp lệ.',
-  REVIEWD_BEFORE: 'Đã đánh giá trước đó.'
+  REVIEWD_BEFORE: 'Đã đánh giá trước đó.',
+  REVIEW_ID_IS_REQUIRED: 'ID review là bắt buộc.',
+  INVALID_REVIEW_ID: 'ID review không hợp lệ.',
+  REVIEW_NOT_FOUND: 'Không tìm thấy review.',
+  REPLY_REVIEW_SUCCESS: 'Phản hồi review thành công.',
+  REVIEW_REPLY_CONTENT_IS_REQUIRED: 'Nội dung phản hồi review là bắt buộc.'
 } as const

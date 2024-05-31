@@ -69,7 +69,8 @@ export const notReviewBeforeValidator = async (req: Request<ProductIdReqParams>,
   const { userId } = req.decodedAuthorization as TokenPayload
   const review = await databaseService.reviews.findOne({
     userId: new ObjectId(userId),
-    productId: new ObjectId(req.params.productId)
+    productId: new ObjectId(req.params.productId),
+    parentId: null
   })
   if (review) {
     next(
@@ -81,3 +82,53 @@ export const notReviewBeforeValidator = async (req: Request<ProductIdReqParams>,
   }
   next()
 }
+
+export const reviewIdValidator = validate(
+  checkSchema(
+    {
+      reviewId: {
+        trim: true,
+        custom: {
+          options: async (value: string, { req }) => {
+            if (!value) {
+              throw new ErrorWithStatus({
+                message: REVIEWS_MESSAGES.REVIEW_ID_IS_REQUIRED,
+                status: HttpStatusCode.BadRequest
+              })
+            }
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                message: REVIEWS_MESSAGES.INVALID_REVIEW_ID,
+                status: HttpStatusCode.BadRequest
+              })
+            }
+            const review = await databaseService.reviews.findOne({ _id: new ObjectId(value) })
+            if (!review) {
+              throw new ErrorWithStatus({
+                message: REVIEWS_MESSAGES.REVIEW_NOT_FOUND,
+                status: HttpStatusCode.NotFound
+              })
+            }
+            ;(req as Request).review = review
+            return true
+          }
+        }
+      }
+    },
+    ['params']
+  )
+)
+
+export const replyReviewValidator = validate(
+  checkSchema(
+    {
+      content: {
+        trim: true,
+        notEmpty: {
+          errorMessage: REVIEWS_MESSAGES.REVIEW_REPLY_CONTENT_IS_REQUIRED
+        }
+      }
+    },
+    ['body']
+  )
+)

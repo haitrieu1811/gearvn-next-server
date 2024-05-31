@@ -1,9 +1,10 @@
 import { Request, Response } from 'express'
-import { ObjectId } from 'mongodb'
+import { ObjectId, WithId } from 'mongodb'
 
 import { REVIEWS_MESSAGES } from '~/constants/message'
+import Review from '~/models/databases/Review.database'
 import { ProductIdReqParams } from '~/models/requests/Product.requests'
-import { CreateReviewReqBody } from '~/models/requests/Review.requests'
+import { CreateReviewReqBody, ReplyReviewReqBody, ReviewIdReqParams } from '~/models/requests/Review.requests'
 import { TokenPayload } from '~/models/requests/User.requests'
 import reviewService from '~/services/reviews.services'
 
@@ -19,6 +20,24 @@ export const createReviewController = async (
   })
   return res.json({
     message: REVIEWS_MESSAGES.CREATE_REVIEW_SUCCESS,
+    data: result
+  })
+}
+
+export const replyReviewController = async (
+  req: Request<ReviewIdReqParams, any, ReplyReviewReqBody>,
+  res: Response
+) => {
+  const { userId } = req.decodedAuthorization as TokenPayload
+  const review = req.review as WithId<Review>
+  const result = await reviewService.reply({
+    data: req.body,
+    userId: new ObjectId(userId),
+    productId: new ObjectId(review.productId),
+    reviewId: new ObjectId(req.params.reviewId)
+  })
+  return res.json({
+    message: REVIEWS_MESSAGES.REPLY_REVIEW_SUCCESS,
     data: result
   })
 }
