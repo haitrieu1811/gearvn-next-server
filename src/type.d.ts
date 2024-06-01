@@ -1,5 +1,6 @@
 import 'express'
 
+import CartItem from '~/models/databases/CartItem.database'
 import Product from '~/models/databases/Product.database'
 import Review from '~/models/databases/Review.database'
 import User from '~/models/databases/User.database'
@@ -14,5 +15,6 @@ declare module 'express' {
     user?: User
     product?: Product
     review?: Review
+    cartItem?: CartItem
   }
 }

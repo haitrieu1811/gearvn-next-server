@@ -206,5 +206,9 @@ export const CART_ITEMS_MESSAGES = {
   UNIT_PRICE_MUST_BE_A_POSITIVE_INT_GREATER_THAN_ZERO: 'Đơn giá sản phẩm phải là một số nguyên lớn hơn 0.',
   QUANTITY_IS_REQUIRED: 'Số lượng sản phẩm thêm vào giỏ hàng là bắt buộc.',
   QUANTITY_MUST_BE_A_POSITIVE_INT_GREATER_THAN_ZERO:
-    'Số lượng sản phẩm thêm vào giỏ hàng phải là một số nguyên lớn hơn 0.'
+    'Số lượng sản phẩm thêm vào giỏ hàng phải là một số nguyên lớn hơn 0.',
+  UPDATE_CART_ITEM_SUCCESS: 'Cập nhật giỏ hàng thành công.',
+  CART_ITEM_ID_IS_REQUIRED: 'ID cart item là bắt buộc.',
+  INVALID_CART_ITEM_ID: 'ID cart item không hợp lệ.',
+  CART_ITEM_NOT_FOUND: 'Không tìm thấy cart item.'
 } as const
