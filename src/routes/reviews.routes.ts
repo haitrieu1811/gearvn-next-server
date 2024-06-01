@@ -24,6 +24,7 @@ import {
   accessTokenValidator,
   isAdminOrStaffValidator,
   isAdminValidator,
+  isCustomerValidator,
   isVerifiedUserValidator
 } from '~/middlewares/users.middlewares'
 import { CreateReviewReqBody, ReplyReviewReqBody, UpdateReviewReqBody } from '~/models/requests/Review.requests'
@@ -35,6 +36,7 @@ reviewsRouter.post(
   '/product/:productId',
   accessTokenValidator,
   isVerifiedUserValidator,
+  isCustomerValidator,
   productIdValidator,
   notReviewBeforeValidator,
   createReviewValidator,

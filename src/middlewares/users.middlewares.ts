@@ -514,3 +514,16 @@ export const isAdminOrStaffValidator = async (req: Request, _: Response, next: N
   }
   next()
 }
+
+export const isCustomerValidator = async (req: Request, _: Response, next: NextFunction) => {
+  const { userType } = req.decodedAuthorization as TokenPayload
+  if (userType !== UserType.Customer) {
+    next(
+      new ErrorWithStatus({
+        message: GENERAL_MESSAGES.PERMISSION_DENIED,
+        status: HttpStatusCode.Forbidden
+      })
+    )
+  }
+  next()
+}

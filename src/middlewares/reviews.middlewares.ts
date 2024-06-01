@@ -3,7 +3,7 @@ import { ParamSchema, checkSchema } from 'express-validator'
 import range from 'lodash/range'
 import { ObjectId, WithId } from 'mongodb'
 
-import { HttpStatusCode, UserType } from '~/constants/enum'
+import { HttpStatusCode } from '~/constants/enum'
 import { GENERAL_MESSAGES, REVIEWS_MESSAGES } from '~/constants/message'
 import { ErrorWithStatus } from '~/models/Errors'
 import Review from '~/models/databases/Review.database'
