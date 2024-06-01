@@ -13,14 +13,19 @@ import {
 import { filterReqBodyMiddleware, paginationValidator } from '~/middlewares/common.middlewares'
 import { isActiveProductValidator, productIdValidator } from '~/middlewares/products.middlewares'
 import {
-  reviewAuthorValidator,
   createReviewValidator,
   notReviewBeforeValidator,
   replyReviewValidator,
+  reviewAuthorValidator,
   reviewIdValidator,
   updateReviewValidator
 } from '~/middlewares/reviews.middlewares'
-import { accessTokenValidator, isAdminValidator, isVerifiedUserValidator } from '~/middlewares/users.middlewares'
+import {
+  accessTokenValidator,
+  isAdminOrStaffValidator,
+  isAdminValidator,
+  isVerifiedUserValidator
+} from '~/middlewares/users.middlewares'
 import { CreateReviewReqBody, ReplyReviewReqBody, UpdateReviewReqBody } from '~/models/requests/Review.requests'
 import { wrapRequestHandler } from '~/utils/handler'
 
@@ -41,6 +46,7 @@ reviewsRouter.post(
   '/:reviewId/reply',
   accessTokenValidator,
   isVerifiedUserValidator,
+  isAdminOrStaffValidator,
   reviewIdValidator,
   replyReviewValidator,
   filterReqBodyMiddleware<ReplyReviewReqBody>(['content']),

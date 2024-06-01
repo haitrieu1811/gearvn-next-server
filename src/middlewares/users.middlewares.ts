@@ -501,3 +501,16 @@ export const userIdValidator = validate(
     ['params']
   )
 )
+
+export const isAdminOrStaffValidator = async (req: Request, _: Response, next: NextFunction) => {
+  const { userType } = req.decodedAuthorization as TokenPayload
+  if (![UserType.Admin, UserType.Staff].includes(userType)) {
+    next(
+      new ErrorWithStatus({
+        message: GENERAL_MESSAGES.PERMISSION_DENIED,
+        status: HttpStatusCode.Forbidden
+      })
+    )
+  }
+  next()
+}
