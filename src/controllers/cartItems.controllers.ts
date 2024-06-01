@@ -43,3 +43,10 @@ export const updateCartItemController = async (
     data: result
   })
 }
+
+export const deleteCartItemController = async (req: Request<CartItemIdReqParams>, res: Response) => {
+  await cartItemService.delete(new ObjectId(req.params.cartItemId))
+  return res.json({
+    message: CART_ITEMS_MESSAGES.DELETE_CART_ITEM_SUCCESS
+  })
+}

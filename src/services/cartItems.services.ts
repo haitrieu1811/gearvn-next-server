@@ -74,6 +74,11 @@ class CartItemService {
       cartItem: updatedCartItem
     }
   }
+
+  async delete(cartItemId: ObjectId) {
+    await databaseService.cartItems.deleteOne({ _id: cartItemId })
+    return true
+  }
 }
 
 const cartItemService = new CartItemService()

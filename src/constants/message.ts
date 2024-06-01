@@ -210,5 +210,6 @@ export const CART_ITEMS_MESSAGES = {
   UPDATE_CART_ITEM_SUCCESS: 'Cập nhật giỏ hàng thành công.',
   CART_ITEM_ID_IS_REQUIRED: 'ID cart item là bắt buộc.',
   INVALID_CART_ITEM_ID: 'ID cart item không hợp lệ.',
-  CART_ITEM_NOT_FOUND: 'Không tìm thấy cart item.'
+  CART_ITEM_NOT_FOUND: 'Không tìm thấy cart item.',
+  DELETE_CART_ITEM_SUCCESS: 'Xóa sản phẩm khỏi giỏ hàng thành công.'
 } as const

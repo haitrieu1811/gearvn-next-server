@@ -1,6 +1,10 @@
 import { Router } from 'express'
 
-import { addProductToCartController, updateCartItemController } from '~/controllers/cartItems.controllers'
+import {
+  addProductToCartController,
+  deleteCartItemController,
+  updateCartItemController
+} from '~/controllers/cartItems.controllers'
 import {
   addProductToCartValidator,
   cartItemAuthorValidator,
@@ -32,6 +36,16 @@ cartItemsRouter.patch(
   cartItemAuthorValidator,
   updateCartItemValidator,
   wrapRequestHandler(updateCartItemController)
+)
+
+cartItemsRouter.delete(
+  '/:cartItemId',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  isCustomerValidator,
+  cartItemIdValidator,
+  cartItemAuthorValidator,
+  wrapRequestHandler(deleteCartItemController)
 )
 
 export default cartItemsRouter
