@@ -141,3 +141,12 @@ export enum ProductApprovalStatus {
   Approved,
   Unapproved
 }
+
+export enum CartItemStatus {
+  InCart,
+  WaitForConfirmation,
+  Confirmed,
+  Delivering,
+  Delivered,
+  Cancelled
+}

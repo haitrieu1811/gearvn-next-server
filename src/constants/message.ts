@@ -199,3 +199,12 @@ export const REVIEWS_MESSAGES = {
   GET_REVIEW_REPLIES_SUCCESS: 'Lấy danh sách phản hồi review thành công.',
   DELETE_REVIEW_SUCCESS: 'Xóa review thành công.'
 } as const
+
+export const CART_ITEMS_MESSAGES = {
+  ADD_PRODUCT_TO_CART_SUCCESS: 'Thêm sản phẩm vào giỏ hàng thành công.',
+  UNIT_PRICE_IS_REQUIRED: 'Đơn giá sản phẩm là bắt buộc.',
+  UNIT_PRICE_MUST_BE_A_POSITIVE_INT_GREATER_THAN_ZERO: 'Đơn giá sản phẩm phải là một số nguyên lớn hơn 0.',
+  QUANTITY_IS_REQUIRED: 'Số lượng sản phẩm thêm vào giỏ hàng là bắt buộc.',
+  QUANTITY_MUST_BE_A_POSITIVE_INT_GREATER_THAN_ZERO:
+    'Số lượng sản phẩm thêm vào giỏ hàng phải là một số nguyên lớn hơn 0.'
+} as const

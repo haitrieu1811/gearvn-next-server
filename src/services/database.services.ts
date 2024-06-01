@@ -3,6 +3,7 @@ import { Collection, Db, MongoClient } from 'mongodb'
 import { ENV_CONFIG } from '~/constants/config'
 import Address from '~/models/databases/Address.database'
 import Brand from '~/models/databases/Brand.database'
+import CartItem from '~/models/databases/CartItem.database'
 import File from '~/models/databases/File.database'
 import Product from '~/models/databases/Product.database'
 import ProductCategory from '~/models/databases/ProductCategory.database'
@@ -75,6 +76,10 @@ class DatabaseService {
 
   get reviews(): Collection<Review> {
     return this.db.collection(ENV_CONFIG.DB_REVIEWS_COLLECTION_NAME)
+  }
+
+  get cartItems(): Collection<CartItem> {
+    return this.db.collection(ENV_CONFIG.DB_CART_ITEMS_COLLECTION_NAME)
   }
 }
 
