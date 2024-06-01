@@ -3,6 +3,7 @@ import { Router } from 'express'
 import {
   addProductToCartController,
   deleteCartItemController,
+  getMyCartController,
   updateCartItemController
 } from '~/controllers/cartItems.controllers'
 import {
@@ -11,6 +12,7 @@ import {
   cartItemIdValidator,
   updateCartItemValidator
 } from '~/middlewares/cartItems.middlewares'
+import { paginationValidator } from '~/middlewares/common.middlewares'
 import { productIdValidator } from '~/middlewares/products.middlewares'
 import { accessTokenValidator, isCustomerValidator, isVerifiedUserValidator } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handler'
@@ -46,6 +48,15 @@ cartItemsRouter.delete(
   cartItemIdValidator,
   cartItemAuthorValidator,
   wrapRequestHandler(deleteCartItemController)
+)
+
+cartItemsRouter.get(
+  '/me',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  isCustomerValidator,
+  paginationValidator,
+  wrapRequestHandler(getMyCartController)
 )
 
 export default cartItemsRouter

@@ -13,6 +13,23 @@ type CartItemConstructor = {
   updatedAt?: Date
 }
 
+export type AggregateCartItem = {
+  _id: string
+  product: {
+    _id: string
+    name: string
+    originalPrice: number
+    priceAfterDiscount: number
+    thumbnail: string
+    createdAt: string
+    updatedAt: string
+  }
+  unitPrice: number
+  quantity: number
+  createdAt: string
+  updatedAt: string
+}
+
 export default class CartItem {
   _id?: ObjectId
   userId: ObjectId
