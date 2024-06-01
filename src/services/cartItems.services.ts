@@ -39,6 +39,9 @@ class CartItemService {
           $inc: {
             quantity
           },
+          $set: {
+            unitPrice
+          },
           $currentDate: {
             updatedAt: true
           }
