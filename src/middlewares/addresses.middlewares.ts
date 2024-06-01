@@ -14,7 +14,7 @@ import { validate } from '~/utils/validation'
 
 const addressTypes = numberEnumToArray(AddressType)
 
-const provinceIdSchema: ParamSchema = {
+export const provinceIdSchema: ParamSchema = {
   trim: true,
   custom: {
     options: async (value: string) => {
@@ -42,7 +42,7 @@ const provinceIdSchema: ParamSchema = {
   }
 }
 
-const districtIdSchema: ParamSchema = {
+export const districtIdSchema: ParamSchema = {
   trim: true,
   custom: {
     options: async (value: string, { req }) => {
@@ -65,7 +65,7 @@ const districtIdSchema: ParamSchema = {
   }
 }
 
-const wardIdSchema: ParamSchema = {
+export const wardIdSchema: ParamSchema = {
   trim: true,
   custom: {
     options: async (value: string, { req }) => {
@@ -89,7 +89,7 @@ const wardIdSchema: ParamSchema = {
   }
 }
 
-const streetIdSchema: ParamSchema = {
+export const streetIdSchema: ParamSchema = {
   trim: true,
   custom: {
     options: async (value: string, { req }) => {
@@ -113,6 +113,35 @@ const streetIdSchema: ParamSchema = {
   }
 }
 
+export const detailAddressSchema: ParamSchema = {
+  trim: true,
+  notEmpty: {
+    errorMessage: ADDRESS_MESSAGES.ADDRESS_DETAIL_IS_REQUIRED
+  }
+}
+
+export const fullNameSchema: ParamSchema = {
+  trim: true,
+  notEmpty: {
+    errorMessage: USERS_MESSAGES.FULLNAME_IS_REQUIRED
+  }
+}
+
+export const phoneNumberSchema: ParamSchema = {
+  trim: true,
+  notEmpty: {
+    errorMessage: USERS_MESSAGES.PHONE_NUMBER_IS_REQUIRED
+  },
+  custom: {
+    options: (value: string) => {
+      if (!VIET_NAM_PHONE_NUMBER_REGEX.test(value)) {
+        throw new Error(USERS_MESSAGES.INVALID_PHONE_NUMBER)
+      }
+      return true
+    }
+  }
+}
+
 export const createAddressValidator = validate(
   checkSchema(
     {
@@ -120,12 +149,7 @@ export const createAddressValidator = validate(
       districtId: districtIdSchema,
       wardId: wardIdSchema,
       streetId: streetIdSchema,
-      addressDetail: {
-        trim: true,
-        notEmpty: {
-          errorMessage: ADDRESS_MESSAGES.ADDRESS_DETAIL_IS_REQUIRED
-        }
-      },
+      detailAddress: detailAddressSchema,
       type: {
         notEmpty: {
           errorMessage: ADDRESS_MESSAGES.ADDRESS_TYPE_IS_REQUIRED
@@ -135,26 +159,8 @@ export const createAddressValidator = validate(
           errorMessage: ADDRESS_MESSAGES.INVALID_ADDRESS_TYPE
         }
       },
-      fullName: {
-        trim: true,
-        notEmpty: {
-          errorMessage: USERS_MESSAGES.FULLNAME_IS_REQUIRED
-        }
-      },
-      phoneNumber: {
-        trim: true,
-        notEmpty: {
-          errorMessage: USERS_MESSAGES.PHONE_NUMBER_IS_REQUIRED
-        },
-        custom: {
-          options: (value: string) => {
-            if (!VIET_NAM_PHONE_NUMBER_REGEX.test(value)) {
-              throw new Error(USERS_MESSAGES.INVALID_PHONE_NUMBER)
-            }
-            return true
-          }
-        }
-      }
+      fullName: fullNameSchema,
+      phoneNumber: phoneNumberSchema
     },
     ['body']
   )

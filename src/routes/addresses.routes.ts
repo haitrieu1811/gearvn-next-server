@@ -34,7 +34,7 @@ addressesRouter.post(
   isVerifiedUserValidator,
   createAddressValidator,
   filterReqBodyMiddleware<CreateAddressReqBody>([
-    'addressDetail',
+    'detailAddress',
     'districtId',
     'fullName',
     'phoneNumber',
@@ -54,7 +54,7 @@ addressesRouter.put(
   addressAuthorValidator,
   createAddressValidator,
   filterReqBodyMiddleware<CreateAddressReqBody>([
-    'addressDetail',
+    'detailAddress',
     'districtId',
     'fullName',
     'phoneNumber',

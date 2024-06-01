@@ -328,8 +328,8 @@ class AddressService {
           street: {
             $first: '$street'
           },
-          addressDetail: {
-            $first: '$addressDetail'
+          detailAddress: {
+            $first: '$detailAddress'
           },
           type: {
             $first: '$type'

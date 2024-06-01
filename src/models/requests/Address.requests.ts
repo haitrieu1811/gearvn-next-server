@@ -19,7 +19,7 @@ export type CreateAddressReqBody = {
   districtId: string
   wardId: string
   streetId: string
-  addressDetail: string
+  detailAddress: string
   type: AddressType
   fullName: string
   phoneNumber: string

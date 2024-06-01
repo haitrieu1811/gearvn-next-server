@@ -1,18 +1,19 @@
 import { Request, Response } from 'express'
-import { ObjectId, WithId } from 'mongodb'
 import { ParamsDictionary } from 'express-serve-static-core'
+import { ObjectId, WithId } from 'mongodb'
 
 import { CART_ITEMS_MESSAGES } from '~/constants/message'
 import Product from '~/models/databases/Product.database'
 import {
   AddProductToCartReqBody,
   CartItemIdReqParams,
+  CheckoutReqBody,
   UpdateCartItemReqBody
 } from '~/models/requests/CartItem.requests'
+import { PaginationReqQuery } from '~/models/requests/Common.requests'
 import { ProductIdReqParams } from '~/models/requests/Product.requests'
 import { TokenPayload } from '~/models/requests/User.requests'
 import cartItemService from '~/services/cartItems.services'
-import { PaginationReqQuery } from '~/models/requests/Common.requests'
 
 export const addProductToCartController = async (
   req: Request<ProductIdReqParams, any, AddProductToCartReqBody>,
@@ -70,5 +71,14 @@ export const getMyCartController = async (
       cartItems,
       pagination
     }
+  })
+}
+
+export const checkoutController = async (req: Request<ParamsDictionary, any, CheckoutReqBody>, res: Response) => {
+  const { userId } = req.decodedAuthorization as TokenPayload
+  const result = await cartItemService.checkout({ userId: new ObjectId(userId), data: req.body })
+  return res.json({
+    message: CART_ITEMS_MESSAGES.CHECKOUT_SUCCESS,
+    data: result
   })
 }

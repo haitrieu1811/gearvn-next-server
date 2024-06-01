@@ -9,7 +9,7 @@ type AddressConstructor = {
   districtId: string
   wardId: string
   streetId: string
-  addressDetail: string
+  detailAddress: string
   type: AddressType
   fullName: string
   phoneNumber: string
@@ -24,7 +24,7 @@ export default class Address {
   districtId: string
   wardId: string
   streetId: string
-  addressDetail: string
+  detailAddress: string
   type: AddressType
   fullName: string
   phoneNumber: string
@@ -38,7 +38,7 @@ export default class Address {
     districtId,
     wardId,
     streetId,
-    addressDetail,
+    detailAddress,
     type,
     fullName,
     phoneNumber,
@@ -52,7 +52,7 @@ export default class Address {
     this.districtId = districtId
     this.wardId = wardId
     this.streetId = streetId
-    this.addressDetail = addressDetail
+    this.detailAddress = detailAddress
     this.type = type
     this.fullName = fullName
     this.phoneNumber = phoneNumber

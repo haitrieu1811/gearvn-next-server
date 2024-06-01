@@ -142,11 +142,16 @@ export enum ProductApprovalStatus {
   Unapproved
 }
 
-export enum CartItemStatus {
+export enum OrderStatus {
   InCart,
   WaitForConfirmation,
   Confirmed,
   Delivering,
   Delivered,
   Cancelled
+}
+
+export enum PaymentMethod {
+  Cash,
+  Banking
 }

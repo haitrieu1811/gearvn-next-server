@@ -2,13 +2,25 @@ import { NextFunction, Request, Response } from 'express'
 import { ParamSchema, checkSchema } from 'express-validator'
 import { ObjectId, WithId } from 'mongodb'
 
-import { HttpStatusCode } from '~/constants/enum'
+import { HttpStatusCode, OrderStatus, PaymentMethod } from '~/constants/enum'
 import { CART_ITEMS_MESSAGES, GENERAL_MESSAGES } from '~/constants/message'
+import {
+  detailAddressSchema,
+  districtIdSchema,
+  fullNameSchema,
+  phoneNumberSchema,
+  provinceIdSchema,
+  streetIdSchema,
+  wardIdSchema
+} from '~/middlewares/addresses.middlewares'
 import { ErrorWithStatus } from '~/models/Errors'
 import CartItem from '~/models/databases/CartItem.database'
 import { TokenPayload } from '~/models/requests/User.requests'
 import databaseService from '~/services/database.services'
+import { numberEnumToArray } from '~/utils/utils'
 import { validate } from '~/utils/validation'
+
+const paymentMethods = numberEnumToArray(PaymentMethod)
 
 const quantitySchema: ParamSchema = {
   custom: {
@@ -93,6 +105,49 @@ export const updateCartItemValidator = validate(
   checkSchema(
     {
       quantity: quantitySchema
+    },
+    ['body']
+  )
+)
+
+export const notEmptyCartValidator = async (req: Request, _: Response, next: NextFunction) => {
+  const { userId } = req.decodedAuthorization as TokenPayload
+  const cartItems = await databaseService.cartItems
+    .find({
+      userId: new ObjectId(userId),
+      status: OrderStatus.InCart
+    })
+    .toArray()
+  if (cartItems.length === 0) {
+    next(
+      new ErrorWithStatus({
+        message: CART_ITEMS_MESSAGES.CART_IS_EMPTY,
+        status: HttpStatusCode.BadRequest
+      })
+    )
+  }
+  next()
+}
+
+export const checkoutValidator = validate(
+  checkSchema(
+    {
+      provinceId: provinceIdSchema,
+      districtId: districtIdSchema,
+      wardId: wardIdSchema,
+      streetId: streetIdSchema,
+      detailAddress: detailAddressSchema,
+      fullName: fullNameSchema,
+      phoneNumber: phoneNumberSchema,
+      paymentMethod: {
+        notEmpty: {
+          errorMessage: CART_ITEMS_MESSAGES.PAYMENT_METHOD_IS_REQUIRED
+        },
+        isIn: {
+          options: [paymentMethods],
+          errorMessage: CART_ITEMS_MESSAGES.INVALID_PAYMENT_METHOD
+        }
+      }
     },
     ['body']
   )

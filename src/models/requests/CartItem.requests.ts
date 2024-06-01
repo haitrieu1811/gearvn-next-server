@@ -1,5 +1,7 @@
 import { ParamsDictionary } from 'express-serve-static-core'
 
+import { PaymentMethod } from '~/constants/enum'
+
 export type AddProductToCartReqBody = {
   quantity: number
 }
@@ -10,4 +12,15 @@ export type CartItemIdReqParams = ParamsDictionary & {
 
 export type UpdateCartItemReqBody = {
   quantity: number
+}
+
+export type CheckoutReqBody = {
+  fullName: string
+  phoneNumber: string
+  provinceId: string
+  districtId: string
+  wardId: string
+  streetId: string
+  detailAddress: string
+  paymentMethod: PaymentMethod
 }

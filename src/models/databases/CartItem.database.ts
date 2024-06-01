@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb'
 
-import { CartItemStatus } from '~/constants/enum'
+import { OrderStatus } from '~/constants/enum'
 
 type CartItemConstructor = {
   _id?: ObjectId
@@ -8,7 +8,7 @@ type CartItemConstructor = {
   productId: ObjectId
   unitPrice: number
   quantity: number
-  status?: CartItemStatus
+  status?: OrderStatus
   createdAt?: Date
   updatedAt?: Date
 }
@@ -36,7 +36,7 @@ export default class CartItem {
   productId: ObjectId
   unitPrice: number
   quantity: number
-  status: CartItemStatus
+  status: OrderStatus
   createdAt: Date
   updatedAt: Date
 
@@ -47,7 +47,7 @@ export default class CartItem {
     this.productId = productId
     this.unitPrice = unitPrice
     this.quantity = quantity
-    this.status = status || CartItemStatus.InCart
+    this.status = status || OrderStatus.InCart
     this.createdAt = createdAt || date
     this.updatedAt = updatedAt || date
   }

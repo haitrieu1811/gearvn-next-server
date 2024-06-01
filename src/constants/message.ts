@@ -212,5 +212,9 @@ export const CART_ITEMS_MESSAGES = {
   INVALID_CART_ITEM_ID: 'ID cart item không hợp lệ.',
   CART_ITEM_NOT_FOUND: 'Không tìm thấy cart item.',
   DELETE_CART_ITEM_SUCCESS: 'Xóa sản phẩm khỏi giỏ hàng thành công.',
-  GET_MY_CART_SUCCESS: 'Lấy giỏ hàng của tôi thành công.'
+  GET_MY_CART_SUCCESS: 'Lấy giỏ hàng của tôi thành công.',
+  CHECKOUT_SUCCESS: 'Checkout thành công.',
+  CART_IS_EMPTY: 'Giỏ hàng đang trống.',
+  PAYMENT_METHOD_IS_REQUIRED: 'Phương thức thanh toán là bắt buộc.',
+  INVALID_PAYMENT_METHOD: 'Phương thức thanh toán không hợp lệ.'
 } as const

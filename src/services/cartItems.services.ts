@@ -1,8 +1,10 @@
 import { ObjectId } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
-import { CartItemStatus } from '~/constants/enum'
+import { OrderStatus } from '~/constants/enum'
 import CartItem, { AggregateCartItem } from '~/models/databases/CartItem.database'
+import Order from '~/models/databases/Order.database'
+import { CheckoutReqBody } from '~/models/requests/CartItem.requests'
 import { PaginationReqQuery } from '~/models/requests/Common.requests'
 import databaseService from '~/services/database.services'
 import { paginationConfig } from '~/utils/utils'
@@ -87,11 +89,11 @@ class CartItemService {
     return true
   }
 
-  async getMyCart({ userId, query }: { userId: ObjectId; query: PaginationReqQuery }) {
+  async getMyCart({ userId, query = { page: '1', limit: '20' } }: { userId: ObjectId; query?: PaginationReqQuery }) {
     const { page, limit, skip } = paginationConfig(query)
     const match = {
       userId,
-      status: CartItemStatus.InCart
+      status: OrderStatus.InCart
     }
     const [cartItems, totalRows] = await Promise.all([
       databaseService.cartItems
@@ -191,6 +193,42 @@ class CartItemService {
       limit,
       totalRows,
       totalPages: Math.ceil(totalRows / limit)
+    }
+  }
+
+  async checkout({ userId, data }: { userId: ObjectId; data: CheckoutReqBody }) {
+    const { totalItems, totalAmount, cartItems } = await this.getMyCart({ userId })
+    const objectIdCartItems = cartItems.map((cartItem) => new ObjectId(cartItem._id))
+    const [{ insertedId }] = await Promise.all([
+      databaseService.orders.insertOne(
+        new Order({
+          ...data,
+          userId,
+          cartItems: objectIdCartItems,
+          totalAmount,
+          totalItems,
+          provinceId: new ObjectId(data.provinceId)
+        })
+      ),
+      databaseService.cartItems.updateMany(
+        {
+          _id: {
+            $in: objectIdCartItems
+          }
+        },
+        {
+          $set: {
+            status: OrderStatus.WaitForConfirmation
+          },
+          $currentDate: {
+            updatedAt: true
+          }
+        }
+      )
+    ])
+    const insertedOrder = await databaseService.orders.findOne({ _id: insertedId })
+    return {
+      order: insertedOrder
     }
   }
 }
