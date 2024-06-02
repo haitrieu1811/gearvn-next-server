@@ -26,3 +26,19 @@ export const getMyOrdersController = async (
     }
   })
 }
+
+export const getAllOrdersController = async (
+  req: Request<ParamsDictionary, any, any, GetOrdersReqQuery>,
+  res: Response
+) => {
+  const { orders, ...pagination } = await orderService.findMany({
+    query: req.query
+  })
+  return res.json({
+    message: ORDERS_MESSAGES.GET_ALL_ORDERS_SUCCESS,
+    data: {
+      orders,
+      pagination
+    }
+  })
+}

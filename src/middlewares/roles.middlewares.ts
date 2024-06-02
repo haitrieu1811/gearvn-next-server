@@ -3,10 +3,11 @@ import { ParamsDictionary } from 'express-serve-static-core'
 import { ParamSchema, checkSchema } from 'express-validator'
 import { ObjectId } from 'mongodb'
 
-import { HttpStatusCode, RoleField, RoleType } from '~/constants/enum'
-import { ROLES_MESSAGES, USERS_MESSAGES } from '~/constants/message'
+import { HttpStatusCode, RoleField, RoleType, UserType } from '~/constants/enum'
+import { GENERAL_MESSAGES, ROLES_MESSAGES, USERS_MESSAGES } from '~/constants/message'
 import { ErrorWithStatus } from '~/models/Errors'
 import { AssignRoleToUserReqParams, CreateRoleReqBody } from '~/models/requests/Role.requests'
+import { TokenPayload } from '~/models/requests/User.requests'
 import databaseService from '~/services/database.services'
 import { numberEnumToArray } from '~/utils/utils'
 import { validate } from '~/utils/validation'
@@ -177,3 +178,37 @@ export const existedUserRoleValidator = async (
   }
   next()
 }
+
+export const generateRoleValidator =
+  ({ roleType, roleField }: { roleType: RoleType; roleField: RoleField }) =>
+  async (req: Request, _: Response, next: NextFunction) => {
+    const { userId, userType } = req.decodedAuthorization as TokenPayload
+    if (userType === UserType.Admin) {
+      next()
+    } else if (userType === UserType.Customer) {
+      next(
+        new ErrorWithStatus({
+          message: GENERAL_MESSAGES.PERMISSION_DENIED,
+          status: HttpStatusCode.Forbidden
+        })
+      )
+    } else {
+      const actionRole = await databaseService.roles.findOne({
+        type: roleType,
+        field: roleField
+      })
+      const role = await databaseService.userRoles.findOne({
+        userId: new ObjectId(userId),
+        roleId: actionRole?._id
+      })
+      if (!role) {
+        next(
+          new ErrorWithStatus({
+            message: GENERAL_MESSAGES.PERMISSION_DENIED,
+            status: HttpStatusCode.Forbidden
+          })
+        )
+      }
+      next()
+    }
+  }

@@ -207,7 +207,7 @@ class OrderService {
     const configuredMatch = omitBy(
       {
         ...match,
-        status
+        status: status !== undefined ? Number(status) : undefined
       },
       isUndefined
     )

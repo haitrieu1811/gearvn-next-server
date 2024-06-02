@@ -221,5 +221,6 @@ export const CART_ITEMS_MESSAGES = {
 
 export const ORDERS_MESSAGES = {
   INVALID_ORDER_STATUS: 'Trạng thái đơn hàng không hợp lệ.',
-  GET_MY_ORDERS_SUCCESS: 'Lấy danh sách đơn hàng của tôi thành công.'
+  GET_MY_ORDERS_SUCCESS: 'Lấy danh sách đơn hàng của tôi thành công.',
+  GET_ALL_ORDERS_SUCCESS: 'Lấy danh sách tất cả đơn hàng thành công.'
 } as const

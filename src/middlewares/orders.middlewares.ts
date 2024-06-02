@@ -1,7 +1,8 @@
 import { checkSchema } from 'express-validator'
 
-import { HttpStatusCode, OrderStatus } from '~/constants/enum'
+import { HttpStatusCode, OrderStatus, RoleField, RoleType } from '~/constants/enum'
 import { ORDERS_MESSAGES } from '~/constants/message'
+import { generateRoleValidator } from '~/middlewares/roles.middlewares'
 import { ErrorWithStatus } from '~/models/Errors'
 import { numberEnumToArray } from '~/utils/utils'
 import { validate } from '~/utils/validation'
@@ -15,9 +16,7 @@ export const getOrdersValidator = validate(
         optional: true,
         custom: {
           options: (value) => {
-            console.log(typeof value)
-
-            if (!orderStatuses.includes(value)) {
+            if (!orderStatuses.includes(Number(value))) {
               throw new ErrorWithStatus({
                 message: ORDERS_MESSAGES.INVALID_ORDER_STATUS,
                 status: HttpStatusCode.BadRequest
@@ -28,6 +27,8 @@ export const getOrdersValidator = validate(
         }
       }
     },
-    ['body']
+    ['query']
   )
 )
+
+export const readAllOrdersRoleValidator = generateRoleValidator({ roleType: RoleType.Read, roleField: RoleField.Order })

@@ -7,6 +7,7 @@ import { HttpStatusCode, ProductApprovalStatus, ProductStatus, RoleField, RoleTy
 import { GENERAL_MESSAGES, PRODUCTS_MESSAGES } from '~/constants/message'
 import { brandIdSchema } from '~/middlewares/brands.middlewares'
 import { productCategoryIdSchema } from '~/middlewares/productCategories.middlewares'
+import { generateRoleValidator } from '~/middlewares/roles.middlewares'
 import { ErrorWithStatus } from '~/models/Errors'
 import Product from '~/models/databases/Product.database'
 import { ProductIdReqParams } from '~/models/requests/Product.requests'
@@ -265,47 +266,25 @@ export const authorProductValidator = async (req: Request<ProductIdReqParams>, _
   }
 }
 
-export const roleValidator =
-  ({ roleType, roleField }: { roleType: RoleType; roleField: RoleField }) =>
-  async (req: Request, _: Response, next: NextFunction) => {
-    const { userId, userType } = req.decodedAuthorization as TokenPayload
-    if (userType === UserType.Admin) {
-      next()
-    } else if (userType === UserType.Customer) {
-      next(
-        new ErrorWithStatus({
-          message: GENERAL_MESSAGES.PERMISSION_DENIED,
-          status: HttpStatusCode.Forbidden
-        })
-      )
-    } else {
-      const actionRole = await databaseService.roles.findOne({
-        type: roleType,
-        field: roleField
-      })
-      const role = await databaseService.userRoles.findOne({
-        userId: new ObjectId(userId),
-        roleId: actionRole?._id
-      })
-      if (!role) {
-        next(
-          new ErrorWithStatus({
-            message: GENERAL_MESSAGES.PERMISSION_DENIED,
-            status: HttpStatusCode.Forbidden
-          })
-        )
-      }
-      next()
-    }
-  }
+export const createProductRoleValidator = generateRoleValidator({
+  roleType: RoleType.Create,
+  roleField: RoleField.Product
+})
 
-export const createProductRoleValidator = roleValidator({ roleType: RoleType.Create, roleField: RoleField.Product })
+export const updateProductRoleValidator = generateRoleValidator({
+  roleType: RoleType.Update,
+  roleField: RoleField.Product
+})
 
-export const updateProductRoleValidator = roleValidator({ roleType: RoleType.Update, roleField: RoleField.Product })
+export const deleteProductRoleValidator = generateRoleValidator({
+  roleType: RoleType.Delete,
+  roleField: RoleField.Product
+})
 
-export const deleteProductRoleValidator = roleValidator({ roleType: RoleType.Delete, roleField: RoleField.Product })
-
-export const getAllProductsRoleValidator = roleValidator({ roleType: RoleType.Read, roleField: RoleField.Product })
+export const getAllProductsRoleValidator = generateRoleValidator({
+  roleType: RoleType.Read,
+  roleField: RoleField.Product
+})
 
 export const getProductsValidator = validate(
   checkSchema(
