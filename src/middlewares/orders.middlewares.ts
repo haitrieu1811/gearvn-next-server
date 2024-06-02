@@ -47,6 +47,8 @@ export const readAllOrdersRoleValidator = generateRoleValidator({ roleType: Role
 
 export const updateOrderRoleValidator = generateRoleValidator({ roleType: RoleType.Update, roleField: RoleField.Order })
 
+export const deleteOrderRoleValidator = generateRoleValidator({ roleType: RoleType.Delete, roleField: RoleField.Order })
+
 export const orderIdValidator = validate(
   checkSchema(
     {

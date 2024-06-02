@@ -53,3 +53,10 @@ export const updateOrderController = async (req: Request<OrderIdReqParams, any, 
     data: result
   })
 }
+
+export const deleteOrderController = async (req: Request<OrderIdReqParams>, res: Response) => {
+  await orderService.delete(new ObjectId(req.params.orderId))
+  return res.json({
+    message: ORDERS_MESSAGES.DELETE_ORDER_SUCCESS
+  })
+}

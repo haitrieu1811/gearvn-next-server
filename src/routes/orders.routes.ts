@@ -1,8 +1,14 @@
 import { Router } from 'express'
 
-import { getAllOrdersController, getMyOrdersController, updateOrderController } from '~/controllers/orders.controllers'
+import {
+  deleteOrderController,
+  getAllOrdersController,
+  getMyOrdersController,
+  updateOrderController
+} from '~/controllers/orders.controllers'
 import { paginationValidator } from '~/middlewares/common.middlewares'
 import {
+  deleteOrderRoleValidator,
   getOrdersValidator,
   orderIdValidator,
   readAllOrdersRoleValidator,
@@ -42,6 +48,15 @@ ordersRouter.patch(
   orderIdValidator,
   updateOrderValidator,
   wrapRequestHandler(updateOrderController)
+)
+
+ordersRouter.delete(
+  '/:orderId',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  deleteOrderRoleValidator,
+  orderIdValidator,
+  wrapRequestHandler(deleteOrderController)
 )
 
 export default ordersRouter

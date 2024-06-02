@@ -278,6 +278,16 @@ class OrderService {
       order: updatedOrder
     }
   }
+
+  async delete(orderId: ObjectId) {
+    const deletedOrder = await databaseService.orders.findOneAndDelete({ _id: orderId })
+    await databaseService.cartItems.deleteMany({
+      _id: {
+        $in: deletedOrder?.cartItems
+      }
+    })
+    return true
+  }
 }
 
 const orderService = new OrderService()
