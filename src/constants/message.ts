@@ -218,3 +218,8 @@ export const CART_ITEMS_MESSAGES = {
   PAYMENT_METHOD_IS_REQUIRED: 'Phương thức thanh toán là bắt buộc.',
   INVALID_PAYMENT_METHOD: 'Phương thức thanh toán không hợp lệ.'
 } as const
+
+export const ORDERS_MESSAGES = {
+  INVALID_ORDER_STATUS: 'Trạng thái đơn hàng không hợp lệ.',
+  GET_MY_ORDERS_SUCCESS: 'Lấy danh sách đơn hàng của tôi thành công.'
+} as const
