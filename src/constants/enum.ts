@@ -155,3 +155,13 @@ export enum PaymentMethod {
   Cash,
   Banking
 }
+
+export enum PostStatus {
+  Active,
+  Inactive
+}
+
+export enum PostApprovalStatus {
+  Approved,
+  Unapproved
+}

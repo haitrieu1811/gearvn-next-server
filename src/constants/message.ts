@@ -230,3 +230,15 @@ export const ORDERS_MESSAGES = {
   ORDER_STATUS_IS_REQUIRED: 'Trạng thái đơn hàng là bắt buộc.',
   DELETE_ORDER_SUCCESS: 'Xóa đơn hàng thành công.'
 } as const
+
+export const POSTS_MESSAGES = {
+  CREATE_POST_SUCCESS: 'Tạo bài viết thành công.',
+  POST_TITLE_IS_REQUIRED: 'Tiêu đề bài viết là bắt buộc.',
+  POST_CONTENT_IS_REQUIRED: 'Nội dung bài viết là bắt buộc.',
+  POST_DESCRIPTION_IS_REQUIRED: 'Mô tả bài viết là bắt buộc.',
+  POST_THUMBNAIL_IS_REQUIRED: 'Hình thu nhỏ bài viết là bắt buộc.',
+  INVALID_POST_THUMBNAIL: 'Hình thu nhỏ bài viết không hợp lệ.',
+  POST_ORDER_NUMBER_MUST_BE_AN_POSITIVE_INTEGER: 'Thứ tự sắp xếp bài viết phải là một số nguyên dương.',
+  INVALID_POST_STATUS: 'Trạng thái bài viết không hợp lệ.',
+  INVALID_POST_APPROVAL_STATUS: 'Trạng thái phê duyệt không hợp lệ.'
+} as const
