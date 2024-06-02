@@ -1,8 +1,9 @@
 import isUndefined from 'lodash/isUndefined'
 import omitBy from 'lodash/omitBy'
+import { ObjectId } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
-import { GetOrdersReqQuery } from '~/models/requests/Order.requests'
+import { GetOrdersReqQuery, UpdateOrderReqBody } from '~/models/requests/Order.requests'
 import databaseService from '~/services/database.services'
 import { paginationConfig } from '~/utils/utils'
 
@@ -238,6 +239,43 @@ class OrderService {
       limit,
       totalRows,
       totalPages: Math.ceil(totalRows / limit)
+    }
+  }
+
+  async update({ data, orderId }: { data: UpdateOrderReqBody; orderId: ObjectId }) {
+    const updatedOrder = await databaseService.orders.findOneAndUpdate(
+      {
+        _id: orderId
+      },
+      {
+        $set: {
+          status: data.status
+        },
+        $currentDate: {
+          updatedAt: true
+        }
+      },
+      {
+        returnDocument: 'after'
+      }
+    )
+    await databaseService.cartItems.updateMany(
+      {
+        _id: {
+          $in: updatedOrder?.cartItems
+        }
+      },
+      {
+        $set: {
+          status: data.status
+        },
+        $currentDate: {
+          updatedAt: true
+        }
+      }
+    )
+    return {
+      order: updatedOrder
     }
   }
 }

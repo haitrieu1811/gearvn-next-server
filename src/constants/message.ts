@@ -222,5 +222,10 @@ export const CART_ITEMS_MESSAGES = {
 export const ORDERS_MESSAGES = {
   INVALID_ORDER_STATUS: 'Trạng thái đơn hàng không hợp lệ.',
   GET_MY_ORDERS_SUCCESS: 'Lấy danh sách đơn hàng của tôi thành công.',
-  GET_ALL_ORDERS_SUCCESS: 'Lấy danh sách tất cả đơn hàng thành công.'
+  GET_ALL_ORDERS_SUCCESS: 'Lấy danh sách tất cả đơn hàng thành công.',
+  UPDATE_ORDER_SUCCESS: 'Cập nhật đơn hàng thành công.',
+  ORDER_IS_REQUIRED: 'ID đơn hàng là bắt buộc.',
+  INVALID_ORDER_ID: 'ID đơn hàng không hợp lệ.',
+  ORDER_NOT_FOUND: 'Không tìm thấy đơn hàng.',
+  ORDER_STATUS_IS_REQUIRED: 'Trạng thái đơn hàng là bắt buộc.'
 } as const
