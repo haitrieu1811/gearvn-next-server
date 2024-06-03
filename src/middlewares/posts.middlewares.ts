@@ -1,3 +1,4 @@
+import { Request } from 'express'
 import { ParamSchema, checkSchema } from 'express-validator'
 import { ObjectId } from 'mongodb'
 
@@ -5,6 +6,7 @@ import { HttpStatusCode, PostApprovalStatus, PostStatus, RoleField, RoleType } f
 import { POSTS_MESSAGES } from '~/constants/message'
 import { generateRoleValidator } from '~/middlewares/roles.middlewares'
 import { ErrorWithStatus } from '~/models/Errors'
+import databaseService from '~/services/database.services'
 import { numberEnumToArray } from '~/utils/utils'
 import { validate } from '~/utils/validation'
 
@@ -112,3 +114,71 @@ export const createPostValidator = validate(
 )
 
 export const createPostRoleValidator = generateRoleValidator({ roleType: RoleType.Create, roleField: RoleField.Post })
+
+export const updatePostRoleValidator = generateRoleValidator({ roleType: RoleType.Update, roleField: RoleField.Post })
+
+export const postIdValidator = validate(
+  checkSchema(
+    {
+      postId: {
+        trim: true,
+        custom: {
+          options: async (value: string, { req }) => {
+            if (!value) {
+              throw new ErrorWithStatus({
+                message: POSTS_MESSAGES.POST_ID_IS_REQUIRED,
+                status: HttpStatusCode.BadRequest
+              })
+            }
+            if (!ObjectId.isValid(value)) {
+              throw new ErrorWithStatus({
+                message: POSTS_MESSAGES.INVALID_POST_ID,
+                status: HttpStatusCode.BadRequest
+              })
+            }
+            const post = await databaseService.posts.findOne({ _id: new ObjectId(value) })
+            if (!post) {
+              throw new ErrorWithStatus({
+                message: POSTS_MESSAGES.POST_NOT_FOUND,
+                status: HttpStatusCode.NotFound
+              })
+            }
+            ;(req as Request).post = post
+            return true
+          }
+        }
+      }
+    },
+    ['params']
+  )
+)
+
+export const updatePostValidator = validate(
+  checkSchema(
+    {
+      title: {
+        ...titleSchema,
+        optional: true,
+        notEmpty: undefined
+      },
+      content: {
+        ...contentSchema,
+        optional: true,
+        notEmpty: undefined
+      },
+      description: {
+        ...descriptionSchema,
+        optional: true,
+        notEmpty: undefined
+      },
+      thumbnail: {
+        ...thumbnailSchema,
+        optional: true
+      },
+      orderNumber: orderNumberSchema,
+      status: statusSchema,
+      approvalStatus: approvalStatusSchema
+    },
+    ['body']
+  )
+)

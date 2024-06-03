@@ -1,3 +1,5 @@
+import { ParamsDictionary } from 'express-serve-static-core'
+
 import { PostApprovalStatus, PostStatus } from '~/constants/enum'
 
 export type CreatePostReqBody = {
@@ -8,4 +10,10 @@ export type CreatePostReqBody = {
   orderNumber?: number
   status?: PostStatus
   approvalStatus?: PostApprovalStatus
+}
+
+export type UpdatePostReqBody = Partial<CreatePostReqBody>
+
+export type PostIdReqParams = ParamsDictionary & {
+  postId: string
 }

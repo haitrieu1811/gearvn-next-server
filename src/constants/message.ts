@@ -240,5 +240,9 @@ export const POSTS_MESSAGES = {
   INVALID_POST_THUMBNAIL: 'Hình thu nhỏ bài viết không hợp lệ.',
   POST_ORDER_NUMBER_MUST_BE_AN_POSITIVE_INTEGER: 'Thứ tự sắp xếp bài viết phải là một số nguyên dương.',
   INVALID_POST_STATUS: 'Trạng thái bài viết không hợp lệ.',
-  INVALID_POST_APPROVAL_STATUS: 'Trạng thái phê duyệt không hợp lệ.'
+  INVALID_POST_APPROVAL_STATUS: 'Trạng thái phê duyệt không hợp lệ.',
+  UPDATE_POST_SUCCESS: 'Cập nhật bài viết thành công.',
+  POST_ID_IS_REQUIRED: 'ID bài viết là bắt buộc.',
+  INVALID_POST_ID: 'ID bài viết không hợp lệ.',
+  POST_NOT_FOUND: 'Không tìm thấy bài viết.'
 } as const
