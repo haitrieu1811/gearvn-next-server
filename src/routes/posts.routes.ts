@@ -1,7 +1,12 @@
 import { Router } from 'express'
 
-import { createPostController, deletePostController, updatePostController } from '~/controllers/posts.controllers'
-import { filterReqBodyMiddleware } from '~/middlewares/common.middlewares'
+import {
+  createPostController,
+  deletePostController,
+  getPublicPostsController,
+  updatePostController
+} from '~/controllers/posts.controllers'
+import { filterReqBodyMiddleware, paginationValidator } from '~/middlewares/common.middlewares'
 import {
   createPostRoleValidator,
   createPostValidator,
@@ -61,5 +66,7 @@ postsRouter.delete(
   postIdValidator,
   wrapRequestHandler(deletePostController)
 )
+
+postsRouter.get('/', paginationValidator, wrapRequestHandler(getPublicPostsController))
 
 export default postsRouter

@@ -1,8 +1,11 @@
 import { Request, Response } from 'express'
+import { ParamsDictionary } from 'express-serve-static-core'
 import { ObjectId, WithId } from 'mongodb'
 
+import { PostApprovalStatus, PostStatus } from '~/constants/enum'
 import { POSTS_MESSAGES } from '~/constants/message'
 import Post from '~/models/databases/Post.database'
+import { PaginationReqQuery } from '~/models/requests/Common.requests'
 import { PostIdReqParams, UpdatePostReqBody } from '~/models/requests/Post.requests'
 import { TokenPayload } from '~/models/requests/User.requests'
 import postService from '~/services/posts.services'
@@ -36,5 +39,25 @@ export const deletePostController = async (req: Request<PostIdReqParams>, res: R
   await postService.delete(new ObjectId(req.params.postId))
   return res.json({
     message: POSTS_MESSAGES.DELETE_POST_SUCCESS
+  })
+}
+
+export const getPublicPostsController = async (
+  req: Request<ParamsDictionary, any, any, PaginationReqQuery>,
+  res: Response
+) => {
+  const { posts, ...pagination } = await postService.findMany({
+    query: req.query,
+    match: {
+      status: PostStatus.Active,
+      approvalStatus: PostApprovalStatus.Approved
+    }
+  })
+  return res.json({
+    message: POSTS_MESSAGES.GET_PUBLIC_POSTS_SUCCESS,
+    data: {
+      posts,
+      pagination
+    }
   })
 }
