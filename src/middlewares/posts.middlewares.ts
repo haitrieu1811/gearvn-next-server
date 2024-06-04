@@ -115,6 +115,8 @@ export const createPostValidator = validate(
 
 export const createPostRoleValidator = generateRoleValidator({ roleType: RoleType.Create, roleField: RoleField.Post })
 
+export const readAllPostsRoleValidator = generateRoleValidator({ roleType: RoleType.Read, roleField: RoleField.Post })
+
 export const updatePostRoleValidator = generateRoleValidator({ roleType: RoleType.Update, roleField: RoleField.Post })
 
 export const deletePostRoleValidator = generateRoleValidator({ roleType: RoleType.Delete, roleField: RoleField.Post })

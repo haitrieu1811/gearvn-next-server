@@ -61,3 +61,17 @@ export const getPublicPostsController = async (
     }
   })
 }
+
+export const getAllPostsController = async (
+  req: Request<ParamsDictionary, any, any, PaginationReqQuery>,
+  res: Response
+) => {
+  const { posts, ...pagination } = await postService.findMany({ query: req.query })
+  return res.json({
+    message: POSTS_MESSAGES.GET_ALL_POSTS_SUCCESS,
+    data: {
+      posts,
+      pagination
+    }
+  })
+}

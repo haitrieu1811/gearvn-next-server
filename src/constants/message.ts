@@ -246,5 +246,6 @@ export const POSTS_MESSAGES = {
   INVALID_POST_ID: 'ID bài viết không hợp lệ.',
   POST_NOT_FOUND: 'Không tìm thấy bài viết.',
   DELETE_POST_SUCCESS: 'Xóa bài viết thành công.',
-  GET_PUBLIC_POSTS_SUCCESS: 'Lấy danh sách bài viết công khai thành công.'
+  GET_PUBLIC_POSTS_SUCCESS: 'Lấy danh sách bài viết công khai thành công.',
+  GET_ALL_POSTS_SUCCESS: 'Lấy danh sách tất cả bài viết thành công.'
 } as const

@@ -174,7 +174,7 @@ class PostService {
     ]
   }
 
-  async findMany({ match, query }: { match: object; query: PaginationReqQuery }) {
+  async findMany({ match = {}, query }: { match?: object; query: PaginationReqQuery }) {
     const { page, limit, skip } = paginationConfig(query)
     const aggregate = [
       {

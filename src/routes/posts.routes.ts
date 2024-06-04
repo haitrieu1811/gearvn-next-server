@@ -3,6 +3,7 @@ import { Router } from 'express'
 import {
   createPostController,
   deletePostController,
+  getAllPostsController,
   getPublicPostsController,
   updatePostController
 } from '~/controllers/posts.controllers'
@@ -12,6 +13,7 @@ import {
   createPostValidator,
   deletePostRoleValidator,
   postIdValidator,
+  readAllPostsRoleValidator,
   updatePostRoleValidator,
   updatePostValidator
 } from '~/middlewares/posts.middlewares'
@@ -68,5 +70,14 @@ postsRouter.delete(
 )
 
 postsRouter.get('/', paginationValidator, wrapRequestHandler(getPublicPostsController))
+
+postsRouter.get(
+  '/all',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  readAllPostsRoleValidator,
+  paginationValidator,
+  wrapRequestHandler(getAllPostsController)
+)
 
 export default postsRouter
