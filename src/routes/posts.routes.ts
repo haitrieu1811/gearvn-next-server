@@ -89,4 +89,13 @@ postsRouter.get(
   wrapRequestHandler(getPostDetailController)
 )
 
+postsRouter.get(
+  '/:postId/for-update',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  updatePostRoleValidator,
+  postIdValidator,
+  wrapRequestHandler(getPostDetailController)
+)
+
 export default postsRouter
