@@ -1,11 +1,12 @@
-import { Request } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { ParamSchema, checkSchema } from 'express-validator'
-import { ObjectId } from 'mongodb'
+import { ObjectId, WithId } from 'mongodb'
 
 import { HttpStatusCode, PostApprovalStatus, PostStatus, RoleField, RoleType } from '~/constants/enum'
 import { POSTS_MESSAGES } from '~/constants/message'
 import { generateRoleValidator } from '~/middlewares/roles.middlewares'
 import { ErrorWithStatus } from '~/models/Errors'
+import Post from '~/models/databases/Post.database'
 import databaseService from '~/services/database.services'
 import { numberEnumToArray } from '~/utils/utils'
 import { validate } from '~/utils/validation'
@@ -186,3 +187,16 @@ export const updatePostValidator = validate(
     ['body']
   )
 )
+
+export const isPublicPostValidator = (req: Request, _: Response, next: NextFunction) => {
+  const { status, approvalStatus } = req.post as WithId<Post>
+  if (status !== PostStatus.Active || approvalStatus !== PostApprovalStatus.Approved) {
+    next(
+      new ErrorWithStatus({
+        message: POSTS_MESSAGES.POST_NOT_PUBLIC,
+        status: HttpStatusCode.BadRequest
+      })
+    )
+  }
+  next()
+}

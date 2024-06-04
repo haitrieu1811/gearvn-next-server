@@ -205,6 +205,21 @@ class PostService {
       totalPages: Math.ceil(totalRows / limit)
     }
   }
+
+  async findById(postId: ObjectId) {
+    const aggregate = [
+      {
+        $match: {
+          _id: postId
+        }
+      },
+      ...this.aggregatePost()
+    ]
+    const posts = await databaseService.posts.aggregate(aggregate).toArray()
+    return {
+      post: posts[0]
+    }
+  }
 }
 
 const postService = new PostService()

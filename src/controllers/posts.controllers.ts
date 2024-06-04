@@ -75,3 +75,11 @@ export const getAllPostsController = async (
     }
   })
 }
+
+export const getPostDetailController = async (req: Request<PostIdReqParams>, res: Response) => {
+  const result = await postService.findById(new ObjectId(req.params.postId))
+  return res.json({
+    message: POSTS_MESSAGES.GET_POST_DETAIL_SUCCESS,
+    data: result
+  })
+}

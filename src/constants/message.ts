@@ -247,5 +247,7 @@ export const POSTS_MESSAGES = {
   POST_NOT_FOUND: 'Không tìm thấy bài viết.',
   DELETE_POST_SUCCESS: 'Xóa bài viết thành công.',
   GET_PUBLIC_POSTS_SUCCESS: 'Lấy danh sách bài viết công khai thành công.',
-  GET_ALL_POSTS_SUCCESS: 'Lấy danh sách tất cả bài viết thành công.'
+  GET_ALL_POSTS_SUCCESS: 'Lấy danh sách tất cả bài viết thành công.',
+  GET_POST_DETAIL_SUCCESS: 'Lấy chi tiết bài viết thành công.',
+  POST_NOT_PUBLIC: 'Bài viết không được công khai.'
 } as const

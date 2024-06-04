@@ -4,6 +4,7 @@ import {
   createPostController,
   deletePostController,
   getAllPostsController,
+  getPostDetailController,
   getPublicPostsController,
   updatePostController
 } from '~/controllers/posts.controllers'
@@ -12,6 +13,7 @@ import {
   createPostRoleValidator,
   createPostValidator,
   deletePostRoleValidator,
+  isPublicPostValidator,
   postIdValidator,
   readAllPostsRoleValidator,
   updatePostRoleValidator,
@@ -78,6 +80,13 @@ postsRouter.get(
   readAllPostsRoleValidator,
   paginationValidator,
   wrapRequestHandler(getAllPostsController)
+)
+
+postsRouter.get(
+  '/:postId/for-read',
+  postIdValidator,
+  isPublicPostValidator,
+  wrapRequestHandler(getPostDetailController)
 )
 
 export default postsRouter
