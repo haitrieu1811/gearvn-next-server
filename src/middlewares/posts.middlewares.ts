@@ -117,6 +117,8 @@ export const createPostRoleValidator = generateRoleValidator({ roleType: RoleTyp
 
 export const updatePostRoleValidator = generateRoleValidator({ roleType: RoleType.Update, roleField: RoleField.Post })
 
+export const deletePostRoleValidator = generateRoleValidator({ roleType: RoleType.Delete, roleField: RoleField.Post })
+
 export const postIdValidator = validate(
   checkSchema(
     {

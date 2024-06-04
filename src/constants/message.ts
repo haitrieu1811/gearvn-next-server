@@ -244,5 +244,6 @@ export const POSTS_MESSAGES = {
   UPDATE_POST_SUCCESS: 'Cập nhật bài viết thành công.',
   POST_ID_IS_REQUIRED: 'ID bài viết là bắt buộc.',
   INVALID_POST_ID: 'ID bài viết không hợp lệ.',
-  POST_NOT_FOUND: 'Không tìm thấy bài viết.'
+  POST_NOT_FOUND: 'Không tìm thấy bài viết.',
+  DELETE_POST_SUCCESS: 'Xóa bài viết thành công.'
 } as const

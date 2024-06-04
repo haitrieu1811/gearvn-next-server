@@ -31,3 +31,10 @@ export const updatePostController = async (req: Request<PostIdReqParams, any, Up
     data: result
   })
 }
+
+export const deletePostController = async (req: Request<PostIdReqParams>, res: Response) => {
+  await postService.delete(new ObjectId(req.params.postId))
+  return res.json({
+    message: POSTS_MESSAGES.DELETE_POST_SUCCESS
+  })
+}

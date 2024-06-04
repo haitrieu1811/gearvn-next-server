@@ -1,10 +1,11 @@
 import { Router } from 'express'
 
-import { createPostController, updatePostController } from '~/controllers/posts.controllers'
+import { createPostController, deletePostController, updatePostController } from '~/controllers/posts.controllers'
 import { filterReqBodyMiddleware } from '~/middlewares/common.middlewares'
 import {
   createPostRoleValidator,
   createPostValidator,
+  deletePostRoleValidator,
   postIdValidator,
   updatePostRoleValidator,
   updatePostValidator
@@ -50,6 +51,15 @@ postsRouter.patch(
     'title'
   ]),
   wrapRequestHandler(updatePostController)
+)
+
+postsRouter.delete(
+  '/:postId',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  deletePostRoleValidator,
+  postIdValidator,
+  wrapRequestHandler(deletePostController)
 )
 
 export default postsRouter

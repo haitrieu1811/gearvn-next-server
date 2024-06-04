@@ -54,6 +54,12 @@ class PostService {
       post: updatedPost
     }
   }
+
+  async delete(postId: ObjectId) {
+    const deletedPost = (await databaseService.posts.findOneAndDelete({ _id: postId })) as WithId<Post>
+    await fileService.deleteImage(deletedPost.thumbnail)
+    return true
+  }
 }
 
 const postService = new PostService()
