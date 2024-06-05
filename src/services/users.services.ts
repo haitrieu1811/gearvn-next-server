@@ -4,7 +4,7 @@ import omitBy from 'lodash/omitBy'
 import { ObjectId, WithId } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
-import { TokenType, UserStatus, UserType, UserVerifyStatus } from '~/constants/enum'
+import { Gender, TokenType, UserStatus, UserType, UserVerifyStatus } from '~/constants/enum'
 import RefreshToken from '~/models/databases/RefreshToken.database'
 import User from '~/models/databases/User.database'
 import { GetAllUsersReqQuery, RegisterReqBody, UpdateMeReqBody } from '~/models/requests/User.requests'
@@ -494,7 +494,19 @@ class UserService {
       { type: Number(type), status: Number(status), gender: Number(gender), verify: Number(verify) },
       isNaN
     )
-    const [users, totalRows] = await Promise.all([
+    const [
+      users,
+      totalRows,
+      totalAdmin,
+      totalStaff,
+      totalCustomer,
+      totalMale,
+      totalFemale,
+      totalActive,
+      totalInactive,
+      totalVerified,
+      totalUnverified
+    ] = await Promise.all([
       databaseService.users
         .aggregate([
           {
@@ -575,14 +587,35 @@ class UserService {
           }
         ])
         .toArray(),
-      databaseService.users.countDocuments(match)
+      databaseService.users.countDocuments(match),
+      databaseService.users.countDocuments({ type: UserType.Admin }),
+      databaseService.users.countDocuments({ type: UserType.Staff }),
+      databaseService.users.countDocuments({ type: UserType.Customer }),
+      databaseService.users.countDocuments({ gender: Gender.Male }),
+      databaseService.users.countDocuments({ gender: Gender.Female }),
+      databaseService.users.countDocuments({ status: UserStatus.Active }),
+      databaseService.users.countDocuments({ status: UserStatus.Inactive }),
+      databaseService.users.countDocuments({ verify: UserVerifyStatus.Verified }),
+      databaseService.users.countDocuments({ verify: UserVerifyStatus.Unverified })
     ])
     return {
       users,
       page,
       limit,
       totalRows,
-      totalPages: Math.ceil(totalRows / limit)
+      totalPages: Math.ceil(totalRows / limit),
+      analytics: {
+        totalUsers: totalRows,
+        totalAdmin,
+        totalStaff,
+        totalCustomer,
+        totalMale,
+        totalFemale,
+        totalActive,
+        totalInactive,
+        totalVerified,
+        totalUnverified
+      }
     }
   }
 }

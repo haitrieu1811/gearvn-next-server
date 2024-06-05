@@ -139,11 +139,12 @@ export const getAllUsersController = async (
   req: Request<ParamsDictionary, any, any, GetAllUsersReqQuery>,
   res: Response
 ) => {
-  const { users, ...pagination } = await userService.getAllUsers(req.query)
+  const { users, analytics, ...pagination } = await userService.getAllUsers(req.query)
   return res.json({
     message: USERS_MESSAGES.GET_ALL_USERS_SUCCESS,
     data: {
       users,
+      analytics,
       pagination
     }
   })
