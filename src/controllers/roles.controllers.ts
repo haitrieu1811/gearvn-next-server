@@ -71,3 +71,17 @@ export const unassignRoleOfUserController = async (req: Request<AssignRoleToUser
     message: ROLES_MESSAGES.UNASSIGN_ROLE_TO_USER_SUCCESS
   })
 }
+
+export const getPermissionsGroupByUserController = async (
+  req: Request<ParamsDictionary, any, any, PaginationReqQuery>,
+  res: Response
+) => {
+  const { permissions, ...pagination } = await roleService.getPermissionsGroupByUser(req.query)
+  return res.json({
+    message: ROLES_MESSAGES.GET_PERMISSIONS_GROUP_BY_USER_SUCCESS,
+    data: {
+      permissions,
+      pagination
+    }
+  })
+}

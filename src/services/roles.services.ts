@@ -2,6 +2,7 @@ import isUndefined from 'lodash/isUndefined'
 import omitBy from 'lodash/omitBy'
 import { ObjectId } from 'mongodb'
 
+import { ENV_CONFIG } from '~/constants/config'
 import Role from '~/models/databases/Role.database'
 import UserRole from '~/models/databases/UserRole.database'
 import { PaginationReqQuery } from '~/models/requests/Common.requests'
@@ -49,7 +50,7 @@ class RoleService {
     const [roles, totalRows] = await Promise.all([
       databaseService.roles
         .find({})
-        .sort({ createdAt: -1 })
+        .sort({ name: -1 })
         .skip(skip)
         .limit(limit)
         .project({
@@ -99,6 +100,225 @@ class RoleService {
       userId
     })
     return true
+  }
+
+  async getPermissionsGroupByUser(query: PaginationReqQuery) {
+    const { page, limit, skip } = paginationConfig(query)
+    const [permissions, totalRows] = await Promise.all([
+      databaseService.userRoles
+        .aggregate([
+          {
+            $lookup: {
+              from: 'users',
+              localField: 'userId',
+              foreignField: '_id',
+              as: 'user'
+            }
+          },
+          {
+            $unwind: {
+              path: '$user'
+            }
+          },
+          {
+            $lookup: {
+              from: 'files',
+              localField: 'user.avatar',
+              foreignField: '_id',
+              as: 'userAvatar'
+            }
+          },
+          {
+            $unwind: {
+              path: '$userAvatar',
+              preserveNullAndEmptyArrays: true
+            }
+          },
+          {
+            $lookup: {
+              from: 'roles',
+              localField: 'roleId',
+              foreignField: '_id',
+              as: 'role'
+            }
+          },
+          {
+            $unwind: {
+              path: '$role'
+            }
+          },
+          {
+            $addFields: {
+              'user.avatar': {
+                $cond: {
+                  if: '$userAvatar',
+                  then: {
+                    $concat: [ENV_CONFIG.HOST, '/', ENV_CONFIG.STATIC_IMAGES_PATH, '/', '$userAvatar.name']
+                  },
+                  else: ''
+                }
+              }
+            }
+          },
+          {
+            $group: {
+              _id: '$user._id',
+              user: {
+                $first: '$user'
+              },
+              roles: {
+                $push: '$role'
+              },
+              createdAt: {
+                $first: '$createdAt'
+              },
+              updatedAt: {
+                $first: '$updatedAt'
+              }
+            }
+          },
+          {
+            $addFields: {
+              'user.roles': '$roles'
+            }
+          },
+          {
+            $replaceRoot: {
+              newRoot: '$user'
+            }
+          },
+          {
+            $project: {
+              password: 0,
+              addresses: 0,
+              defaultAddress: 0,
+              verifyEmailToken: 0,
+              forgotPasswordToken: 0,
+              createdAt: 0,
+              updatedAt: 0,
+              'roles.userId': 0,
+              'roles.type': 0,
+              'roles.field': 0
+            }
+          },
+          {
+            $skip: skip
+          },
+          {
+            $limit: limit
+          }
+        ])
+        .toArray(),
+      databaseService.userRoles
+        .aggregate([
+          {
+            $lookup: {
+              from: 'users',
+              localField: 'userId',
+              foreignField: '_id',
+              as: 'user'
+            }
+          },
+          {
+            $unwind: {
+              path: '$user'
+            }
+          },
+          {
+            $lookup: {
+              from: 'files',
+              localField: 'user.avatar',
+              foreignField: '_id',
+              as: 'userAvatar'
+            }
+          },
+          {
+            $unwind: {
+              path: '$userAvatar',
+              preserveNullAndEmptyArrays: true
+            }
+          },
+          {
+            $lookup: {
+              from: 'roles',
+              localField: 'roleId',
+              foreignField: '_id',
+              as: 'role'
+            }
+          },
+          {
+            $unwind: {
+              path: '$role'
+            }
+          },
+          {
+            $addFields: {
+              'user.avatar': {
+                $cond: {
+                  if: '$userAvatar',
+                  then: {
+                    $concat: [ENV_CONFIG.HOST, '/', ENV_CONFIG.STATIC_IMAGES_PATH, '/', '$userAvatar.name']
+                  },
+                  else: ''
+                }
+              }
+            }
+          },
+          {
+            $group: {
+              _id: '$user._id',
+              user: {
+                $first: '$user'
+              },
+              roles: {
+                $push: '$role'
+              },
+              createdAt: {
+                $first: '$createdAt'
+              },
+              updatedAt: {
+                $first: '$updatedAt'
+              }
+            }
+          },
+          {
+            $addFields: {
+              'user.roles': '$roles'
+            }
+          },
+          {
+            $replaceRoot: {
+              newRoot: '$user'
+            }
+          },
+          {
+            $project: {
+              password: 0,
+              addresses: 0,
+              defaultAddress: 0,
+              verifyEmailToken: 0,
+              forgotPasswordToken: 0,
+              createdAt: 0,
+              updatedAt: 0,
+              'roles.userId': 0,
+              'roles.type': 0,
+              'roles.field': 0
+            }
+          },
+          {
+            $count: 'total'
+          }
+        ])
+        .toArray()
+    ])
+    const realTotalRows = totalRows[0].total || 0
+    return {
+      permissions,
+      page,
+      limit,
+      totalRows: realTotalRows,
+      totalPage: Math.ceil(realTotalRows / limit)
+    }
   }
 }
 

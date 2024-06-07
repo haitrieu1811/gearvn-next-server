@@ -74,7 +74,7 @@ const genderSchema: ParamSchema = {
   optional: true,
   custom: {
     options: (value) => {
-      if (!genders.includes(value)) {
+      if (!genders.includes(Number(value))) {
         throw new ErrorWithStatus({
           message: USERS_MESSAGES.INVALID_GENDER,
           status: HttpStatusCode.BadRequest
@@ -423,7 +423,7 @@ export const getAllUsersValidator = validate(
         optional: true,
         custom: {
           options: (value) => {
-            if (!userTypes.includes(value)) {
+            if (!userTypes.includes(Number(value))) {
               throw new ErrorWithStatus({
                 message: USERS_MESSAGES.INVALID_USER_TYPE,
                 status: HttpStatusCode.BadRequest
@@ -437,7 +437,7 @@ export const getAllUsersValidator = validate(
         optional: true,
         custom: {
           options: (value) => {
-            if (!userStatuses.includes(value)) {
+            if (!userStatuses.includes(Number(value))) {
               throw new ErrorWithStatus({
                 message: USERS_MESSAGES.INVALID_USER_STATUS,
                 status: HttpStatusCode.BadRequest
@@ -451,7 +451,7 @@ export const getAllUsersValidator = validate(
         optional: true,
         custom: {
           options: (value) => {
-            if (!userVerifyStatuses.includes(value)) {
+            if (!userVerifyStatuses.includes(Number(value))) {
               throw new ErrorWithStatus({
                 message: USERS_MESSAGES.INVALID_USER_VERIFY_STATUS,
                 status: HttpStatusCode.BadRequest

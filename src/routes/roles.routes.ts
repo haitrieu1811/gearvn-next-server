@@ -4,6 +4,7 @@ import {
   assignRoleToUserController,
   createRoleController,
   getAllRolesController,
+  getPermissionsGroupByUserController,
   getRoleDetailController,
   unassignRoleOfUserController,
   updateRoleController
@@ -87,6 +88,15 @@ rolesRouter.delete(
   userIdValidator,
   existedUserRoleValidator,
   wrapRequestHandler(unassignRoleOfUserController)
+)
+
+rolesRouter.get(
+  '/permission/group-by-user',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  isAdminValidator,
+  paginationValidator,
+  wrapRequestHandler(getPermissionsGroupByUserController)
 )
 
 export default rolesRouter
