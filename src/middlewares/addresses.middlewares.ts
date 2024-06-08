@@ -3,8 +3,8 @@ import { ParamSchema, checkSchema } from 'express-validator'
 import { ObjectId } from 'mongodb'
 
 import { AddressType, HttpStatusCode } from '~/constants/enum'
-import { ADDRESS_MESSAGES, GENERAL_MESSAGES, USERS_MESSAGES } from '~/constants/message'
-import { VIET_NAM_PHONE_NUMBER_REGEX } from '~/constants/regex'
+import { ADDRESS_MESSAGES, GENERAL_MESSAGES } from '~/constants/message'
+import { fullNameSchema, phoneNumberSchema } from '~/middlewares/users.middlewares'
 import { ErrorWithStatus } from '~/models/Errors'
 import { AddressIdReqParams } from '~/models/requests/Address.requests'
 import { TokenPayload } from '~/models/requests/User.requests'
@@ -117,28 +117,6 @@ export const detailAddressSchema: ParamSchema = {
   trim: true,
   notEmpty: {
     errorMessage: ADDRESS_MESSAGES.ADDRESS_DETAIL_IS_REQUIRED
-  }
-}
-
-export const fullNameSchema: ParamSchema = {
-  trim: true,
-  notEmpty: {
-    errorMessage: USERS_MESSAGES.FULLNAME_IS_REQUIRED
-  }
-}
-
-export const phoneNumberSchema: ParamSchema = {
-  trim: true,
-  notEmpty: {
-    errorMessage: USERS_MESSAGES.PHONE_NUMBER_IS_REQUIRED
-  },
-  custom: {
-    options: (value: string) => {
-      if (!VIET_NAM_PHONE_NUMBER_REGEX.test(value)) {
-        throw new Error(USERS_MESSAGES.INVALID_PHONE_NUMBER)
-      }
-      return true
-    }
   }
 }
 

@@ -2,6 +2,7 @@ import { Router } from 'express'
 
 import {
   changePasswordController,
+  createUserController,
   forgotPasswordController,
   getAllUsersController,
   getMeController,
@@ -18,10 +19,12 @@ import { filterReqBodyMiddleware, paginationValidator } from '~/middlewares/comm
 import {
   accessTokenValidator,
   changePasswordValidator,
+  createUserValidator,
   forgotPasswordTokenValidator,
   forgotPasswordValidator,
   getAllUsersValidator,
   isAdminValidator,
+  isVerifiedUserValidator,
   loginValidator,
   refreshTokenValidator,
   registerValidator,
@@ -29,7 +32,7 @@ import {
   updateMeValidator,
   verifyEmailValidator
 } from '~/middlewares/users.middlewares'
-import { RegisterReqBody, UpdateMeReqBody } from '~/models/requests/User.requests'
+import { CreateUserReqBody, RegisterReqBody, UpdateMeReqBody } from '~/models/requests/User.requests'
 import { wrapRequestHandler } from '~/utils/handler'
 
 const usersRouter = Router()
@@ -84,6 +87,16 @@ usersRouter.get(
   paginationValidator,
   getAllUsersValidator,
   wrapRequestHandler(getAllUsersController)
+)
+
+usersRouter.post(
+  '/',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  isAdminValidator,
+  createUserValidator,
+  filterReqBodyMiddleware<CreateUserReqBody>(['confirmPassword', 'email', 'fullName', 'gender', 'password', 'type']),
+  wrapRequestHandler(createUserController)
 )
 
 export default usersRouter

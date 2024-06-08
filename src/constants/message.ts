@@ -53,7 +53,10 @@ export const USERS_MESSAGES = {
   USER_NOT_FOUND: 'Không tìm thấy user.',
   USER_ROLE_ALREADY_EXIST: 'User đã có quyền này.',
   USER_ROLE_NOT_EXIST: 'User không có vai trò này.',
-  PHONE_NUMBER_IS_REQUIRED: 'Số điện thoại là bắt buộc.'
+  PHONE_NUMBER_IS_REQUIRED: 'Số điện thoại là bắt buộc.',
+  USER_TYPE_IS_REQUIRED: 'Loại user là bắt buộc.',
+  GENDER_IS_REQUIRED: 'Giới tính là bắt buộc.',
+  CREATE_USER_SUCCESS: 'Tạo người dùng thành công.'
 } as const
 
 export const FILES_MESSAGES = {

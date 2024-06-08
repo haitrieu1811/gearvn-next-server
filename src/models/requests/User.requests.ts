@@ -51,3 +51,12 @@ export type GetAllUsersReqQuery = PaginationReqQuery & {
 export type UserIdReqParams = ParamsDictionary & {
   userId: string
 }
+
+export type CreateUserReqBody = {
+  email: string
+  fullName: string
+  password: string
+  confirmPassword: string
+  gender: Gender
+  type: UserType
+}

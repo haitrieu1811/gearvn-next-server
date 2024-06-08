@@ -71,12 +71,74 @@ const confirmPasswordSchema: ParamSchema = {
 }
 
 const genderSchema: ParamSchema = {
-  optional: true,
   custom: {
     options: (value) => {
+      if (value === undefined) {
+        throw new ErrorWithStatus({
+          message: USERS_MESSAGES.GENDER_IS_REQUIRED,
+          status: HttpStatusCode.BadRequest
+        })
+      }
       if (!genders.includes(Number(value))) {
         throw new ErrorWithStatus({
           message: USERS_MESSAGES.INVALID_GENDER,
+          status: HttpStatusCode.BadRequest
+        })
+      }
+      return true
+    }
+  }
+}
+
+export const fullNameSchema: ParamSchema = {
+  trim: true,
+  notEmpty: {
+    errorMessage: USERS_MESSAGES.FULLNAME_IS_REQUIRED
+  }
+}
+
+export const phoneNumberSchema: ParamSchema = {
+  trim: true,
+  notEmpty: {
+    errorMessage: USERS_MESSAGES.PHONE_NUMBER_IS_REQUIRED
+  },
+  custom: {
+    options: (value: string) => {
+      if (!VIET_NAM_PHONE_NUMBER_REGEX.test(value)) {
+        throw new Error(USERS_MESSAGES.INVALID_PHONE_NUMBER)
+      }
+      return true
+    }
+  }
+}
+
+const userTypeSchema: ParamSchema = {
+  custom: {
+    options: (value) => {
+      if (value === undefined) {
+        throw new ErrorWithStatus({
+          message: USERS_MESSAGES.USER_TYPE_IS_REQUIRED,
+          status: HttpStatusCode.BadRequest
+        })
+      }
+      if (!userTypes.includes(Number(value))) {
+        throw new ErrorWithStatus({
+          message: USERS_MESSAGES.INVALID_USER_TYPE,
+          status: HttpStatusCode.BadRequest
+        })
+      }
+      return true
+    }
+  }
+}
+
+const avatarSchema: ParamSchema = {
+  trim: true,
+  custom: {
+    options: (value: string) => {
+      if (!ObjectId.isValid(value)) {
+        throw new ErrorWithStatus({
+          message: GENERAL_MESSAGES.INVALID_IMAGE_ID,
           status: HttpStatusCode.BadRequest
         })
       }
@@ -352,7 +414,10 @@ export const updateMeValidator = validate(
         optional: true,
         trim: true
       },
-      gender: genderSchema,
+      gender: {
+        ...genderSchema,
+        optional: true
+      },
       phoneNumber: {
         optional: true,
         trim: true,
@@ -371,19 +436,8 @@ export const updateMeValidator = validate(
         }
       },
       avatar: {
-        optional: true,
-        trim: true,
-        custom: {
-          options: (value: string) => {
-            if (!ObjectId.isValid(value)) {
-              throw new ErrorWithStatus({
-                message: GENERAL_MESSAGES.INVALID_IMAGE_ID,
-                status: HttpStatusCode.BadRequest
-              })
-            }
-            return true
-          }
-        }
+        ...avatarSchema,
+        optional: true
       }
     },
     ['body']
@@ -420,18 +474,8 @@ export const getAllUsersValidator = validate(
   checkSchema(
     {
       type: {
-        optional: true,
-        custom: {
-          options: (value) => {
-            if (!userTypes.includes(Number(value))) {
-              throw new ErrorWithStatus({
-                message: USERS_MESSAGES.INVALID_USER_TYPE,
-                status: HttpStatusCode.BadRequest
-              })
-            }
-            return true
-          }
-        }
+        ...userTypeSchema,
+        optional: true
       },
       status: {
         optional: true,
@@ -461,7 +505,10 @@ export const getAllUsersValidator = validate(
           }
         }
       },
-      gender: genderSchema
+      gender: {
+        ...genderSchema,
+        optional: true
+      }
     },
     ['query']
   )
@@ -527,3 +574,28 @@ export const isCustomerValidator = async (req: Request, _: Response, next: NextF
   }
   next()
 }
+
+export const createUserValidator = validate(
+  checkSchema(
+    {
+      email: {
+        ...emailSchema,
+        custom: {
+          options: async (value: string) => {
+            const user = await databaseService.users.findOne({ email: value })
+            if (user) {
+              throw new Error(USERS_MESSAGES.EMAIL_ALREADY_EXISTS)
+            }
+            return true
+          }
+        }
+      },
+      fullName: fullNameSchema,
+      password: passwordSchema,
+      confirmPassword: confirmPasswordSchema,
+      gender: genderSchema,
+      type: userTypeSchema
+    },
+    ['body']
+  )
+)

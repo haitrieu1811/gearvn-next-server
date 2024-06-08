@@ -7,12 +7,11 @@ import { CART_ITEMS_MESSAGES, GENERAL_MESSAGES } from '~/constants/message'
 import {
   detailAddressSchema,
   districtIdSchema,
-  fullNameSchema,
-  phoneNumberSchema,
   provinceIdSchema,
   streetIdSchema,
   wardIdSchema
 } from '~/middlewares/addresses.middlewares'
+import { fullNameSchema, phoneNumberSchema } from '~/middlewares/users.middlewares'
 import { ErrorWithStatus } from '~/models/Errors'
 import CartItem from '~/models/databases/CartItem.database'
 import { TokenPayload } from '~/models/requests/User.requests'

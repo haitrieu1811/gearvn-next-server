@@ -6,6 +6,7 @@ import { USERS_MESSAGES } from '~/constants/message'
 import User from '~/models/databases/User.database'
 import {
   ChangePasswordReqBody,
+  CreateUserReqBody,
   GetAllUsersReqQuery,
   LogoutReqBody,
   RefreshTokenReqBody,
@@ -147,5 +148,13 @@ export const getAllUsersController = async (
       analytics,
       pagination
     }
+  })
+}
+
+export const createUserController = async (req: Request<ParamsDictionary, any, CreateUserReqBody>, res: Response) => {
+  const result = await userService.createUser(req.body)
+  return res.json({
+    message: USERS_MESSAGES.CREATE_USER_SUCCESS,
+    data: result
   })
 }

@@ -7,7 +7,12 @@ import { ENV_CONFIG } from '~/constants/config'
 import { Gender, TokenType, UserStatus, UserType, UserVerifyStatus } from '~/constants/enum'
 import RefreshToken from '~/models/databases/RefreshToken.database'
 import User from '~/models/databases/User.database'
-import { GetAllUsersReqQuery, RegisterReqBody, UpdateMeReqBody } from '~/models/requests/User.requests'
+import {
+  CreateUserReqBody,
+  GetAllUsersReqQuery,
+  RegisterReqBody,
+  UpdateMeReqBody
+} from '~/models/requests/User.requests'
 import databaseService from '~/services/database.services'
 import fileService from '~/services/files.services'
 import { hashPassword } from '~/utils/crypto'
@@ -616,6 +621,32 @@ class UserService {
         totalVerified,
         totalUnverified
       }
+    }
+  }
+
+  async createUser(data: CreateUserReqBody) {
+    const { insertedId } = await databaseService.users.insertOne(
+      new User({
+        ...data,
+        password: hashPassword(data.password),
+        verify: UserVerifyStatus.Verified
+      })
+    )
+    const insertedUser = await databaseService.users.findOne(
+      {
+        _id: insertedId
+      },
+      {
+        projection: {
+          email: 1,
+          fullName: 1,
+          createdAt: 1,
+          updatedAt: 1
+        }
+      }
+    )
+    return {
+      user: insertedUser
     }
   }
 }
