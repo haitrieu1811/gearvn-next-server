@@ -311,13 +311,69 @@ class RoleService {
         ])
         .toArray()
     ])
-    const realTotalRows = totalRows[0].total || 0
+    const realTotalRows = totalRows[0]?.total || 0
     return {
       permissions,
       page,
       limit,
       totalRows: realTotalRows,
       totalPage: Math.ceil(realTotalRows / limit)
+    }
+  }
+
+  async getPermissionsByUserId({ userId, query }: { userId: ObjectId; query: PaginationReqQuery }) {
+    const { page, limit, skip } = paginationConfig(query)
+    const match = { userId }
+    const [permissions, totalRows] = await Promise.all([
+      databaseService.userRoles
+        .aggregate([
+          {
+            $match: match
+          },
+          {
+            $lookup: {
+              from: 'roles',
+              localField: 'roleId',
+              foreignField: '_id',
+              as: 'role'
+            }
+          },
+          {
+            $unwind: {
+              path: '$role'
+            }
+          },
+          {
+            $replaceRoot: {
+              newRoot: '$role'
+            }
+          },
+          {
+            $project: {
+              userId: 0
+            }
+          },
+          {
+            $sort: {
+              createdAt: -1
+            }
+          },
+          {
+            $skip: skip
+          },
+          {
+            $limit: limit
+          }
+        ])
+        .toArray(),
+      databaseService.userRoles.countDocuments(match)
+    ])
+    return {
+      permissions,
+      page,
+      limit,
+      totalRows,
+      totalPages: Math.ceil(totalRows / limit)
     }
   }
 }

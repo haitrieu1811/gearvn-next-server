@@ -4,6 +4,7 @@ import {
   assignRoleToUserController,
   createRoleController,
   getAllRolesController,
+  getPermissionsByUserIdController,
   getPermissionsGroupByUserController,
   getRoleDetailController,
   unassignRoleOfUserController,
@@ -97,6 +98,16 @@ rolesRouter.get(
   isAdminValidator,
   paginationValidator,
   wrapRequestHandler(getPermissionsGroupByUserController)
+)
+
+rolesRouter.get(
+  '/user/:userId',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  isAdminValidator,
+  userIdValidator,
+  paginationValidator,
+  wrapRequestHandler(getPermissionsByUserIdController)
 )
 
 export default rolesRouter

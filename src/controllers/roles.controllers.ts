@@ -10,7 +10,7 @@ import {
   RoleIdReqParams,
   UpdateRoleReqBody
 } from '~/models/requests/Role.requests'
-import { TokenPayload } from '~/models/requests/User.requests'
+import { TokenPayload, UserIdReqParams } from '~/models/requests/User.requests'
 import roleService from '~/services/roles.services'
 
 export const createRoleController = async (req: Request<ParamsDictionary, any, CreateRoleReqBody>, res: Response) => {
@@ -79,6 +79,23 @@ export const getPermissionsGroupByUserController = async (
   const { permissions, ...pagination } = await roleService.getPermissionsGroupByUser(req.query)
   return res.json({
     message: ROLES_MESSAGES.GET_PERMISSIONS_GROUP_BY_USER_SUCCESS,
+    data: {
+      permissions,
+      pagination
+    }
+  })
+}
+
+export const getPermissionsByUserIdController = async (
+  req: Request<UserIdReqParams, any, any, PaginationReqQuery>,
+  res: Response
+) => {
+  const { permissions, ...pagination } = await roleService.getPermissionsByUserId({
+    query: req.query,
+    userId: new ObjectId(req.params.userId)
+  })
+  return res.json({
+    message: ROLES_MESSAGES.GET_PERMISSIONS_SUCCESS,
     data: {
       permissions,
       pagination

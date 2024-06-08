@@ -82,7 +82,8 @@ export const ROLES_MESSAGES = {
   GET_ROLE_DETAIL_SUCCESS: 'Lấy thông tin chi tiết quyền thành công.',
   ASSIGN_ROLE_TO_USER_SUCCESS: 'Gán vai trò cho user thành công.',
   UNASSIGN_ROLE_TO_USER_SUCCESS: 'Bỏ gán vai trò của user thành công.',
-  GET_PERMISSIONS_GROUP_BY_USER_SUCCESS: 'Nhận nhóm quyền theo người dùng thành công.'
+  GET_PERMISSIONS_GROUP_BY_USER_SUCCESS: 'Nhận nhóm quyền theo người dùng thành công.',
+  GET_PERMISSIONS_SUCCESS: 'Lấy danh sách quyền thành công.'
 } as const
 
 export const ADDRESS_MESSAGES = {
