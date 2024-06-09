@@ -6,6 +6,7 @@ import {
   forgotPasswordController,
   getAllUsersController,
   getMeController,
+  getUserByIdController,
   loginController,
   logoutController,
   refreshTokenController,
@@ -30,6 +31,7 @@ import {
   registerValidator,
   resetPasswordValidator,
   updateMeValidator,
+  userIdValidator,
   verifyEmailValidator
 } from '~/middlewares/users.middlewares'
 import { CreateUserReqBody, RegisterReqBody, UpdateMeReqBody } from '~/models/requests/User.requests'
@@ -97,6 +99,15 @@ usersRouter.post(
   createUserValidator,
   filterReqBodyMiddleware<CreateUserReqBody>(['confirmPassword', 'email', 'fullName', 'gender', 'password', 'type']),
   wrapRequestHandler(createUserController)
+)
+
+usersRouter.get(
+  '/:userId',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  isAdminValidator,
+  userIdValidator,
+  wrapRequestHandler(getUserByIdController)
 )
 
 export default usersRouter

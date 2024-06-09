@@ -13,7 +13,8 @@ import {
   RegisterReqBody,
   ResetPasswordReqBody,
   TokenPayload,
-  UpdateMeReqBody
+  UpdateMeReqBody,
+  UserIdReqParams
 } from '~/models/requests/User.requests'
 import userService from '~/services/users.services'
 
@@ -155,6 +156,14 @@ export const createUserController = async (req: Request<ParamsDictionary, any, C
   const result = await userService.createUser(req.body)
   return res.json({
     message: USERS_MESSAGES.CREATE_USER_SUCCESS,
+    data: result
+  })
+}
+
+export const getUserByIdController = async (req: Request<UserIdReqParams>, res: Response) => {
+  const result = await userService.getUserById(new ObjectId(req.params.userId))
+  return res.json({
+    message: USERS_MESSAGES.GET_USER_SUCCESS,
     data: result
   })
 }

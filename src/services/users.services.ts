@@ -115,7 +115,7 @@ class UserService {
     })
   }
 
-  async aggregateLoggedUser(userId: ObjectId) {
+  async aggregateUser(userId: ObjectId) {
     const users = await databaseService.users
       .aggregate([
         {
@@ -249,7 +249,7 @@ class UserService {
         exp
       })
     )
-    const user = await this.aggregateLoggedUser(_id)
+    const user = await this.aggregateUser(_id)
     return {
       accessToken,
       refreshToken,
@@ -479,14 +479,14 @@ class UserService {
     if (updatedUser && updatedUser.avatar && updatedUser.avatar !== configuredData.avatar) {
       await fileService.deleteImage(updatedUser.avatar)
     }
-    const user = await this.aggregateLoggedUser(userId)
+    const user = await this.aggregateUser(userId)
     return {
       user
     }
   }
 
   async getMe(userId: ObjectId) {
-    const me = await this.aggregateLoggedUser(userId)
+    const me = await this.aggregateUser(userId)
     return {
       me
     }
@@ -647,6 +647,13 @@ class UserService {
     )
     return {
       user: insertedUser
+    }
+  }
+
+  async getUserById(userId: ObjectId) {
+    const user = await this.aggregateUser(userId)
+    return {
+      user
     }
   }
 }
