@@ -10,13 +10,7 @@ export type CreateBrandReqBody = {
   orderNumber?: number
 }
 
-export type UpdateBrandReqBody = {
-  thumbnail?: string
-  name?: string
-  description?: string
-  status?: BrandStatus
-  orderNumber?: number
-}
+export type UpdateBrandReqBody = Partial<CreateBrandReqBody>
 
 export type BrandIdReqParams = ParamsDictionary & {
   brandId: string

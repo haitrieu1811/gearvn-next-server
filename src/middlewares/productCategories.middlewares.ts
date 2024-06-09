@@ -39,7 +39,8 @@ const orderNumberSchema: ParamSchema = {
   optional: true,
   custom: {
     options: (value) => {
-      if (!Number.isInteger(value) || value < 0) {
+      const _value = Number(value)
+      if (!Number.isInteger(_value) || _value < 0) {
         throw new Error(PRODUCT_CATEGORY_MESSAGES.ORDER_NUMBER_MUST_BE_A_POSITIVE_INTEGER)
       }
       return true

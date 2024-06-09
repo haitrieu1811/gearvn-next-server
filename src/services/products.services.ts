@@ -276,6 +276,12 @@ class ProductService {
           brand: {
             $first: '$brand'
           },
+          description: {
+            $first: '$description'
+          },
+          shortDescription: {
+            $first: '$shortDescription'
+          },
           createdAt: {
             $first: '$createdAt'
           },

@@ -45,7 +45,11 @@ class ProductCategoryService {
         }
       }
     )
-    if (updatedProductCategory && updatedProductCategory.thumbnail !== configuredData.thumbnail) {
+    if (
+      updatedProductCategory &&
+      configuredData.thumbnail &&
+      updatedProductCategory.thumbnail.toString() !== configuredData.thumbnail.toString()
+    ) {
       await fileService.deleteImage(updatedProductCategory.thumbnail)
     }
     const productCategory = await databaseService.productCategories.findOne({ _id: productCategoryId })
@@ -119,7 +123,6 @@ class ProductCategoryService {
 
   async findAll(query: PaginationReqQuery) {
     const { page, limit, skip } = paginationConfig(query)
-
     const aggregate = [
       ...this.aggregateProductCategory(),
       {

@@ -45,7 +45,11 @@ class BrandService {
         }
       }
     )
-    if (updatedBrand && updatedBrand.thumbnail !== configuredData.thumbnail) {
+    if (
+      updatedBrand &&
+      configuredData.thumbnail &&
+      updatedBrand.thumbnail.toString() !== configuredData.thumbnail.toString()
+    ) {
       await fileService.deleteImage(updatedBrand.thumbnail)
     }
     const brand = await databaseService.brands.findOne({ _id: brandId })
