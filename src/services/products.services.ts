@@ -317,9 +317,14 @@ class ProductService {
 
   async findMany(query: GetProductsReqQuery) {
     const { page, limit, skip } = paginationConfig(query)
-    const { categoryId, brandId, lowestPrice, highestPrice } = query
+    const { categoryId, brandId, lowestPrice, highestPrice, name } = query
     const match = omitBy(
       {
+        $text: name
+          ? {
+              $search: name
+            }
+          : undefined,
         status: ProductStatus.Active,
         approvalStatus: ProductApprovalStatus.Approved,
         productCategoryId: categoryId ? new ObjectId(categoryId) : undefined,
@@ -376,9 +381,14 @@ class ProductService {
 
   async findAll(query: GetProductsReqQuery) {
     const { page, limit, skip } = paginationConfig(query)
-    const { categoryId, brandId, lowestPrice, highestPrice } = query
+    const { categoryId, brandId, lowestPrice, highestPrice, name } = query
     const match = omitBy(
       {
+        $text: name
+          ? {
+              $search: name
+            }
+          : undefined,
         productCategoryId: categoryId ? new ObjectId(categoryId) : undefined,
         brandId: brandId ? new ObjectId(brandId) : undefined,
         $and: [
