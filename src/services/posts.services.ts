@@ -108,8 +108,11 @@ class PostService {
       },
       {
         $addFields: {
-          thumbnail: {
-            $concat: [ENV_CONFIG.HOST, '/', ENV_CONFIG.STATIC_IMAGES_PATH, '/', '$thumbnail.name']
+          thumbnailClone: {
+            _id: '$thumbnail._id',
+            url: {
+              $concat: [ENV_CONFIG.HOST, '/', ENV_CONFIG.STATIC_IMAGES_PATH, '/', '$thumbnail.name']
+            }
           },
           'author.avatar': {
             $cond: {
@@ -126,7 +129,7 @@ class PostService {
         $group: {
           _id: '$_id',
           thumbnail: {
-            $first: '$thumbnail'
+            $first: '$thumbnailClone'
           },
           title: {
             $first: '$title'
@@ -183,7 +186,8 @@ class PostService {
       ...this.aggregatePost(),
       {
         $sort: {
-          orderNumber: 1
+          orderNumber: 1,
+          createdAt: -1
         }
       },
       {

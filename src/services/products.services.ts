@@ -350,7 +350,8 @@ class ProductService {
       ...this.aggregateProduct(),
       {
         $sort: {
-          orderNumber: 1
+          orderNumber: 1,
+          createdAt: -1
         }
       },
       {
@@ -406,7 +407,8 @@ class ProductService {
       ...this.aggregateProduct(),
       {
         $sort: {
-          orderNumber: 1
+          orderNumber: 1,
+          createdAt: -1
         }
       },
       {

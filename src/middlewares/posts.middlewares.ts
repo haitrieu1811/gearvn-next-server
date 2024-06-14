@@ -81,6 +81,7 @@ const statusSchema: ParamSchema = {
           status: HttpStatusCode.BadRequest
         })
       }
+      return true
     }
   }
 }

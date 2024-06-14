@@ -98,7 +98,8 @@ class BrandService {
       ...this.aggregateBrand(),
       {
         $sort: {
-          orderNumber: 1
+          orderNumber: 1,
+          createdAt: -1
         }
       },
       {
@@ -127,7 +128,8 @@ class BrandService {
       ...this.aggregateBrand(),
       {
         $sort: {
-          orderNumber: 1
+          orderNumber: 1,
+          createdAt: -1
         }
       },
       {

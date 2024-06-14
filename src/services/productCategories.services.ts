@@ -98,7 +98,8 @@ class ProductCategoryService {
       ...this.aggregateProductCategory(),
       {
         $sort: {
-          orderNumber: 1
+          orderNumber: 1,
+          createdAt: -1
         }
       },
       {
@@ -127,7 +128,8 @@ class ProductCategoryService {
       ...this.aggregateProductCategory(),
       {
         $sort: {
-          orderNumber: 1
+          orderNumber: 1,
+          createdAt: -1
         }
       },
       {
