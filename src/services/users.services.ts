@@ -117,7 +117,7 @@ class UserService {
 
   async aggregateUser(userId: ObjectId) {
     const users = await databaseService.users
-      .aggregate([
+      .aggregate<User>([
         {
           $match: {
             _id: userId
@@ -143,7 +143,10 @@ class UserService {
               $cond: {
                 if: '$avatar',
                 then: {
-                  $concat: [ENV_CONFIG.HOST, '/', ENV_CONFIG.STATIC_IMAGES_PATH, '/', '$avatar.name']
+                  _id: '$avatar._id',
+                  url: {
+                    $concat: [ENV_CONFIG.HOST, '/', ENV_CONFIG.STATIC_IMAGES_PATH, '/', '$avatar.name']
+                  }
                 },
                 else: ''
               }
@@ -161,6 +164,9 @@ class UserService {
             },
             avatar: {
               $first: '$avatar'
+            },
+            phoneNumber: {
+              $first: '$phoneNumber'
             },
             type: {
               $first: '$type'
@@ -476,11 +482,28 @@ class UserService {
         }
       }
     )
-    if (updatedUser && updatedUser.avatar && updatedUser.avatar !== configuredData.avatar) {
+    if (updatedUser && updatedUser.avatar && updatedUser.avatar.toString() !== configuredData.avatar?.toString()) {
       await fileService.deleteImage(updatedUser.avatar)
     }
     const user = await this.aggregateUser(userId)
+    const { _id, status, verify, type } = user as WithId<User>
+    const [accessToken, refreshToken] = await this.signAccessAndRefreshToken({
+      userId: _id?.toString(),
+      status,
+      verify,
+      type
+    })
+    const { iat, exp } = await this.decodeRefreshToken(refreshToken)
+    await databaseService.refreshTokens.insertOne(
+      new RefreshToken({
+        token: refreshToken,
+        iat,
+        exp
+      })
+    )
     return {
+      accessToken,
+      refreshToken,
       user
     }
   }
