@@ -209,21 +209,8 @@ class UserService {
       sendVerifyEmail(data.email, verifyEmailToken)
     ])
     const { iat, exp } = await this.decodeRefreshToken(refreshToken)
-    const [insertedUser] = await Promise.all([
-      databaseService.users.findOne(
-        {
-          _id: userId
-        },
-        {
-          projection: {
-            _id: 1,
-            fullName: 1,
-            email: 1,
-            createdAt: 1,
-            updatedAt: 1
-          }
-        }
-      ),
+    const [user] = await Promise.all([
+      this.aggregateUser(userId),
       databaseService.refreshTokens.insertOne(
         new RefreshToken({
           token: refreshToken,
@@ -235,7 +222,7 @@ class UserService {
     return {
       accessToken,
       refreshToken,
-      user: insertedUser
+      user
     }
   }
 
@@ -331,7 +318,7 @@ class UserService {
   }
 
   async verifyEmail(userId: ObjectId) {
-    const updatedUser = await databaseService.users.findOneAndUpdate(
+    await databaseService.users.updateOne(
       {
         _id: userId
       },
@@ -343,29 +330,28 @@ class UserService {
         $currentDate: {
           updatedAt: true
         }
-      },
-      {
-        returnDocument: 'after',
-        projection: {
-          _id: 1,
-          email: 1,
-          fullName: 1,
-          createdAt: 1,
-          updatedAt: 1
-        }
       }
     )
-    const { _id, type, status, verify } = updatedUser as WithId<User>
+    const user = await this.aggregateUser(userId)
+    const { _id, type, status } = user as WithId<User>
     const [accessToken, refreshToken] = await this.signAccessAndRefreshToken({
       userId: _id.toString(),
       type,
       status,
-      verify
+      verify: UserVerifyStatus.Verified
     })
+    const { iat, exp } = await this.decodeRefreshToken(refreshToken)
+    await databaseService.refreshTokens.insertOne(
+      new RefreshToken({
+        iat,
+        exp,
+        token: refreshToken
+      })
+    )
     return {
       accessToken,
       refreshToken,
-      user: updatedUser
+      user
     }
   }
 

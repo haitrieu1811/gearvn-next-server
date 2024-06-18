@@ -25,6 +25,7 @@ import {
   forgotPasswordValidator,
   getAllUsersValidator,
   isAdminValidator,
+  isUnverifiedUserValidator,
   isVerifiedUserValidator,
   loginValidator,
   refreshTokenValidator,
@@ -52,7 +53,12 @@ usersRouter.post('/logout', refreshTokenValidator, wrapRequestHandler(logoutCont
 
 usersRouter.post('/refresh-token', refreshTokenValidator, wrapRequestHandler(refreshTokenController))
 
-usersRouter.post('/resend-email-verify', accessTokenValidator, wrapRequestHandler(resendEmailVerifyController))
+usersRouter.post(
+  '/resend-email-verify',
+  accessTokenValidator,
+  isUnverifiedUserValidator,
+  wrapRequestHandler(resendEmailVerifyController)
+)
 
 usersRouter.post('/verify-email', verifyEmailValidator, wrapRequestHandler(verifyEmailController))
 

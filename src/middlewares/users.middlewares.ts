@@ -324,6 +324,19 @@ export const verifyEmailValidator = validate(
   )
 )
 
+export const isUnverifiedUserValidator = (req: Request, _: Response, next: NextFunction) => {
+  const { userVerifyStatus } = req.decodedAuthorization as TokenPayload
+  if (userVerifyStatus === UserVerifyStatus.Verified) {
+    next(
+      new ErrorWithStatus({
+        message: USERS_MESSAGES.USER_VERIFIED_BEFORE,
+        status: HttpStatusCode.Forbidden
+      })
+    )
+  }
+  next()
+}
+
 export const forgotPasswordValidator = validate(
   checkSchema(
     {
