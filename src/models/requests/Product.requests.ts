@@ -32,4 +32,6 @@ export type GetProductsReqQuery = PaginationReqQuery & {
   name?: string
   lowestPrice?: string
   highestPrice?: string
+  sortBy?: 'priceAfterDiscount' | 'name' | 'orderNumber'
+  orderBy?: 'asc' | 'desc'
 }

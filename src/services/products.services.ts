@@ -317,7 +317,7 @@ class ProductService {
 
   async findMany(query: GetProductsReqQuery) {
     const { page, limit, skip } = paginationConfig(query)
-    const { categoryId, brandId, lowestPrice, highestPrice, name } = query
+    const { categoryId, brandId, lowestPrice, highestPrice, name, sortBy = 'orderNumber', orderBy = 'asc' } = query
     const match = omitBy(
       {
         $text: name
@@ -348,16 +348,17 @@ class ProductService {
       },
       isUndefined
     )
+    const sort = {
+      [sortBy]: orderBy === 'asc' ? 1 : -1,
+      createdAt: -1
+    }
     const aggregate = [
       {
         $match: match
       },
       ...this.aggregateProduct(),
       {
-        $sort: {
-          orderNumber: 1,
-          createdAt: -1
-        }
+        $sort: sort
       },
       {
         $skip: skip
