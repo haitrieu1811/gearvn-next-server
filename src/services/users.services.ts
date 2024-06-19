@@ -377,41 +377,42 @@ class UserService {
   }
 
   async resetPassword({ password, userId }: { password: string; userId: ObjectId }) {
-    const updatedUser = await databaseService.users.findOneAndUpdate(
-      {
-        _id: userId
-      },
-      {
-        $set: {
-          password: hashPassword(password),
-          forgotPasswordToken: ''
+    const [user] = await Promise.all([
+      this.aggregateUser(userId),
+      databaseService.users.updateOne(
+        {
+          _id: userId
         },
-        $currentDate: {
-          updatedAt: true
+        {
+          $set: {
+            forgotPasswordToken: '',
+            password: hashPassword(password)
+          },
+          $currentDate: {
+            updatedAt: true
+          }
         }
-      },
-      {
-        returnDocument: 'after',
-        projection: {
-          _id: 1,
-          fullName: 1,
-          email: 1,
-          createdAt: 1,
-          updatedAt: 1
-        }
-      }
-    )
-    const { _id, type, status, verify } = updatedUser as WithId<User>
+      )
+    ])
+    const { _id, type, status, verify } = user
     const [accessToken, refreshToken] = await this.signAccessAndRefreshToken({
-      userId: _id.toString(),
+      userId: (_id as ObjectId).toString(),
       type,
       status,
       verify
     })
+    const { iat, exp } = await this.decodeRefreshToken(refreshToken)
+    await databaseService.refreshTokens.insertOne(
+      new RefreshToken({
+        token: refreshToken,
+        iat,
+        exp
+      })
+    )
     return {
       accessToken,
       refreshToken,
-      user: updatedUser
+      user: user
     }
   }
 
