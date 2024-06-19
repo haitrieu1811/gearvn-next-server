@@ -439,9 +439,7 @@ class UserService {
         }
       }
     )
-    return {
-      user: updatedUser
-    }
+    return true
   }
 
   async updateMe({ data, userId }: { data: UpdateMeReqBody; userId: ObjectId }) {

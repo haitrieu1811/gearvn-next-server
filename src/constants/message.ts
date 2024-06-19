@@ -57,7 +57,9 @@ export const USERS_MESSAGES = {
   USER_TYPE_IS_REQUIRED: 'Loại user là bắt buộc.',
   GENDER_IS_REQUIRED: 'Giới tính là bắt buộc.',
   CREATE_USER_SUCCESS: 'Tạo người dùng thành công.',
-  GET_USER_SUCCESS: 'Lấy thông tin người dùng thành công'
+  GET_USER_SUCCESS: 'Lấy thông tin người dùng thành công',
+  OLD_PASSWORD_IS_REQUIRED: 'Mật khẩu cũ là bắt buộc.',
+  INCORRECT_OLD_PASSWORD: 'Mật khẩu cũ không chính xác.'
 } as const
 
 export const FILES_MESSAGES = {

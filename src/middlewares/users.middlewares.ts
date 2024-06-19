@@ -413,6 +413,25 @@ export const resetPasswordValidator = validate(
 export const changePasswordValidator = validate(
   checkSchema(
     {
+      oldPassword: {
+        trim: true,
+        notEmpty: {
+          errorMessage: USERS_MESSAGES.OLD_PASSWORD_IS_REQUIRED
+        },
+        custom: {
+          options: async (value: string, { req }) => {
+            const { userId } = (req as Request).decodedAuthorization as TokenPayload
+            const user = await databaseService.users.findOne({
+              _id: new ObjectId(userId),
+              password: hashPassword(value)
+            })
+            if (!user) {
+              throw new Error(USERS_MESSAGES.INCORRECT_OLD_PASSWORD)
+            }
+            return true
+          }
+        }
+      },
       password: passwordSchema,
       confirmPassword: confirmPasswordSchema
     },
