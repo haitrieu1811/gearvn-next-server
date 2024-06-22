@@ -201,6 +201,27 @@ class ProductService {
         }
       },
       {
+        $lookup: {
+          from: 'reviews',
+          localField: '_id',
+          foreignField: 'productId',
+          as: 'reviews'
+        }
+      },
+      {
+        $addFields: {
+          reviews: {
+            $filter: {
+              input: '$reviews',
+              as: 'review',
+              cond: {
+                $eq: ['$$review.parentId', null]
+              }
+            }
+          }
+        }
+      },
+      {
         $addFields: {
           'author.avatar': {
             $cond: {
@@ -231,6 +252,75 @@ class ProductService {
                 _id: '$$photo._id',
                 url: {
                   $concat: [ENV_CONFIG.HOST, '/', ENV_CONFIG.STATIC_IMAGES_PATH, '/', '$$photo.name']
+                }
+              }
+            }
+          },
+          'review.totalReview': {
+            $size: '$reviews'
+          },
+          'review.averageReview': {
+            $cond: {
+              if: {
+                $size: '$reviews'
+              },
+              then: {
+                $avg: '$reviews.starPoint'
+              },
+              else: 0
+            }
+          },
+          'review.totalOneStar': {
+            $size: {
+              $filter: {
+                input: '$reviews',
+                as: 'review',
+                cond: {
+                  $eq: ['$$review.starPoint', 1]
+                }
+              }
+            }
+          },
+          'review.totalTwoStar': {
+            $size: {
+              $filter: {
+                input: '$reviews',
+                as: 'review',
+                cond: {
+                  $eq: ['$$review.starPoint', 2]
+                }
+              }
+            }
+          },
+          'review.totalThreeStar': {
+            $size: {
+              $filter: {
+                input: '$reviews',
+                as: 'review',
+                cond: {
+                  $eq: ['$$review.starPoint', 3]
+                }
+              }
+            }
+          },
+          'review.totalFourStar': {
+            $size: {
+              $filter: {
+                input: '$reviews',
+                as: 'review',
+                cond: {
+                  $eq: ['$$review.starPoint', 4]
+                }
+              }
+            }
+          },
+          'review.totalFiveStar': {
+            $size: {
+              $filter: {
+                input: '$reviews',
+                as: 'review',
+                cond: {
+                  $eq: ['$$review.starPoint', 5]
                 }
               }
             }
@@ -281,6 +371,9 @@ class ProductService {
           },
           shortDescription: {
             $first: '$shortDescription'
+          },
+          review: {
+            $first: '$review'
           },
           createdAt: {
             $first: '$createdAt'

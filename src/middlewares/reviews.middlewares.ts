@@ -38,9 +38,9 @@ const photosSchema: ParamSchema = {
   optional: true,
   custom: {
     options: (value) => {
-      if (!Array.isArray(value) || value.length === 0) {
+      if (!Array.isArray(value)) {
         throw new ErrorWithStatus({
-          message: REVIEWS_MESSAGES.PHOTOS_MUST_BE_AN_ARRAY_NOT_EMPTY,
+          message: REVIEWS_MESSAGES.PHOTOS_MUST_BE_AN_ARRAY,
           status: HttpStatusCode.BadRequest
         })
       }
