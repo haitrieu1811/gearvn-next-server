@@ -11,6 +11,7 @@ type OrderConstructor = {
   totalAmountReduced?: number
   fullName: string
   phoneNumber: string
+  note?: string
   provinceId: ObjectId
   districtId: string
   wardId: string
@@ -31,6 +32,7 @@ export default class Order {
   totalAmountReduced: number
   fullName: string
   phoneNumber: string
+  note: string
   provinceId: ObjectId
   districtId: string
   wardId: string
@@ -50,6 +52,7 @@ export default class Order {
     totalAmountReduced,
     fullName,
     phoneNumber,
+    note,
     provinceId,
     districtId,
     wardId,
@@ -69,6 +72,7 @@ export default class Order {
     this.totalAmountReduced = totalAmountReduced || 0
     this.fullName = fullName
     this.phoneNumber = phoneNumber
+    this.note = note || ''
     this.provinceId = provinceId
     this.districtId = districtId
     this.wardId = wardId

@@ -146,6 +146,10 @@ export const checkoutValidator = validate(
           options: [paymentMethods],
           errorMessage: CART_ITEMS_MESSAGES.INVALID_PAYMENT_METHOD
         }
+      },
+      note: {
+        trim: true,
+        optional: true
       }
     },
     ['body']

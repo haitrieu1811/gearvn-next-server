@@ -23,7 +23,8 @@ class CartItemService {
   }) {
     let cartItem = await databaseService.cartItems.findOne({
       userId,
-      productId
+      productId,
+      status: OrderStatus.InCart
     })
     if (!cartItem) {
       const { insertedId } = await databaseService.cartItems.insertOne(

@@ -17,6 +17,7 @@ export type UpdateCartItemReqBody = {
 export type CheckoutReqBody = {
   fullName: string
   phoneNumber: string
+  note?: string
   provinceId: string
   districtId: string
   wardId: string
