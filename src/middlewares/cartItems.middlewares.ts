@@ -8,7 +8,6 @@ import {
   detailAddressSchema,
   districtIdSchema,
   provinceIdSchema,
-  streetIdSchema,
   wardIdSchema
 } from '~/middlewares/addresses.middlewares'
 import { fullNameSchema, phoneNumberSchema } from '~/middlewares/users.middlewares'
@@ -134,7 +133,6 @@ export const checkoutValidator = validate(
       provinceId: provinceIdSchema,
       districtId: districtIdSchema,
       wardId: wardIdSchema,
-      streetId: streetIdSchema,
       detailAddress: detailAddressSchema,
       fullName: fullNameSchema,
       phoneNumber: phoneNumberSchema,

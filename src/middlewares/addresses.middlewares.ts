@@ -89,30 +89,6 @@ export const wardIdSchema: ParamSchema = {
   }
 }
 
-export const streetIdSchema: ParamSchema = {
-  trim: true,
-  custom: {
-    options: async (value: string, { req }) => {
-      if (!value) {
-        throw new ErrorWithStatus({
-          message: ADDRESS_MESSAGES.STREET_ID_IS_REQUIRED,
-          status: HttpStatusCode.BadRequest
-        })
-      }
-      const province = await databaseService.provinces.findOne({ _id: new ObjectId(String(req.body.provinceId)) })
-      const district = province?.districts.find((district) => district.id === String(req.body.districtId))
-      const streets = district?.streets.map((street) => street.id) || []
-      if (!streets.includes(value)) {
-        throw new ErrorWithStatus({
-          message: ADDRESS_MESSAGES.STREET_NOT_FOUND,
-          status: HttpStatusCode.NotFound
-        })
-      }
-      return true
-    }
-  }
-}
-
 export const detailAddressSchema: ParamSchema = {
   trim: true,
   notEmpty: {
@@ -126,7 +102,6 @@ export const createAddressValidator = validate(
       provinceId: provinceIdSchema,
       districtId: districtIdSchema,
       wardId: wardIdSchema,
-      streetId: streetIdSchema,
       detailAddress: detailAddressSchema,
       type: {
         notEmpty: {

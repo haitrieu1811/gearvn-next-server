@@ -38,15 +38,6 @@ export const getWardsController = async (req: Request<ProvinceIdReqParams & Dist
   })
 }
 
-export const getStreetsController = async (req: Request<ProvinceIdReqParams & DistrictIdReqParams>, res: Response) => {
-  const { provinceId, districtId } = req.params
-  const result = await addressService.getStreetsByProvinceAndDistrictId({ provinceId, districtId })
-  return res.json({
-    message: ADDRESS_MESSAGES.GET_STREETS_SUCCESS,
-    data: result
-  })
-}
-
 export const createAddressController = async (
   req: Request<ParamsDictionary, any, CreateAddressReqBody>,
   res: Response

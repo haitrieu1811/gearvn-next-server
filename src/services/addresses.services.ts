@@ -103,50 +103,6 @@ class AddressService {
     }
   }
 
-  async getStreetsByProvinceAndDistrictId({ provinceId, districtId }: { provinceId: string; districtId: string }) {
-    const streets = await databaseService.provinces
-      .aggregate([
-        {
-          $match: {
-            _id: new ObjectId(provinceId)
-          }
-        },
-        {
-          $addFields: {
-            district: {
-              $filter: {
-                input: '$districts',
-                as: 'district',
-                cond: {
-                  $eq: ['$$district.id', districtId]
-                }
-              }
-            }
-          }
-        },
-        {
-          $unwind: {
-            path: '$district'
-          }
-        },
-        {
-          $unwind: {
-            path: '$district.streets'
-          }
-        },
-        {
-          $replaceRoot: {
-            newRoot: '$district.streets'
-          }
-        }
-      ])
-      .toArray()
-    return {
-      streets,
-      totalRows: streets.length
-    }
-  }
-
   async create({ data, userId }: { data: CreateAddressReqBody; userId: ObjectId }) {
     const { insertedId } = await databaseService.addresses.insertOne(
       new Address({
@@ -285,26 +241,12 @@ class AddressService {
                 $eq: ['$$ward.id', '$wardId']
               }
             }
-          },
-          street: {
-            $filter: {
-              input: '$district.streets',
-              as: 'street',
-              cond: {
-                $eq: ['$$street.id', '$streetId']
-              }
-            }
           }
         }
       },
       {
         $unwind: {
           path: '$ward'
-        }
-      },
-      {
-        $unwind: {
-          path: '$street'
         }
       },
       {
@@ -324,9 +266,6 @@ class AddressService {
           },
           ward: {
             $first: '$ward'
-          },
-          street: {
-            $first: '$street'
           },
           detailAddress: {
             $first: '$detailAddress'

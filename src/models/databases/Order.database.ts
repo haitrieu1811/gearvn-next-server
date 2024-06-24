@@ -15,7 +15,6 @@ type OrderConstructor = {
   provinceId: ObjectId
   districtId: string
   wardId: string
-  streetId: string
   detailAddress: string
   paymentMethod: PaymentMethod
   status?: OrderStatus
@@ -36,7 +35,6 @@ export default class Order {
   provinceId: ObjectId
   districtId: string
   wardId: string
-  streetId: string
   detailAddress: string
   paymentMethod: PaymentMethod
   status: OrderStatus
@@ -56,7 +54,6 @@ export default class Order {
     provinceId,
     districtId,
     wardId,
-    streetId,
     detailAddress,
     paymentMethod,
     status,
@@ -76,7 +73,6 @@ export default class Order {
     this.provinceId = provinceId
     this.districtId = districtId
     this.wardId = wardId
-    this.streetId = streetId
     this.detailAddress = detailAddress
     this.paymentMethod = paymentMethod
     this.status = status || OrderStatus.WaitForConfirmation

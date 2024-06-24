@@ -59,26 +59,12 @@ class OrderService {
                 $eq: ['$$ward.id', '$wardId']
               }
             }
-          },
-          street: {
-            $filter: {
-              input: '$district.streets',
-              as: 'street',
-              cond: {
-                $eq: ['$$street.id', '$streetId']
-              }
-            }
           }
         }
       },
       {
         $unwind: {
           path: '$ward'
-        }
-      },
-      {
-        $unwind: {
-          path: '$street'
         }
       },
       {
@@ -159,9 +145,6 @@ class OrderService {
           },
           ward: {
             $first: '$ward'
-          },
-          street: {
-            $first: '$street'
           },
           detailAddress: {
             $first: '$detailAddress'

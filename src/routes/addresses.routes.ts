@@ -7,7 +7,6 @@ import {
   getDistrictsController,
   getMyAddressesController,
   getProvincesController,
-  getStreetsController,
   getWardsController,
   setDefaultAddressController,
   updateAddressController
@@ -26,8 +25,6 @@ addressesRouter.get('/provinces/:provinceId/districts', wrapRequestHandler(getDi
 
 addressesRouter.get('/provinces/:provinceId/districts/:districtId/wards', wrapRequestHandler(getWardsController))
 
-addressesRouter.get('/provinces/:provinceId/districts/:districtId/streets', wrapRequestHandler(getStreetsController))
-
 addressesRouter.post(
   '/',
   accessTokenValidator,
@@ -39,7 +36,6 @@ addressesRouter.post(
     'fullName',
     'phoneNumber',
     'provinceId',
-    'streetId',
     'type',
     'wardId'
   ]),
@@ -59,7 +55,6 @@ addressesRouter.put(
     'fullName',
     'phoneNumber',
     'provinceId',
-    'streetId',
     'type',
     'wardId'
   ]),
