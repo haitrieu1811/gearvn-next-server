@@ -149,6 +149,9 @@ class OrderService {
           detailAddress: {
             $first: '$detailAddress'
           },
+          note: {
+            $first: '$note'
+          },
           createdAt: {
             $first: '$createdAt'
           },
@@ -222,6 +225,21 @@ class OrderService {
       limit,
       totalRows,
       totalPages: Math.ceil(totalRows / limit)
+    }
+  }
+
+  async findById(orderId: ObjectId) {
+    const aggregate = [
+      {
+        $match: {
+          _id: orderId
+        }
+      },
+      ...this.aggregateOrder()
+    ]
+    const orders = await databaseService.orders.aggregate(aggregate).toArray()
+    return {
+      order: orders[0]
     }
   }
 

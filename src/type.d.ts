@@ -1,6 +1,7 @@
 import 'express'
 
 import CartItem from '~/models/databases/CartItem.database'
+import Order from '~/models/databases/Order.database'
 import Post from '~/models/databases/Post.database'
 import Product from '~/models/databases/Product.database'
 import Review from '~/models/databases/Review.database'
@@ -18,5 +19,6 @@ declare module 'express' {
     review?: Review
     cartItem?: CartItem
     post?: Post
+    order?: Order
   }
 }

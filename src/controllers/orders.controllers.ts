@@ -43,6 +43,14 @@ export const getAllOrdersController = async (
   })
 }
 
+export const getOrderController = async (req: Request<OrderIdReqParams>, res: Response) => {
+  const result = await orderService.findById(new ObjectId(req.params.orderId))
+  return res.json({
+    message: ORDERS_MESSAGES.GET_ORDER_DETAIL_SUCCESS,
+    data: result
+  })
+}
+
 export const updateOrderController = async (req: Request<OrderIdReqParams, any, UpdateOrderReqBody>, res: Response) => {
   const result = await orderService.update({
     data: req.body,

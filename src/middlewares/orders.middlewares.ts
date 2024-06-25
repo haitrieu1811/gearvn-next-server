@@ -1,10 +1,13 @@
-import { ParamSchema, check, checkSchema } from 'express-validator'
-import { ObjectId } from 'mongodb'
+import { NextFunction, Request, Response } from 'express'
+import { ParamSchema, checkSchema } from 'express-validator'
+import { ObjectId, WithId } from 'mongodb'
 
 import { HttpStatusCode, OrderStatus, RoleField, RoleType } from '~/constants/enum'
-import { ORDERS_MESSAGES } from '~/constants/message'
+import { GENERAL_MESSAGES, ORDERS_MESSAGES } from '~/constants/message'
 import { generateRoleValidator } from '~/middlewares/roles.middlewares'
 import { ErrorWithStatus } from '~/models/Errors'
+import Order from '~/models/databases/Order.database'
+import { TokenPayload } from '~/models/requests/User.requests'
 import databaseService from '~/services/database.services'
 import { numberEnumToArray } from '~/utils/utils'
 import { validate } from '~/utils/validation'
@@ -55,7 +58,7 @@ export const orderIdValidator = validate(
       orderId: {
         trim: true,
         custom: {
-          options: async (value: string) => {
+          options: async (value: string, { req }) => {
             if (!value) {
               throw new ErrorWithStatus({
                 message: ORDERS_MESSAGES.ORDER_IS_REQUIRED,
@@ -75,6 +78,7 @@ export const orderIdValidator = validate(
                 status: HttpStatusCode.NotFound
               })
             }
+            ;(req as Request).order = order
             return true
           }
         }
@@ -83,6 +87,20 @@ export const orderIdValidator = validate(
     ['params']
   )
 )
+
+export const orderAuthorValidator = async (req: Request, _: Response, next: NextFunction) => {
+  const order = req.order as WithId<Order>
+  const { userId } = req.decodedAuthorization as TokenPayload
+  if (order.userId.toString() !== userId) {
+    next(
+      new ErrorWithStatus({
+        message: GENERAL_MESSAGES.PERMISSION_DENIED,
+        status: HttpStatusCode.Forbidden
+      })
+    )
+  }
+  next()
+}
 
 export const updateOrderValidator = validate(
   checkSchema(

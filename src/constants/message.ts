@@ -233,7 +233,8 @@ export const ORDERS_MESSAGES = {
   INVALID_ORDER_ID: 'ID đơn hàng không hợp lệ.',
   ORDER_NOT_FOUND: 'Không tìm thấy đơn hàng.',
   ORDER_STATUS_IS_REQUIRED: 'Trạng thái đơn hàng là bắt buộc.',
-  DELETE_ORDER_SUCCESS: 'Xóa đơn hàng thành công.'
+  DELETE_ORDER_SUCCESS: 'Xóa đơn hàng thành công.',
+  GET_ORDER_DETAIL_SUCCESS: 'Lấy chi tiết đơn hàng thành công.'
 } as const
 
 export const POSTS_MESSAGES = {

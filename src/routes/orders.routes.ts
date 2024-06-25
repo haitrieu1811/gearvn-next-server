@@ -4,12 +4,14 @@ import {
   deleteOrderController,
   getAllOrdersController,
   getMyOrdersController,
+  getOrderController,
   updateOrderController
 } from '~/controllers/orders.controllers'
 import { paginationValidator } from '~/middlewares/common.middlewares'
 import {
   deleteOrderRoleValidator,
   getOrdersValidator,
+  orderAuthorValidator,
   orderIdValidator,
   readAllOrdersRoleValidator,
   updateOrderRoleValidator,
@@ -38,6 +40,15 @@ ordersRouter.get(
   getOrdersValidator,
   paginationValidator,
   wrapRequestHandler(getAllOrdersController)
+)
+
+ordersRouter.get(
+  '/:orderId',
+  accessTokenValidator,
+  isVerifiedUserValidator,
+  orderIdValidator,
+  orderAuthorValidator,
+  wrapRequestHandler(getOrderController)
 )
 
 ordersRouter.patch(
