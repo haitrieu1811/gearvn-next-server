@@ -17,7 +17,7 @@ import {
   updateOrderRoleValidator,
   updateOrderValidator
 } from '~/middlewares/orders.middlewares'
-import { accessTokenValidator, isCustomerValidator, isVerifiedUserValidator } from '~/middlewares/users.middlewares'
+import { accessTokenValidator, isVerifiedUserValidator } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handler'
 
 const ordersRouter = Router()
@@ -26,7 +26,6 @@ ordersRouter.get(
   '/me',
   accessTokenValidator,
   isVerifiedUserValidator,
-  isCustomerValidator,
   getOrdersValidator,
   paginationValidator,
   wrapRequestHandler(getMyOrdersController)
