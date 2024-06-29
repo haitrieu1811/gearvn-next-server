@@ -3,6 +3,7 @@ import omitBy from 'lodash/omitBy'
 import { ObjectId } from 'mongodb'
 
 import { ENV_CONFIG } from '~/constants/config'
+import { OrderStatus } from '~/constants/enum'
 import { GetOrdersReqQuery, UpdateOrderReqBody } from '~/models/requests/Order.requests'
 import databaseService from '~/services/database.services'
 import { paginationConfig } from '~/utils/utils'
@@ -215,11 +216,46 @@ class OrderService {
         $limit: limit
       }
     ]
-    const [orders, totalRows] = await Promise.all([
+    const [
+      orders,
+      totalRows,
+      totalWaitForConfirmation,
+      totalConfirmed,
+      totalDelivering,
+      totalDelivered,
+      totalCancelled
+    ] = await Promise.all([
       databaseService.orders.aggregate(aggregate).toArray(),
-      databaseService.orders.countDocuments(match)
+      databaseService.orders.countDocuments(match),
+      databaseService.orders.countDocuments({
+        ...match,
+        status: OrderStatus.WaitForConfirmation
+      }),
+      databaseService.orders.countDocuments({
+        ...match,
+        status: OrderStatus.Confirmed
+      }),
+      databaseService.orders.countDocuments({
+        ...match,
+        status: OrderStatus.Delivering
+      }),
+      databaseService.orders.countDocuments({
+        ...match,
+        status: OrderStatus.Delivered
+      }),
+      databaseService.orders.countDocuments({
+        ...match,
+        status: OrderStatus.Cancelled
+      })
     ])
     return {
+      analytics: {
+        totalWaitForConfirmation,
+        totalConfirmed,
+        totalDelivering,
+        totalDelivered,
+        totalCancelled
+      },
       orders,
       page,
       limit,

@@ -631,3 +631,13 @@ export const createUserValidator = validate(
     ['body']
   )
 )
+
+export const isLoggedWithCustomer =
+  (middleware: (req: Request, res: Response, next: NextFunction) => Promise<void>) =>
+  (req: Request, res: Response, next: NextFunction) => {
+    const { userType } = req.decodedAuthorization as TokenPayload
+    if (userType !== UserType.Admin) {
+      return middleware(req, res, next)
+    }
+    next()
+  }

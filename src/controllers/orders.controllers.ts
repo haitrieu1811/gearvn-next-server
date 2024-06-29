@@ -12,7 +12,7 @@ export const getMyOrdersController = async (
   res: Response
 ) => {
   const { userId } = req.decodedAuthorization as TokenPayload
-  const { orders, ...pagination } = await orderService.findMany({
+  const { orders, analytics, ...pagination } = await orderService.findMany({
     query: req.query,
     match: {
       userId: new ObjectId(userId)
@@ -21,6 +21,7 @@ export const getMyOrdersController = async (
   return res.json({
     message: ORDERS_MESSAGES.GET_MY_ORDERS_SUCCESS,
     data: {
+      analytics,
       orders,
       pagination
     }
@@ -31,12 +32,13 @@ export const getAllOrdersController = async (
   req: Request<ParamsDictionary, any, any, GetOrdersReqQuery>,
   res: Response
 ) => {
-  const { orders, ...pagination } = await orderService.findMany({
+  const { orders, analytics, ...pagination } = await orderService.findMany({
     query: req.query
   })
   return res.json({
     message: ORDERS_MESSAGES.GET_ALL_ORDERS_SUCCESS,
     data: {
+      analytics,
       orders,
       pagination
     }
