@@ -55,9 +55,6 @@ productCategoriesRouter.get(
 
 productCategoriesRouter.get(
   '/:productCategoryId',
-  accessTokenValidator,
-  isVerifiedUserValidator,
-  isAdminValidator,
   productCategoryIdValidator,
   wrapRequestHandler(getProductCategoryDetailController)
 )
