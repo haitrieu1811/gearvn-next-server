@@ -25,6 +25,7 @@ import {
   isAdminOrStaffValidator,
   isAdminValidator,
   isCustomerValidator,
+  isLoggedWithCustomer,
   isVerifiedUserValidator
 } from '~/middlewares/users.middlewares'
 import { CreateReviewReqBody, ReplyReviewReqBody, UpdateReviewReqBody } from '~/models/requests/Review.requests'
@@ -69,7 +70,7 @@ reviewsRouter.patch(
 reviewsRouter.get(
   '/product/:productId',
   productIdValidator,
-  isActiveProductValidator,
+  isLoggedWithCustomer(isActiveProductValidator),
   paginationValidator,
   wrapRequestHandler(getReviewByProductIdController)
 )
